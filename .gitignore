@@ -5,3 +5,4 @@ theos
 obj
 _/*
 testapp/_/*
+*.swp

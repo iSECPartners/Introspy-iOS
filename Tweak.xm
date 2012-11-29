@@ -51,6 +51,24 @@
 	return %orig(path, mask, errorPtr);
 }
 
+- (BOOL)writeToURL:(NSURL *)aURL atomically:(BOOL)flag {
+	%log;
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"writeToURL"];
+	[tracer addArgFromUrl:aURL withKey:@"aURL"];
+	[tracer addArgFromBool:flag withKey:@"flag"];
+	[tracer release];
+	return %orig(aURL, flag);
+}
+
+- (BOOL)writeToURL:(NSURL *)aURL options:(NSDataWritingOptions)mask error:(NSError **)errorPtr {
+	%log;
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"writeToURL:options:error"];
+	[tracer addArgFromUrl:aURL withKey:@"aURL"];
+	[tracer addArgFromInt:mask withKey:@"mask"];
+	[tracer release];
+	return %orig(aURL, mask, errorPtr);
+}
+
 %end
 
 %end

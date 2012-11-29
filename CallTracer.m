@@ -45,6 +45,28 @@
 	return true;
 }
 
+- (BOOL) addArgFromUrl:(NSURL *)aURL withKey:(NSString *)key {
+	/* creates a dictionary of the NSURL attributes and adds it to the plist */
+	NSDictionary *url_dict = [NSDictionary dictionaryWithObjects:
+					   [NSArray arrayWithObjects: [aURL absoluteString],
+					 			      [aURL scheme],
+								      [aURL host],
+								      [aURL port],
+								      [aURL path],
+								      [aURL parameterString],
+								      [aURL query], nil]
+							     forKeys: [NSArray arrayWithObjects:
+							    	      @"absoluteString",
+							    	      @"scheme",
+								      @"host",
+								      @"port",
+								      @"path",
+								      @"parameterString",
+								      @"query", nil]];
+	[self addArgFromDictionary:url_dict withKey:key];
+	return true;
+}
+
 - (id) serializeArgs {
     /* serialize the NSMutableDictionary of arguments into a plist */
     NSError *error;
