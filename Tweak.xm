@@ -69,6 +69,74 @@
 	return %orig(aURL, mask, errorPtr);
 }
 
++ (id)dataWithContentsOfFile:(NSString *)path {
+	%log
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"dataWithContentsOfFile"];
+	[tracer addArgFromString:path withKey:@"path"];
+	[tracer release];
+	return %orig(path);
+}
+
++ (id)dataWithContentsOfFile:(NSString *)path options:(NSDataReadingOptions)mask error:(NSError **)errorPtr {
+	%Log
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"dataWithContentsOfFile:options:error"];
+	[tracer addArgFromString:path withKey:@"path"];
+	[tracer addArgFromInt:mask withKey:@"mask"];
+	[tracer release];
+	return %orig(path, mask, errorPtr);
+}
+
++ (id)dataWithContentsOfURL:(NSURL *)aURL {
+	%log
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"dataWithContentsOfURL"];
+	[tracer addArgFromUrl:path withKey:@"aURL"];
+	[tracer release];
+	return %orig(path);
+}
+
++ (id)dataWithContentsOfURL:(NSURL *)aURL options:(NSDataReadingOptions)mask error:(NSError **)errorPtr {
+	%Log
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"dataWithContentsOfURL:options:error"];
+	[tracer addArgFromURL:path withKey:@"aURL"];
+	[tracer addArgFromInt:mask withKey:@"mask"];
+	[tracer release];
+	return %orig(path, mask, errorPtr);
+}
+
+- (id)initWithContentsOfFile:(NSString *)path {
+	%log
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"initWithContentsOfFile"];
+	[tracer addArgFromString:path withKey:@"path"];
+	[tracer release];
+	return %orig(path);
+}
+
+- (id)initWithContentsOfFile:(NSString *)path options:(NSDataReadingOptions)mask error:(NSError **)errorPtr {
+	%Log
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"initWithContentsOfFile:options:error"];
+	[tracer addArgFromString:path withKey:@"path"];
+	[tracer addArgFromInt:mask withKey:@"mask"];
+	[tracer release];
+	return %orig(path, mask, errorPtr);
+}
+
+- (id)initWithContentsOfURL:(NSURL *)aURL {
+	%log
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"initWithContentsOfURL"];
+	[tracer addArgFromUrl:path withKey:@"aURL"];
+	[tracer release];
+	return %orig(path);
+}
+
+- (id)initWithContentsOfURL:(NSURL *)aURL options:(NSDataReadingOptions)mask error:(NSError **)errorPtr {
+	%Log
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"initWithContentsOfURL:options:error"];
+	[tracer addArgFromURL:path withKey:@"aURL"];
+	[tracer addArgFromInt:mask withKey:@"mask"];
+	[tracer release];
+	return %orig(path, mask, errorPtr);
+}
+
 %end
 
 %end
