@@ -1,0 +1,9 @@
+Package: com.isecpartners.introspytestapp
+Name: Introspy Test App
+Depends: 
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome application!
+Maintainer: Alban Diquet
+Author: Alban Diquet
+Section: Utilities
