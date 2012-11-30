@@ -1,4 +1,5 @@
 #import "RootViewController.h"
+#import "DataStorageTester.h"
 
 @implementation RootViewController
 - (void)loadView {
@@ -17,20 +18,9 @@
     [alert release];
 
     // Data Storage
-
-    //NSFileManager
-    NSLog(@"**************Test**************");
-    NSFileManager * fileManager = [NSFileManager defaultManager];
-
-    //createFileAtPath
-    NSString* path = [NSHomeDirectory() stringByAppendingPathComponent:@"test.file"];
-    //NSDictionary attributes;
-    NSString* myString = @"testing12345";
-    NSData* contents = [myString dataUsingEncoding: [NSString defaultCStringEncoding]];
-
-   	[fileManager createFileAtPath:path contents:contents attributes:nil];
-
-
+    DataStorageTester *dataStorageTests = [[DataStorageTester alloc] init];
+    [dataStorageTests runTests];
+    [dataStorageTests release];
    	// End
 
 }

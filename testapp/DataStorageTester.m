@@ -4,17 +4,20 @@
 @implementation DataStorageTester : NSObject 
 
 
-static NSString *testFilePath;
+// Testing settings
+static NSString *testFilePath = @"introspytest.file";
+static NSString *testContentStr = @"introspy testing 12345";
+
+
+// Internal stuff
 static NSURL *testURL;
 static NSData *testContent;
 
 
 - (DataStorageTester *)init {
     self = [super init];
-    testFilePath = [NSHomeDirectory() stringByAppendingPathComponent:@"introspytest.file"];
     testURL = [NSURL fileURLWithPath:testFilePath];
-    testContent = [@"introspy testing 12345" dataUsingEncoding: [NSString defaultCStringEncoding]];
-
+    testContent = [testContentStr dataUsingEncoding: [NSString defaultCStringEncoding]];
     return self;
 }
 
