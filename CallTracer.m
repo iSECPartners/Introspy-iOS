@@ -68,14 +68,15 @@
 }
 
 - (id) serializeArgs {
-    /* serialize the NSMutableDictionary of arguments into a plist */
-    NSError *error;
-    NSUInteger *format;
-    id plist = [IntrospyPlistSerialization propertyListWithData:(id)args
+	/* serialize the NSMutableDictionary of arguments into a plist */
+	NSError *error;
+	NSUInteger *format;
+	id plist = [IntrospyPlistSerialization propertyListWithData:(id)args
 	    						 options:NSPropertyListMutableContainersAndLeaves
 							  format:format
 							   error:&error];
-    return plist;
+	NSLog(@"%s", plist);
+	return plist;
 }
 
 @end
