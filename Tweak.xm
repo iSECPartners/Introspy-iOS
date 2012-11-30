@@ -38,8 +38,6 @@
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"writeToFile:atomically"];
 	[tracer addArgFromString:path withKey:@"path"];
 	[tracer addArgFromBool:flag withKey:@"flag"];
-	id plist = [tracer serializeArgs];
-	NSLog(@"%s", plist);
 	[tracer release];
 	return %orig(path, flag);
 }
