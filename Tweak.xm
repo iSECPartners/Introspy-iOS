@@ -1,4 +1,9 @@
 #import "CallTracer.h"
+#import "IntrospySQLiteStorage.h"
+
+
+static IntrospySQLiteStorage *traceStorage;
+
 
 %group DataStorage
 
@@ -10,6 +15,7 @@
 	[tracer addArgFromString:path withKey:@"path"];
 	[tracer addArgFromData:contents withKey:@"contents"];
 	[tracer addArgFromDictionary:attributes withKey:@"attributes"];
+	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig(path, contents, attributes);
 }
@@ -18,6 +24,7 @@
 	%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileManager" andMethod:@"contentsAtPath"];
 	[tracer addArgFromString:path withKey:@"path"];
+	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig(path);
 }
@@ -25,6 +32,7 @@
 - (id <NSObject, NSCopying, NSCoding>)ubiquityIdentityToken {
 	%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileManager" andMethod:@"ubiquityIdentityToken"];
+	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig;
 }
@@ -40,6 +48,7 @@
 	[tracer addArgFromBool:flag withKey:@"flag"];
 	id plist = [tracer serializeArgs];
 	NSLog(@"%s", plist);
+	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig(path, flag);
 }
@@ -49,6 +58,7 @@
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"writeToFile:options:error"];
 	[tracer addArgFromString:path withKey:@"path"];
 	[tracer addArgFromInt:mask withKey:@"mask"];
+	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig(path, mask, errorPtr);
 }
@@ -58,6 +68,7 @@
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"writeToURL"];
 	[tracer addArgFromUrl:aURL withKey:@"aURL"];
 	[tracer addArgFromBool:flag withKey:@"flag"];
+	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig(aURL, flag);
 }
@@ -67,6 +78,7 @@
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"writeToURL:options:error"];
 	[tracer addArgFromUrl:aURL withKey:@"aURL"];
 	[tracer addArgFromInt:mask withKey:@"mask"];
+	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig(aURL, mask, errorPtr);
 }
@@ -75,6 +87,7 @@
 	%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"dataWithContentsOfFile"];
 	[tracer addArgFromString:path withKey:@"path"];
+	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig(path);
 }
@@ -84,6 +97,7 @@
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"dataWithContentsOfFile:options:error"];
 	[tracer addArgFromString:path withKey:@"path"];
 	[tracer addArgFromInt:mask withKey:@"mask"];
+	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig(path, mask, errorPtr);
 }
@@ -92,6 +106,7 @@
 	%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"dataWithContentsOfURL"];
 	[tracer addArgFromUrl:aURL withKey:@"aURL"];
+	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig(aURL);
 }
@@ -101,6 +116,7 @@
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"dataWithContentsOfURL:options:error"];
 	[tracer addArgFromUrl:aURL withKey:@"aURL"];
 	[tracer addArgFromInt:mask withKey:@"mask"];
+	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig(aURL, mask, errorPtr);
 }
@@ -109,6 +125,7 @@
 	%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"initWithContentsOfFile"];
 	[tracer addArgFromString:path withKey:@"path"];
+	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig(path);
 }
@@ -118,6 +135,7 @@
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"initWithContentsOfFile:options:error"];
 	[tracer addArgFromString:path withKey:@"path"];
 	[tracer addArgFromInt:mask withKey:@"mask"];
+	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig(path, mask, errorPtr);
 }
@@ -126,6 +144,7 @@
 	%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"initWithContentsOfURL"];
 	[tracer addArgFromUrl:aURL withKey:@"aURL"];
+	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig(aURL);
 }
@@ -135,6 +154,7 @@
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"initWithContentsOfURL:options:error"];
 	[tracer addArgFromUrl:aURL withKey:@"aURL"];
 	[tracer addArgFromInt:mask withKey:@"mask"];
+	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig(aURL, mask, errorPtr);
 }
@@ -147,6 +167,7 @@
 	%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileHandle" andMethod:@"writeData"];
 	[tracer addArgFromData:data withKey:@"data"];
+	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig(data);
 }
@@ -155,6 +176,11 @@
 
 %end
 
+
 %ctor {
+	// Initialize DB access
+	traceStorage = [[IntrospySQLiteStorage alloc] initWithDefaultDBFilePath];
+    
+    // Initialize hooks
     %init(DataStorage);
 }

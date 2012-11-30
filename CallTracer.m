@@ -1,5 +1,7 @@
 #import "CallTracer.h"
 #import "IntrospyPlistSerialization.h"
+#import "IntrospySQLiteStorage.h"
+
 
 @implementation CallTracer : NSObject
 
@@ -66,6 +68,7 @@
 	[self addArgFromDictionary:url_dict withKey:key];
 	return true;
 }
+
 
 - (id) serializeArgs {
 	/* serialize the NSMutableDictionary of arguments into a plist */
