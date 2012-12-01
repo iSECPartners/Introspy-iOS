@@ -4,13 +4,12 @@
 
 static IntrospySQLiteStorage *traceStorage;
 
-
 %group DataStorage
 
 %hook NSFileManager
 
 - (BOOL)createFileAtPath:(NSString *)path contents:(NSData *)contents attributes:(NSDictionary *) attributes {
-	%log;
+	//%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileManager" andMethod:@"createFileAtPath:contents:attributes"];
 	[tracer addArgFromString:path withKey:@"path"];
 	[tracer addArgFromData:contents withKey:@"contents"];
@@ -21,7 +20,7 @@ static IntrospySQLiteStorage *traceStorage;
 }
 
 - (NSData *)contentsAtPath:(NSString *)path {
-	%log;
+	//%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileManager" andMethod:@"contentsAtPath"];
 	[tracer addArgFromString:path withKey:@"path"];
 	[traceStorage saveTracedCall: tracer];
@@ -30,7 +29,7 @@ static IntrospySQLiteStorage *traceStorage;
 }
 
 - (id <NSObject, NSCopying, NSCoding>)ubiquityIdentityToken {
-	%log;
+	//%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileManager" andMethod:@"ubiquityIdentityToken"];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
@@ -42,19 +41,17 @@ static IntrospySQLiteStorage *traceStorage;
 %hook NSData
 
 - (BOOL)writeToFile:(NSString *)path atomically:(BOOL)flag {
-	%log;
+	//%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"writeToFile:atomically"];
 	[tracer addArgFromString:path withKey:@"path"];
 	[tracer addArgFromBool:flag withKey:@"flag"];
-	id plist = [tracer serializeArgs];
-	NSLog(@"%s", plist);
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return %orig(path, flag);
 }
 
 - (BOOL)writeToFile:(NSString *)path options:(NSDataWritingOptions)mask error:(NSError **)errorPtr {
-	%log;
+	//%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"writeToFile:options:error"];
 	[tracer addArgFromString:path withKey:@"path"];
 	[tracer addArgFromInt:mask withKey:@"mask"];
@@ -64,7 +61,7 @@ static IntrospySQLiteStorage *traceStorage;
 }
 
 - (BOOL)writeToURL:(NSURL *)aURL atomically:(BOOL)flag {
-	%log;
+	//%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"writeToURL"];
 	[tracer addArgFromUrl:aURL withKey:@"aURL"];
 	[tracer addArgFromBool:flag withKey:@"flag"];
@@ -74,7 +71,7 @@ static IntrospySQLiteStorage *traceStorage;
 }
 
 - (BOOL)writeToURL:(NSURL *)aURL options:(NSDataWritingOptions)mask error:(NSError **)errorPtr {
-	%log;
+	//%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"writeToURL:options:error"];
 	[tracer addArgFromUrl:aURL withKey:@"aURL"];
 	[tracer addArgFromInt:mask withKey:@"mask"];
@@ -84,7 +81,7 @@ static IntrospySQLiteStorage *traceStorage;
 }
 
 + (id)dataWithContentsOfFile:(NSString *)path {
-	%log;
+	//%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"dataWithContentsOfFile"];
 	[tracer addArgFromString:path withKey:@"path"];
 	[traceStorage saveTracedCall: tracer];
@@ -93,7 +90,7 @@ static IntrospySQLiteStorage *traceStorage;
 }
 
 + (id)dataWithContentsOfFile:(NSString *)path options:(NSDataReadingOptions)mask error:(NSError **)errorPtr {
-	%log;
+	//%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"dataWithContentsOfFile:options:error"];
 	[tracer addArgFromString:path withKey:@"path"];
 	[tracer addArgFromInt:mask withKey:@"mask"];
@@ -103,7 +100,7 @@ static IntrospySQLiteStorage *traceStorage;
 }
 
 + (id)dataWithContentsOfURL:(NSURL *)aURL {
-	%log;
+	//%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"dataWithContentsOfURL"];
 	[tracer addArgFromUrl:aURL withKey:@"aURL"];
 	[traceStorage saveTracedCall: tracer];
@@ -112,7 +109,7 @@ static IntrospySQLiteStorage *traceStorage;
 }
 
 + (id)dataWithContentsOfURL:(NSURL *)aURL options:(NSDataReadingOptions)mask error:(NSError **)errorPtr {
-	%log;
+	//%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"dataWithContentsOfURL:options:error"];
 	[tracer addArgFromUrl:aURL withKey:@"aURL"];
 	[tracer addArgFromInt:mask withKey:@"mask"];
@@ -122,7 +119,7 @@ static IntrospySQLiteStorage *traceStorage;
 }
 
 - (id)initWithContentsOfFile:(NSString *)path {
-	%log;
+	//%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"initWithContentsOfFile"];
 	[tracer addArgFromString:path withKey:@"path"];
 	[traceStorage saveTracedCall: tracer];
@@ -131,7 +128,7 @@ static IntrospySQLiteStorage *traceStorage;
 }
 
 - (id)initWithContentsOfFile:(NSString *)path options:(NSDataReadingOptions)mask error:(NSError **)errorPtr {
-	%log;
+	//%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"initWithContentsOfFile:options:error"];
 	[tracer addArgFromString:path withKey:@"path"];
 	[tracer addArgFromInt:mask withKey:@"mask"];
@@ -141,7 +138,7 @@ static IntrospySQLiteStorage *traceStorage;
 }
 
 - (id)initWithContentsOfURL:(NSURL *)aURL {
-	%log;
+	//%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"initWithContentsOfURL"];
 	[tracer addArgFromUrl:aURL withKey:@"aURL"];
 	[traceStorage saveTracedCall: tracer];
@@ -150,7 +147,7 @@ static IntrospySQLiteStorage *traceStorage;
 }
 
 - (id)initWithContentsOfURL:(NSURL *)aURL options:(NSDataReadingOptions)mask error:(NSError **)errorPtr {
-	%log;
+	//%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"initWithContentsOfURL:options:error"];
 	[tracer addArgFromUrl:aURL withKey:@"aURL"];
 	[tracer addArgFromInt:mask withKey:@"mask"];
@@ -164,7 +161,7 @@ static IntrospySQLiteStorage *traceStorage;
 %hook NSFileHandle
 
 - (void)writeData:(NSData *)data {
-	%log;
+	//%log;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileHandle" andMethod:@"writeData"];
 	[tracer addArgFromData:data withKey:@"data"];
 	[traceStorage saveTracedCall: tracer];

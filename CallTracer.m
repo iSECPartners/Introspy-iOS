@@ -12,8 +12,10 @@
 - (CallTracer*)initWithClass:(NSString *)clazz andMethod:(NSString *)meth {
 	/* initialize the call tracer with class and method names */
 	[super init];
+	args = [[NSMutableDictionary alloc] init];
 	className = clazz;
 	methodName = meth;
+	NSLog(@"CallTracer::initWithClass: %@::%@", clazz, meth);
 	return self;
 }
 
@@ -94,14 +96,17 @@
 }
 
 
-- (id) serializeArgs {
-	/* serialize the NSMutableDictionary of arguments into a plist */
+- (NSData *) serializeArgs {
+	/* serialize the NSDictionary of arguments into a plist */
 	NSError *error;
-	NSUInteger *format;
-	id plist = [IntrospyPlistSerialization propertyListWithData:(id)args
-	    						 options:NSPropertyListMutableContainersAndLeaves
-							  format:format
-							   error:&error];
+	NSData *plist = [IntrospyPlistSerialization dataWithPropertyList:(id)args
+   							     format:NSPropertyListXMLFormat_v1_0 // for testing
+   							    options:0
+   							      error:&error];
+//	if (error != nil) {
+//		NSLog(@"CallTracer::serializeArgs: %@", error);
+//		return nil;
+//	}
 	return plist;
 }
 

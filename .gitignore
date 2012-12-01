@@ -6,3 +6,4 @@ obj
 _/*
 testapp/_/*
 *.swp
+.gitconfig

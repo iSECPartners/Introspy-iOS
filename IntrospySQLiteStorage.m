@@ -41,10 +41,19 @@ static sqlite3_stmt *saveTracedCallStmt;
 
 - (void)saveTracedCall: (CallTracer*) tracedCall {
 
-	sqlite3_reset(saveTracedCallStmt);
-	sqlite3_bind_text(saveTracedCallStmt, 1, [ [tracedCall className] UTF8String], -1, nil);
-	sqlite3_bind_text(saveTracedCallStmt, 2, [ [tracedCall methodName] UTF8String], -1, nil);
+//	sqlite3_reset(saveTracedCallStmt);
+//	sqlite3_bind_text(saveTracedCallStmt, 1, [ [tracedCall className] UTF8String], -1, nil);
+//	sqlite3_bind_text(saveTracedCallStmt, 2, [ [tracedCall methodName] UTF8String], -1, nil);
 
+	NSData *plist = [tracedCall serializeArgs];
+	if (plist != nil) {
+		NSString *sPlist = [[NSString alloc] initWithData:plist encoding:NSUTF8StringEncoding];
+		NSLog(@"*****************************************************");	
+		NSLog(@"%@", sPlist);
+		NSLog(@"*****************************************************");	
+	} else {
+		NSLog(@"IntrospySQLiteStorage::saveTraceCall: can't print plist");
+	}
 	// Store arguments as a blob
 	//(NSData *) plistArgs = [dataWithPropertyList:[tracedCall args] format:(NSPropertyListFormat)format options:0 error:nil];
 
@@ -56,9 +65,9 @@ static sqlite3_stmt *saveTracedCallStmt;
 	//sqlite3_bind_blob(saveTracedCallStmt, 3, 
 	
 
-    if (sqlite3_step(saveTracedCallStmt) != SQLITE_DONE) {
-        printf("IntrospySQLiteStorage - Commit Failed!");
-    }
+//    if (sqlite3_step(saveTracedCallStmt) != SQLITE_DONE) {
+//        printf("IntrospySQLiteStorage - Commit Failed!");
+//    }
 
 }
 

@@ -5,7 +5,7 @@
 	NSString* methodName;
 }
 
-@property (retain) NSMutableDictionary *args;
+@property (retain) NSDictionary *args;
 @property (retain) NSString *className;
 @property (retain) NSString *methodName;
 
@@ -16,5 +16,5 @@
 - (BOOL) addArgFromBool:(BOOL)boolean withKey:(NSString *)key;
 - (BOOL) addArgFromInt:(NSUInteger)val withKey:(NSString *)key;
 - (BOOL) addArgFromUrl:(NSURL *)aURL withKey:(NSString *)key;
-- (id) serializeArgs;
+- (NSData *) serializeArgs;
 @end
