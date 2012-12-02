@@ -5,7 +5,7 @@
 
 // Database settings
 //static int ARGS_BLOB_MAX_SIZE = 256;
-static NSString *defaultDBFilePath = @"~/introspy.db";
+static NSString *defaultDBFileFormat = @"~/introspy-%@.db"; // Becomes ~/introspy-<processName>.db
 static const char createTableStmtStr[] = "CREATE TABLE tracedCalls (class TEXT, method TEXT, arguments TEXT)";
 static const char saveTracedCallStmtStr[] = "INSERT INTO tracedCalls VALUES (?1, ?2, ?3)";
 
@@ -15,8 +15,11 @@ static sqlite3_stmt *saveTracedCallStmt;
 
 
 - (IntrospySQLiteStorage *)initWithDefaultDBFilePath {
-	NSLog(@"DB PATH = %@", [defaultDBFilePath stringByExpandingTildeInPath]);
-	return [self initWithDBFilePath: [defaultDBFilePath stringByExpandingTildeInPath]];
+	// Put process name in the DB's filename to avoid confusion
+	NSString *processName = [[NSProcessInfo processInfo] processName];
+	NSString *DBFilePath = [NSString stringWithFormat:defaultDBFileFormat, processName];
+	NSLog(@"DB PATH = %@", [DBFilePath stringByExpandingTildeInPath]);
+	return [self initWithDBFilePath: [DBFilePath stringByExpandingTildeInPath]];
 }
 
 
