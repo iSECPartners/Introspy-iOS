@@ -175,28 +175,30 @@ static IntrospySQLiteStorage *traceStorage;
 
 
 %ctor {
-	// Only hook the App we're interested in; this means the test App for now
-	// TODO: Menu where the user can pick the App to profile
+	// Only hook the App we're interested in
 	NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey];
 	if (appName == nil) {
-		// Not a bundle ? Most likely something we don't want to hook like a system service
-
-	}
-	else {
-		NSLog(@"APPNAME = %@", appName);
-
-		//if ([appName isEqualToString: @"IntrospyTestApp"]) {
-			
-			// Initialize DB storage
-			traceStorage = [[IntrospySQLiteStorage alloc] initWithDefaultDBFilePath];
-			if (traceStorage != nil) {
-
-		    // Initialize hooks
-		    %init(DataStorage);
-			}
-			else {
-				NSLog(@"Introspy - DB Initialization error; disabling hooks.");
-			}
-	    //}
+		// Not a bundle ? Most likely something we don't want to hook like a system App
+		// Unless it's the Introspy Test App which is built as a system App
+		if (! ([[[NSProcessInfo processInfo] processName] isEqualToString: @"IntrospyTestApp"]) ) {
+			return;
 		}
+	}
+
+	NSLog(@"APPNAME = %@", appName);
+	// TODO: Menu where the user can pick the App to profile
+	//if ([appName isEqualToString: @"Twitter"]) {
+		
+		// Initialize DB storage
+		traceStorage = [[IntrospySQLiteStorage alloc] initWithDefaultDBFilePath];
+		if (traceStorage != nil) {
+
+	    // Initialize hooks
+	    %init(DataStorage);
+		}
+		else {
+			NSLog(@"Introspy - DB Initialization error; disabling hooks.");
+		}
+    //}
+	
 }
