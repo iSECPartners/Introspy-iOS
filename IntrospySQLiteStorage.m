@@ -5,8 +5,8 @@
 
 // Database settings
 //static int ARGS_BLOB_MAX_SIZE = 256;
-static NSString *defaultDBFilePath = @"introspy.db";
-static const char createTableStmtStr[] = "CREATE TABLE tracedCalls (class TEXT, method TEXT, arguments BLOB)";
+static NSString *defaultDBFilePath = @"~/introspy.db";
+static const char createTableStmtStr[] = "CREATE TABLE tracedCalls (class TEXT, method TEXT, arguments TEXT)";
 static const char saveTracedCallStmtStr[] = "INSERT INTO tracedCalls VALUES (?1, ?2, ?3)";
 
 
@@ -15,7 +15,8 @@ static sqlite3_stmt *saveTracedCallStmt;
 
 
 - (IntrospySQLiteStorage *)initWithDefaultDBFilePath {
-	return [self initWithDBFilePath: defaultDBFilePath];
+	NSLog(@"DB PATH = %@", [defaultDBFilePath stringByExpandingTildeInPath]);
+	return [self initWithDBFilePath: [defaultDBFilePath stringByExpandingTildeInPath]];
 }
 
 
@@ -23,52 +24,61 @@ static sqlite3_stmt *saveTracedCallStmt;
     self = [super init];
     sqlite3 *dbConn;
 
-    if (sqlite3_open([DBFilePath UTF8String], &dbConn) != SQLITE_OK) {
-        NSLog(@"IntrospySQLiteStorage - Unable to open database!");
-        return nil;
-    }
+    // Open the DB file if it's already there
+    if (sqlite3_open_v2([DBFilePath UTF8String], &dbConn, SQLITE_OPEN_READWRITE, NULL) != SQLITE_OK) {
 
+		// If not, create the DB file
+		if (sqlite3_open_v2([DBFilePath UTF8String], &dbConn, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL) != SQLITE_OK) {
+        	NSLog(@"IntrospySQLiteStorage - Unable to open database!");
+        	return nil;			
+    	}
+    	else {
+    		// Create the tables in the DB we just created
+    		if (sqlite3_exec(dbConn, createTableStmtStr, NULL, NULL, NULL) != SQLITE_OK) {
+        		NSLog(@"IntrospySQLiteStorage - Unable to create tables!");
+        		return nil;
+    		}
+    	}
+	}
+
+	// Prepare the INSERT statement we'll use to store everything
     sqlite3_stmt *statement = nil;
     if (sqlite3_prepare_v2(dbConn, saveTracedCallStmtStr, -1, &statement, NULL) != SQLITE_OK) {
         NSLog(@"IntrospySQLiteStorage - Unable to prepare statement!");
+        return nil;
     }
-
+    
     saveTracedCallStmt = statement;
     dbConnection = dbConn;
     return self;
 }
 
 
-- (void)saveTracedCall: (CallTracer*) tracedCall {
+- (BOOL)saveTracedCall: (CallTracer*) tracedCall {
 
-//	sqlite3_reset(saveTracedCallStmt);
-//	sqlite3_bind_text(saveTracedCallStmt, 1, [ [tracedCall className] UTF8String], -1, nil);
-//	sqlite3_bind_text(saveTracedCallStmt, 2, [ [tracedCall methodName] UTF8String], -1, nil);
+	sqlite3_reset(saveTracedCallStmt);
+	sqlite3_bind_text(saveTracedCallStmt, 1, [ [tracedCall className] UTF8String], -1, nil);
+	sqlite3_bind_text(saveTracedCallStmt, 2, [ [tracedCall methodName] UTF8String], -1, nil);
 
+	// Store arguments in plist format as a blob
 	NSData *plist = [tracedCall serializeArgs];
-	if (plist != nil) {
-		NSString *sPlist = [[NSString alloc] initWithData:plist encoding:NSUTF8StringEncoding];
-		NSLog(@"*****************************************************");	
-		NSLog(@"%@", sPlist);
-		NSLog(@"*****************************************************");	
-	} else {
+	if (plist == nil) {
 		NSLog(@"IntrospySQLiteStorage::saveTraceCall: can't print plist");
+		return NO;
 	}
-	// Store arguments as a blob
-	//(NSData *) plistArgs = [dataWithPropertyList:[tracedCall args] format:(NSPropertyListFormat)format options:0 error:nil];
 
-	//uint8_t argsBuffer[ARGS_BLOB_MAX_SIZE];
-	//NSPropertyListSerialization
-	//[NSOutputStream outputStreamToBuffer:argsBuffer capacity:ARGS_BLOB_MAX_SIZE];
-
-
-	//sqlite3_bind_blob(saveTracedCallStmt, 3, 
+	NSString *sPlist = [[NSString alloc] initWithData:plist encoding:NSUTF8StringEncoding];
+	NSLog(@"*****************************************************");	
+	NSLog(@"%@", sPlist);
+	NSLog(@"*****************************************************");	
+	sqlite3_bind_text(saveTracedCallStmt, 3, [sPlist UTF8String], -1, nil);
 	
-
-//    if (sqlite3_step(saveTracedCallStmt) != SQLITE_DONE) {
-//        printf("IntrospySQLiteStorage - Commit Failed!");
-//    }
-
+	// Do the query
+    if (sqlite3_step(saveTracedCallStmt) != SQLITE_DONE) {
+        NSLog(@"IntrospySQLiteStorage - Commit Failed!");
+    	return NO;
+    }
+    return YES;
 }
 
 

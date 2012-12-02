@@ -5,7 +5,7 @@
 
 
 // Testing settings
-static NSString *testFilePath = @"introspytest.file";
+static NSString *testFilePath = @"~/introspytest.file";
 static NSString *testContentStr = @"introspy testing 12345";
 
 
@@ -16,6 +16,8 @@ static NSData *testContent;
 
 - (DataStorageTester *)init {
     self = [super init];
+    testFilePath = [testFilePath stringByExpandingTildeInPath];
+    NSLog(@"TEST PATH = %@", [testFilePath stringByExpandingTildeInPath]);
     testURL = [NSURL fileURLWithPath:testFilePath];
     testContent = [testContentStr dataUsingEncoding: [NSString defaultCStringEncoding]];
     return self;
