@@ -1,0 +1,35 @@
+#import "CallTracer.h"
+#import "IntrospySQLiteStorage.h"
+
+
+static IntrospySQLiteStorage *traceStorage;
+
+
+// Horrible h4ck to split Logos hooking code into separate files
+#include "DataStorageHooks.xm"
+
+
+%ctor {
+	// Only hook the App we're interested in. Only the test App for now
+	// TODO: Menu where the user can pick the App to profile
+	NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
+	if (appId == nil) {
+		// A NULL appId is most likely something we don't want to hook
+		return;
+	}
+
+	NSLog(@"APPNAME = %@", appId);
+	if ([appId isEqualToString: @"com.isecpartners.introspytestapp"]) {
+		
+		// Initialize DB storage
+		traceStorage = [[IntrospySQLiteStorage alloc] initWithDefaultDBFilePath];
+		if (traceStorage != nil) {
+
+	    // Initialize hooks
+	    %init(DataStorage);
+		}
+		else {
+			NSLog(@"Introspy - DB Initialization error; disabling hooks.");
+		}
+	}
+}
