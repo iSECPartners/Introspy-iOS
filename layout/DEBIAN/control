@@ -1,9 +1,9 @@
 Package: com.isecpartners.introspy
 Name: introspy
-Depends: mobilesubstrate
+Depends: mobilesubstrate, preferenceloader, applist
 Version: 0.0.1
 Architecture: iphoneos-arm
 Description:
-Maintainer: tom@isecpartners.com
-Author: tom@isecpartners.com
+Maintainer: Tom D. & Alban D.
+Author: Tom D. & Alban D.
 Section: Tweaks

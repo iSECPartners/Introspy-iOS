@@ -1,0 +1,28 @@
+entry = {
+  bundle = AppList;
+  cell = PSLinkCell;
+  icon = "/Applications/Preferences.app/Settings.png";
+  isController = 1;
+  label = "Introspy";
+  ALSettingsPath = "/var/mobile/Library/Preferences/com.isecpartners.introspy.plist";
+  ALSettingsKeyPrefix = "Settings-";
+  ALChangeNotification = "com.isecpartners.introspy";
+  ALAllowsSelection = 1;
+  ALSectionDescriptors = (
+    {
+      title = "System Applications Profiling";
+      predicate = "isSystemApplication = TRUE";
+      "cell-class-name" = "ALSwitchCell";
+      "icon-size" = 29;
+      "suppress-hidden-apps" = 1;
+    },
+    {
+      title = "User Applications Profiling";
+      predicate = "isSystemApplication = FALSE";
+      "cell-class-name" = "ALSwitchCell";
+      "icon-size" = 29;
+      "suppress-hidden-apps" = 1;
+      "footer-title" = "© iSEC Partners";
+    }
+  );
+};
