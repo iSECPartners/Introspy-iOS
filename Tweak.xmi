@@ -2,6 +2,7 @@
 #import "IntrospySQLiteStorage.h"
 
 
+static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/com.isecpartners.introspy.plist";
 static IntrospySQLiteStorage *traceStorage;
 
 
@@ -10,26 +11,28 @@ static IntrospySQLiteStorage *traceStorage;
 
 
 %ctor {
-	// Only hook the App we're interested in. Only the test App for now
-	// TODO: Menu where the user can pick the App to profile
+	// Only hook Apps the user has selected in Introspy's settings panel
 	NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
 	if (appId == nil) {
-		// A NULL appId is most likely something we don't want to hook
 		return;
 	}
 
+    NSMutableDictionary* preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:preferenceFilePath];
+	NSString *appPreferenceKey = [NSString stringWithFormat:@"Settings-%@", appId];
 	NSLog(@"APPNAME = %@", appId);
-	if ([appId isEqualToString: @"com.isecpartners.introspytestapp"]) {
-		
+
+    if ([preferences objectForKey:appPreferenceKey]) { 
+
 		// Initialize DB storage
 		traceStorage = [[IntrospySQLiteStorage alloc] initWithDefaultDBFilePath];
 		if (traceStorage != nil) {
 
-	    // Initialize hooks
-	    %init(DataStorage);
+	    	// Initialize hooks
+	    	%init(DataStorage);
 		}
 		else {
 			NSLog(@"Introspy - DB Initialization error; disabling hooks.");
 		}
 	}
+	[preferences release];
 }

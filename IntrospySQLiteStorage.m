@@ -4,7 +4,7 @@
 
 
 // Database settings
-static NSString *defaultDBFileFormat = @"~/introspy-%@.db"; // Becomes ~/introspy-<processName>.db
+static NSString *defaultDBFileFormat = @"~/introspy-%@.db"; // Becomes ~/introspy-<appName>.db
 static const char createTableStmtStr[] = "CREATE TABLE tracedCalls (class TEXT, method TEXT, arguments TEXT)";
 static const char saveTracedCallStmtStr[] = "INSERT INTO tracedCalls VALUES (?1, ?2, ?3)";
 
@@ -15,9 +15,9 @@ static sqlite3 *dbConnection;
 
 
 - (IntrospySQLiteStorage *)initWithDefaultDBFilePath {
-	// Put process name in the DB's filename to avoid confusion
-	NSString *processName = [[NSProcessInfo processInfo] processName];
-	NSString *DBFilePath = [NSString stringWithFormat:defaultDBFileFormat, processName];
+	// Put application name in the DB's filename to avoid confusion
+    NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
+	NSString *DBFilePath = [NSString stringWithFormat:defaultDBFileFormat, appId];
 	NSLog(@"DB PATH = %@", [DBFilePath stringByExpandingTildeInPath]);
 	return [self initWithDBFilePath: [DBFilePath stringByExpandingTildeInPath]];
 }
@@ -75,6 +75,7 @@ static sqlite3 *dbConnection;
 	NSLog(@"%@", sPlist);
 	NSLog(@"*****************************************************");	
 	sqlite3_bind_text(saveTracedCallStmt, 3, [sPlist UTF8String], -1, nil);
+    [sPlist release];
 	
 	// Do the query
     if (sqlite3_step(saveTracedCallStmt) != SQLITE_DONE) {

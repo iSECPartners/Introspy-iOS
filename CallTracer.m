@@ -110,4 +110,10 @@
 	return plist;
 }
 
+- (void)dealloc
+{
+    [args release];
+    [super dealloc];
+}
+
 @end
