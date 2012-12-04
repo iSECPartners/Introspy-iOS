@@ -4,7 +4,6 @@
 
 
 // Database settings
-//static int ARGS_BLOB_MAX_SIZE = 256;
 static NSString *defaultDBFileFormat = @"~/introspy-%@.db"; // Becomes ~/introspy-<processName>.db
 static const char createTableStmtStr[] = "CREATE TABLE tracedCalls (class TEXT, method TEXT, arguments TEXT)";
 static const char saveTracedCallStmtStr[] = "INSERT INTO tracedCalls VALUES (?1, ?2, ?3)";
@@ -12,6 +11,7 @@ static const char saveTracedCallStmtStr[] = "INSERT INTO tracedCalls VALUES (?1,
 
 // Internal stuff
 static sqlite3_stmt *saveTracedCallStmt;
+static sqlite3 *dbConnection;
 
 
 - (IntrospySQLiteStorage *)initWithDefaultDBFilePath {
@@ -83,6 +83,16 @@ static sqlite3_stmt *saveTracedCallStmt;
     }
     return YES;
 }
+
+
+- (void)dealloc
+{
+    sqlite3_finalize(saveTracedCallStmt);
+    sqlite3_close(dbConnection);
+    [super dealloc];
+}
+
+
 
 
 
