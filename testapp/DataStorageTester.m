@@ -1,5 +1,5 @@
 #import "DataStorageTester.h"
-
+#include <Security/Security.h>
 
 @implementation DataStorageTester : NSObject 
 
@@ -7,6 +7,8 @@
 // Testing settings
 static NSString *testFilePath = @"~/introspytest.file";
 static NSString *testContentStr = @"introspy testing 12345";
+static NSString *keyChainTestKey = @"IntrospyPassword";
+static NSString *keyChainTestValue = @"s3cr3t";
 
 
 // Internal stuff
@@ -27,10 +29,32 @@ static NSData *testContent;
 - (void)runTests {
     
     NSLog(@"**************Test**************");
+    [self testKeyChain];
     [self testNSFileManager];
     [self testNSData];
 }
 
+
+- (void)testKeyChain {
+
+    NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
+    NSData *testKey = [keyChainTestKey dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *testValue = [keyChainTestValue dataUsingEncoding:NSUTF8StringEncoding];
+
+    // Test SecItemAdd()
+    NSMutableDictionary *ItemAddDictionary = [[NSMutableDictionary alloc] init];
+    [ItemAddDictionary setObject:(id)kSecClassGenericPassword forKey:(id)kSecClass];
+    [ItemAddDictionary setObject:testKey forKey:(id)kSecAttrGeneric];
+    [ItemAddDictionary setObject:testKey forKey:(id)kSecAttrAccount];
+    [ItemAddDictionary setObject:appId forKey:(id)kSecAttrService];
+    [ItemAddDictionary setObject:testValue forKey:(id)kSecValueData];
+
+    SecItemAdd((CFDictionaryRef)ItemAddDictionary, NULL);
+    [ItemAddDictionary release];
+
+    // Test SecItemCopyMatching()
+
+}
 
 - (void)testNSFileManager {
 

@@ -1,4 +1,5 @@
 #import "IntrospySQLiteStorage.h"
+#include <sqlite3.h>
 
 @implementation IntrospySQLiteStorage : NSObject 
 
@@ -92,11 +93,6 @@ static sqlite3 *dbConnection;
     sqlite3_close(dbConnection);
     [super dealloc];
 }
-
-
-
-
-
 
 
 @end

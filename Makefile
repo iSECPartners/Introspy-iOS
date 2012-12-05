@@ -1,8 +1,10 @@
+#TARGET = iphone:5.1
+#ARCHS = armv6
 include theos/makefiles/common.mk
 
 TWEAK_NAME = introspy
-introspy_FILES = Tweak.xm CallTracer.m IntrospyPlistSerialization.m IntrospySQLiteStorage.m
-introspy_LIBRARIES = sqlite3
+introspy_FILES = Tweak.xmi CallTracer.m IntrospyPlistSerialization.m IntrospySQLiteStorage.m KeyChainHooks.m
+introspy_LIBRARIES = sqlite3 
 
-introspy_FRAMEWORKS = UIKit, Foundation
+introspy_FRAMEWORKS = UIKit, Foundation, Security
 include $(THEOS_MAKE_PATH)/tweak.mk

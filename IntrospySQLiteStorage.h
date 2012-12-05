@@ -1,4 +1,3 @@
-#import <sqlite3.h>
 #import "CallTracer.h"
 
 @interface IntrospySQLiteStorage : NSObject {
