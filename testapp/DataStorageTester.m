@@ -8,7 +8,8 @@
 static NSString *testFilePath = @"~/introspytest.file";
 static NSString *testContentStr = @"introspy testing 12345";
 static NSString *keyChainTestKey = @"IntrospyPassword";
-static NSString *keyChainTestValue = @"s3cr3t";
+static NSString *keyChainTestValue1 = @"s3cr3t";
+static NSString *keyChainTestValue2 = @"p@ssw0rd";
 
 
 // Internal stuff
@@ -35,26 +36,67 @@ static NSData *testContent;
 }
 
 
-- (void)testKeyChain {
+// Utility function for the keyChain tests
+- (NSMutableDictionary *)newKeyChainSearchDict {
 
     NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
     NSData *testKey = [keyChainTestKey dataUsingEncoding:NSUTF8StringEncoding];
-    NSData *testValue = [keyChainTestValue dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
+
+    [searchDictionary setObject:(id)kSecClassGenericPassword forKey:(id)kSecClass];
+    [searchDictionary setObject:testKey forKey:(id)kSecAttrGeneric];
+    [searchDictionary setObject:testKey forKey:(id)kSecAttrAccount];
+    [searchDictionary setObject:appId forKey:(id)kSecAttrService];
+
+  return searchDictionary;
+}
+
+
+- (void)testKeyChain {
+    
+    NSData *testValue1 = [keyChainTestValue1 dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *testValue2 = [keyChainTestValue2 dataUsingEncoding:NSUTF8StringEncoding];
 
     // Test SecItemAdd()
-    NSMutableDictionary *ItemAddDictionary = [[NSMutableDictionary alloc] init];
-    [ItemAddDictionary setObject:(id)kSecClassGenericPassword forKey:(id)kSecClass];
-    [ItemAddDictionary setObject:testKey forKey:(id)kSecAttrGeneric];
-    [ItemAddDictionary setObject:testKey forKey:(id)kSecAttrAccount];
-    [ItemAddDictionary setObject:appId forKey:(id)kSecAttrService];
-    [ItemAddDictionary setObject:testValue forKey:(id)kSecValueData];
-
-    SecItemAdd((CFDictionaryRef)ItemAddDictionary, NULL);
-    [ItemAddDictionary release];
+    NSMutableDictionary *itemAddDict = [self newKeyChainSearchDict];
+    [itemAddDict setObject:testValue1 forKey:(id)kSecValueData];
+    SecItemAdd((CFDictionaryRef)itemAddDict, NULL);
+    [itemAddDict release];
 
     // Test SecItemCopyMatching()
+    NSMutableDictionary *itemMatchDict = [self newKeyChainSearchDict];
+    CFTypeRef *result;
+    [itemMatchDict setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
+    [itemMatchDict setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
+    SecItemCopyMatching((CFDictionaryRef)itemMatchDict, result);
+    [itemMatchDict release];
 
+    // Test SecItemUpdate()
+    NSMutableDictionary *itemSearchDict = [self newKeyChainSearchDict];
+    NSMutableDictionary *itemUpdateDict = [[NSMutableDictionary alloc] init];
+    [itemUpdateDict setObject:testValue2 forKey:(id)kSecValueData];
+    SecItemUpdate((CFDictionaryRef) itemSearchDict, (CFDictionaryRef) itemUpdateDict);
+    [itemUpdateDict release];
+
+    // Test SecItemDelete()
+    SecItemDelete((CFDictionaryRef) itemSearchDict);
+    [itemSearchDict release];
 }
+
+
+- (void)testNSUserDefaults {
+    // TBD
+    /*
+    (NSUserDefaults *) defaults = [NSUserDefaults standardUserDefaults];
+
+    [defaults setObject:firstName forKey:@"firstName"];
+    [defaults setObject:lastName forKey:@"lastname"];
+    [defaults setInteger:age forKey:@"age"];
+    [defaults setObject:imageData forKey:@"image"];
+    [defaults synchronize];
+   */
+}
+
 
 - (void)testNSFileManager {
 
@@ -65,9 +107,9 @@ static NSData *testContent;
     [fileManager createFileAtPath:testFilePath contents:testContent attributes:nil];
     
     // Test ubiquityIdentityToken - iOS 6 only
-    if([fileManager respondsToSelector:@selector(ubiquityIdentityToken)]) {
-        [fileManager ubiquityIdentityToken];
-    }
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000
+    [fileManager ubiquityIdentityToken];
+#endif
 
     // Test contentsAtPath:
     NSData* readContent = [fileManager contentsAtPath:testFilePath];

@@ -1,5 +1,4 @@
 #import "CallTracer.h"
-#import "IntrospyPlistSerialization.h"
 #import "IntrospySQLiteStorage.h"
 
 
@@ -46,19 +45,31 @@
 	return false;
 }
 
-- (BOOL) addArgFromBool:(BOOL)boolean withKey:(NSString *)key {
+- (BOOL) addArgFromBOOL:(BOOL)boolean withKey:(NSString *)key {
 	/* add a BOOL argument to the plist of method arguments */
 	[args setValue:[NSNumber numberWithBool:boolean] forKey:key];
 	return true;
 }
 
-- (BOOL) addArgFromInt:(NSUInteger)val withKey:(NSString *)key {
+- (BOOL) addArgFromInteger:(NSUInteger)val withKey:(NSString *)key {
 	/* add a BOOL argument to the plist of method arguments */
 	[args setValue:[NSNumber numberWithInt:val] forKey:key];
 	return true;
 }
 
-- (BOOL) addArgFromUrl:(NSURL *)aURL withKey:(NSString *)key {
+- (BOOL) addArgFromFloat:(float)val withKey:(NSString *)key {
+	/* add a BOOL argument to the plist of method arguments */
+	[args setValue:[NSNumber numberWithFloat:val] forKey:key];
+	return true;
+}
+
+- (BOOL) addArgFromDouble:(double)val withKey:(NSString *)key {
+	/* add a BOOL argument to the plist of method arguments */
+	[args setValue:[NSNumber numberWithDouble:val] forKey:key];
+	return true;
+}
+
+- (BOOL) addArgFromURL:(NSURL *)aURL withKey:(NSString *)key {
 	/* creates a dictionary of the NSURL attributes and adds it to the plist */
 	if (aURL != nil) {
 		NSDictionary *url_dict;
@@ -99,7 +110,7 @@
 - (NSData *) serializeArgs {
 	/* serialize the NSDictionary of arguments into a plist */
 	NSError *error;
-	NSData *plist = [IntrospyPlistSerialization dataWithPropertyList:(id)args
+	NSData *plist = [NSPropertyListSerialization dataWithPropertyList:(id)args
    							     format:NSPropertyListXMLFormat_v1_0 // for testing
    							    options:0
    							      error:&error];

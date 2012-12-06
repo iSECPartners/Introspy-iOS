@@ -1,4 +1,5 @@
 #TARGET = iphone:5.1
+#ARCHS = armv6
 include theos/makefiles/common.mk
 
 APPLICATION_NAME = IntrospyTestApp

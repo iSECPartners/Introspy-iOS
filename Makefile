@@ -3,7 +3,7 @@
 include theos/makefiles/common.mk
 
 TWEAK_NAME = introspy
-introspy_FILES = Tweak.xmi CallTracer.m IntrospyPlistSerialization.m IntrospySQLiteStorage.m KeyChainHooks.m
+introspy_FILES = Tweak.xmi CallTracer.m IntrospySQLiteStorage.m KeyChainHooks.m
 introspy_LIBRARIES = sqlite3 
 
 introspy_FRAMEWORKS = UIKit, Foundation, Security

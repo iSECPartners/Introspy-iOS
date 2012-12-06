@@ -12,7 +12,7 @@ static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/
 
 
 // Hooks for ObjC methods rely on the Logos pre-processor
-// H4ck to split Logos hooking code into separate files: the files we're including here are not headers
+// H4ck to split Logos hooking code into separate files: we're including actual code, not headers
 IntrospySQLiteStorage *traceStorage;
 #include "DataStorageHooks.xm"
 
@@ -39,7 +39,7 @@ IntrospySQLiteStorage *traceStorage;
 
 	    	// Initialize hooks
 	    	// TODO: if Datastorage.is_enabled etc...
-	    	%init(DataStorage);
+	    	%init(DataStorageHooks);
 	    	[KeyChainHooks enableHooks];
 		}
 		else {

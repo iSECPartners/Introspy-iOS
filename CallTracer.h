@@ -13,8 +13,10 @@
 - (BOOL) addArgFromString:(NSString *)str withKey:(NSString *)key;
 - (BOOL) addArgFromData:(NSData *)str withKey:(NSString *)key;
 - (BOOL) addArgFromDictionary:(NSDictionary *)dict withKey:(NSString *)key;
-- (BOOL) addArgFromBool:(BOOL)boolean withKey:(NSString *)key;
-- (BOOL) addArgFromInt:(NSUInteger)val withKey:(NSString *)key;
-- (BOOL) addArgFromUrl:(NSURL *)aURL withKey:(NSString *)key;
+- (BOOL) addArgFromBOOL:(BOOL)boolean withKey:(NSString *)key;
+- (BOOL) addArgFromInteger:(NSUInteger)val withKey:(NSString *)key;
+- (BOOL) addArgFromFloat:(float)val withKey:(NSString *)key;
+- (BOOL) addArgFromDouble:(double)val withKey:(NSString *)key;
+- (BOOL) addArgFromURL:(NSURL *)aURL withKey:(NSString *)key;
 - (NSData *) serializeArgs;
 @end
