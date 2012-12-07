@@ -11,6 +11,7 @@
 - (void)testNSUserDefaults;
 - (void)testNSFileManager;
 - (void)testNSData;
+- (void)testNSInputStream;
 
 @end
 
