@@ -3,7 +3,7 @@
 #include <Security/Security.h>
 
 #import "KeyChainHooks.h"
-#import "IntrospySQLiteStorage.h"
+#import "../IntrospySQLiteStorage.h"
 
 
 // Nice global

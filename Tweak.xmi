@@ -8,13 +8,19 @@ static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/
 
 
 // Hooks for C functions directly use MobileSubstrate
-#import "KeyChainHooks.h"
+#import "hooks/KeyChainHooks.h"
 
 
 // Hooks for ObjC methods rely on the Logos pre-processor
 // H4ck to split Logos hooking code into separate files: we're including actual code, not headers
 IntrospySQLiteStorage *traceStorage;
-#include "DataStorageHooks.xm"
+
+%group DataStorageHooks
+#include "hooks/NSDataHooks.xm"
+#include "hooks/NSFileHandleHooks.xm"
+#include "hooks/NSFileManagerHooks.xm"
+#include "hooks/NSUserDefaultsHooks.xm"
+%end
 
 
 
