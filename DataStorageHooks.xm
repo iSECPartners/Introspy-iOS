@@ -126,7 +126,7 @@ IntrospySQLiteStorage *traceStorage;
 	return %orig(defaultName);
 }
 
-/* setObject:forKey: is called by every other setXXX functions. Not sure we want to hook it.
+/* object:forKey: is called by every other functions. Not sure we want to hook it.
 - (id)objectForKey:(NSString *)defaultName {
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSUserDefaults" andMethod:@"objectForKey:"];
 	[tracer addArgFromString:defaultName withKey:@"defaultName"];
@@ -318,13 +318,52 @@ IntrospySQLiteStorage *traceStorage;
 
 %hook NSFileHandle
 
-// TODO: Hook the rest of the API
-- (void)writeData:(NSData *)data {
-	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileHandle" andMethod:@"writeData:"];
-	[tracer addArgFromData:data withKey:@"data"];
++ (id)fileHandleForReadingAtPath:(NSString *)path {
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileHandle" andMethod:@"fileHandleForReadingAtPath:"];
+	[tracer addArgFromString:path withKey:@"path"];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
-	return %orig(data);
+	return %orig(path);	
+}
+
++ (id)fileHandleForReadingFromURL:(NSURL *)url error:(NSError **)error {
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileHandle" andMethod:@"fileHandleForReadingFromURL:error:"];
+	[tracer addArgFromURL:url withKey:@"url"];
+	[traceStorage saveTracedCall: tracer];
+	[tracer release];
+	return %orig(url, error);
+}
+
++ (id)fileHandleForUpdatingAtPath:(NSString *)path {
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileHandle" andMethod:@"fileHandleForUpdatingAtPath:"];
+	[tracer addArgFromString:path withKey:@"path"];
+	[traceStorage saveTracedCall: tracer];
+	[tracer release];
+	return %orig(path);
+}
+
++ (id)fileHandleForUpdatingURL:(NSURL *)url error:(NSError **)error {
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileHandle" andMethod:@"fileHandleForUpdatingURL:error:"];
+	[tracer addArgFromURL:url withKey:@"url"];
+	[traceStorage saveTracedCall: tracer];
+	[tracer release];
+	return %orig(url, error);
+}
+
++ (id)fileHandleForWritingAtPath:(NSString *)path {
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileHandle" andMethod:@"fileHandleForWritingAtPath:"];
+	[tracer addArgFromString:path withKey:@"path"];
+	[traceStorage saveTracedCall: tracer];
+	[tracer release];
+	return %orig(path);
+}
+
++ (id)fileHandleForWritingToURL:(NSURL *)url error:(NSError **)error {
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileHandle" andMethod:@"fileHandleForWritingToURL:error:"];
+	[tracer addArgFromURL:url withKey:@"url"];
+	[traceStorage saveTracedCall: tracer];
+	[tracer release];
+	return %orig(url, error);
 }
 
 %end
