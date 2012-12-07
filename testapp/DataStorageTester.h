@@ -12,6 +12,7 @@
 - (void)testNSFileManager;
 - (void)testNSData;
 - (void)testNSInputStream;
+- (void)testNSOutputStream;
 
 @end
 

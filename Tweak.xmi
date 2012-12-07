@@ -21,6 +21,7 @@ IntrospySQLiteStorage *traceStorage;
 #include "hooks/NSFileManagerHooks.xm"
 #include "hooks/NSUserDefaultsHooks.xm"
 #include "hooks/NSInputStreamHooks.xm"
+#include "hooks/NSOutputStreamHooks.xm"
 %end
 
 

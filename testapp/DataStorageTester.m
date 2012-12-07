@@ -29,12 +29,13 @@ static NSData *testContent;
 
 - (void)runAllTests {
 
-    //[self testKeyChain];
-    //[self testNSFileManager];
-    //[self testNSData];
-    //[self testNSUserDefaults];
-    //[self testNSFileHandle];
+    [self testKeyChain];
+    [self testNSFileManager];
+    [self testNSData];
+    [self testNSUserDefaults];
+    [self testNSFileHandle];
     [self testNSInputStream];
+    [self testNSOutputStream];
 }
 
 
@@ -97,10 +98,21 @@ static NSData *testContent;
     [itemSearchDict release];
 }
 
+- (void)testNSOutputStream {
+    NSOutputStream *testStream = [[NSOutputStream alloc] initToFileAtPath:testFilePath append:NO];
+    [testStream release];
+
+    NSOutputStream *testStream2 = [[NSOutputStream alloc] initWithURL:testURL append:NO];
+    [testStream2 release];    
+
+    [NSOutputStream outputStreamToFileAtPath:testFilePath append:NO];
+    [NSOutputStream outputStreamWithURL:testURL append:NO];
+}
+
 - (void)testNSInputStream {
     NSInputStream *testStream = [[NSInputStream alloc] initWithFileAtPath:testFilePath];
     [testStream release];
-    
+
     NSInputStream *testStream2 = [[NSInputStream alloc] initWithURL:testURL];
     [testStream2 release];    
 
