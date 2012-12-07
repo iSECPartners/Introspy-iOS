@@ -19,7 +19,7 @@
 
     // Data Storage
     DataStorageTester *dataStorageTests = [[DataStorageTester alloc] init];
-    [dataStorageTests runTests];
+    [dataStorageTests runAllTests];
     [dataStorageTests release];
    	// End
 

@@ -3,9 +3,10 @@
 }
 
 - (DataStorageTester *)init;
-- (void)runTests;
+- (void)runAllTests;
 
 - (NSMutableDictionary *)newKeyChainSearchDict;
+- (void)testNSFileHandle;
 - (void)testKeyChain;
 - (void)testNSUserDefaults;
 - (void)testNSFileManager;

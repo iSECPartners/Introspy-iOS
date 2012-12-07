@@ -27,12 +27,25 @@ static NSData *testContent;
 }
 
 
-- (void)runTests {
+- (void)runAllTests {
 
     [self testKeyChain];
     [self testNSFileManager];
     [self testNSData];
     [self testNSUserDefaults];
+    [self testNSFileHandle];
+}
+
+
+- (void)testNSFileHandle {
+
+    [NSFileHandle fileHandleForReadingAtPath:testFilePath];
+    [NSFileHandle fileHandleForUpdatingAtPath:testFilePath];
+    [NSFileHandle fileHandleForWritingAtPath:testFilePath];
+
+    [NSFileHandle fileHandleForReadingFromURL:testURL error:nil];
+    [NSFileHandle fileHandleForUpdatingURL:testURL error:nil];
+    [NSFileHandle fileHandleForWritingToURL:testURL error:nil];
 }
 
 
