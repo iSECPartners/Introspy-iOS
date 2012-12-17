@@ -14,7 +14,6 @@
 	args = [[NSMutableDictionary alloc] init];
 	className = clazz;
 	methodName = meth;
-	NSLog(@"CallTracer::initWithClass: %@::%@", clazz, meth);
 	return self;
 }
 

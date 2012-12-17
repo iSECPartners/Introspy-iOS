@@ -5,6 +5,7 @@
 
 
 // Database settings
+static BOOL logToConsole = TRUE;
 static NSString *defaultDBFileFormat = @"~/introspy-%@.db"; // Becomes ~/introspy-<appName>.db
 static const char createTableStmtStr[] = "CREATE TABLE tracedCalls (class TEXT, method TEXT, arguments TEXT)";
 static const char saveTracedCallStmtStr[] = "INSERT INTO tracedCalls VALUES (?1, ?2, ?3)";
@@ -64,7 +65,6 @@ static sqlite3 *dbConnection;
 	sqlite3_bind_text(saveTracedCallStmt, 1, [ [tracedCall className] UTF8String], -1, nil);
 	sqlite3_bind_text(saveTracedCallStmt, 2, [ [tracedCall methodName] UTF8String], -1, nil);
 
-	// Store arguments in plist format as a blob
 	NSData *plist = [tracedCall serializeArgs];
 	if (plist == nil) {
 		NSLog(@"IntrospySQLiteStorage::saveTraceCall: can't print plist");
@@ -72,12 +72,13 @@ static sqlite3 *dbConnection;
 	}
 
 	NSString *sPlist = [[NSString alloc] initWithData:plist encoding:NSUTF8StringEncoding];
-	NSLog(@"*****************************************************");	
-	NSLog(@"%@", sPlist);
-	NSLog(@"*****************************************************");	
 	sqlite3_bind_text(saveTracedCallStmt, 3, [sPlist UTF8String], -1, nil);
-    [sPlist release];
-	
+
+    if (logToConsole) {
+        NSLog(@"\n*****Introspy*****\nCalled %@::%@ with arguments:\n%@\n******************\n", [tracedCall className], [tracedCall methodName], sPlist);
+    }
+
+    [sPlist release];	
 	// Do the query
     if (sqlite3_step(saveTracedCallStmt) != SQLITE_DONE) {
         NSLog(@"IntrospySQLiteStorage - Commit Failed!");
