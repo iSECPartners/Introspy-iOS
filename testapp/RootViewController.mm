@@ -1,5 +1,9 @@
 #import "RootViewController.h"
-#import "DataStorageTester.h"
+
+#import "FileSystemTester.h"
+#import "UserPreferencesTester.h"
+#import "KeyChainTester.h"
+
 
 @implementation RootViewController
 - (void)loadView {
@@ -18,10 +22,15 @@
     [alert release];
 
     // Data Storage
-    DataStorageTester *dataStorageTests = [[DataStorageTester alloc] init];
-    [dataStorageTests runAllTests];
-    [dataStorageTests release];
-   	// End
+    FileSystemTester *fileSystemTests = [[FileSystemTester alloc] init];
+    [fileSystemTests runAllTests];
+    [fileSystemTests release];
+
+    // KeyChain
+    [KeyChainTester runAllTests];
+
+    // User Preferences
+    [UserPreferencesTester runAllTests];
 
 }
 @end

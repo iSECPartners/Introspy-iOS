@@ -1,15 +1,12 @@
-#import "DataStorageTester.h"
+#import "FileSystemTester.h"
 #include <Security/Security.h>
 
-@implementation DataStorageTester : NSObject 
+@implementation FileSystemTester : NSObject 
 
 
 // Testing settings
 static NSString *testFilePath = @"~/introspytest.file";
 static NSString *testContentStr = @"introspy testing 12345";
-static NSString *keyChainTestKey = @"IntrospyPassword";
-static NSString *keyChainTestValue1 = @"s3cr3t";
-static NSString *keyChainTestValue2 = @"p@ssw0rd";
 
 
 // Internal stuff
@@ -17,10 +14,9 @@ static NSURL *testURL;
 static NSData *testContent;
 
 
-- (DataStorageTester *)init {
+- (FileSystemTester *)init {
     self = [super init];
     testFilePath = [testFilePath stringByExpandingTildeInPath];
-    NSLog(@"TEST PATH = %@", [testFilePath stringByExpandingTildeInPath]);
     testURL = [NSURL fileURLWithPath:testFilePath];
     testContent = [testContentStr dataUsingEncoding: [NSString defaultCStringEncoding]];
     return self;
@@ -29,10 +25,8 @@ static NSData *testContent;
 
 - (void)runAllTests {
 
-    [self testKeyChain];
     [self testNSFileManager];
     [self testNSData];
-    [self testNSUserDefaults];
     [self testNSFileHandle];
     [self testNSInputStream];
     [self testNSOutputStream];
@@ -50,53 +44,6 @@ static NSData *testContent;
     [NSFileHandle fileHandleForWritingToURL:testURL error:nil];
 }
 
-
-// Utility function for the keyChain tests
-- (NSMutableDictionary *)newKeyChainSearchDict {
-
-    NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
-    NSData *testKey = [keyChainTestKey dataUsingEncoding:NSUTF8StringEncoding];
-    NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
-
-    [searchDictionary setObject:(id)kSecClassGenericPassword forKey:(id)kSecClass];
-    [searchDictionary setObject:testKey forKey:(id)kSecAttrGeneric];
-    [searchDictionary setObject:testKey forKey:(id)kSecAttrAccount];
-    [searchDictionary setObject:appId forKey:(id)kSecAttrService];
-
-  return searchDictionary;
-}
-
-
-- (void)testKeyChain {
-    
-    NSData *testValue1 = [keyChainTestValue1 dataUsingEncoding:NSUTF8StringEncoding];
-    NSData *testValue2 = [keyChainTestValue2 dataUsingEncoding:NSUTF8StringEncoding];
-
-    // Test SecItemAdd()
-    NSMutableDictionary *itemAddDict = [self newKeyChainSearchDict];
-    [itemAddDict setObject:testValue1 forKey:(id)kSecValueData];
-    SecItemAdd((CFDictionaryRef)itemAddDict, NULL);
-    [itemAddDict release];
-
-    // Test SecItemCopyMatching()
-    NSMutableDictionary *itemMatchDict = [self newKeyChainSearchDict];
-    CFTypeRef *result;
-    [itemMatchDict setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
-    [itemMatchDict setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
-    SecItemCopyMatching((CFDictionaryRef)itemMatchDict, result);
-    [itemMatchDict release];
-
-    // Test SecItemUpdate()
-    NSMutableDictionary *itemSearchDict = [self newKeyChainSearchDict];
-    NSMutableDictionary *itemUpdateDict = [[NSMutableDictionary alloc] init];
-    [itemUpdateDict setObject:testValue2 forKey:(id)kSecValueData];
-    SecItemUpdate((CFDictionaryRef) itemSearchDict, (CFDictionaryRef) itemUpdateDict);
-    [itemUpdateDict release];
-
-    // Test SecItemDelete()
-    SecItemDelete((CFDictionaryRef) itemSearchDict);
-    [itemSearchDict release];
-}
 
 - (void)testNSOutputStream {
     NSOutputStream *testStream = [[NSOutputStream alloc] initToFileAtPath:testFilePath append:NO];
@@ -118,49 +65,6 @@ static NSData *testContent;
 
     [NSInputStream inputStreamWithFileAtPath:testFilePath];
     [NSInputStream inputStreamWithURL:testURL];
-}
-
-- (void)testNSUserDefaults {
-
-    NSMutableString *testKey = [NSMutableString stringWithCapacity:15];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    [testKey setString:@"testBool"];
-    [defaults setBool:YES forKey:testKey];
-    [defaults boolForKey:testKey];
-
-    [testKey setString:@"testFloat"];
-    [defaults setFloat:5.5 forKey:testKey];
-    [defaults floatForKey:testKey];
-
-    [testKey setString:@"testInt"];
-    [defaults setInteger:1 forKey:testKey];
-    [defaults integerForKey:testKey];
-
-    [testKey setString:@"testDouble"];
-    [defaults setDouble:1 forKey:testKey];
-    [defaults doubleForKey:testKey];
-
-    [testKey setString:@"testObject"];
-    [defaults setObject:@"testString" forKey:testKey];
-    [defaults objectForKey:testKey];
-    [defaults stringForKey:testKey];
-
-    NSArray *testArray;
-    [testKey setString:@"testArray"];
-    testArray = [NSArray arrayWithObjects:@"test1", @"test2", nil];
-    [defaults setObject:testArray forKey:testKey];
-    [defaults stringArrayForKey:testKey];
-    [defaults arrayForKey:testKey];
-    [defaults dictionaryForKey:testKey];
-    
-    [testKey setString:@"testData"];
-    [defaults setObject:testContent forKey:testKey];
-    [defaults dataForKey:testKey];
-
-    [testKey setString:@"testURL"];
-    [defaults setURL:testURL forKey:testKey];
-    [defaults URLForKey:testKey];    
 }
 
 
