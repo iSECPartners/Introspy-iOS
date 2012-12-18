@@ -60,28 +60,33 @@ static sqlite3 *dbConnection;
 
 
 - (BOOL)saveTracedCall: (CallTracer*) tracedCall {
+    int queryResult = SQLITE_ERROR;
+    
+    // Serialize arguments to an XML plist
+    NSData *plist = [tracedCall serializeArgs];
+    if (plist == nil) {
+        NSLog(@"IntrospySQLiteStorage::saveTraceCall: can't print plist");
+        return NO;
+    }
+    NSString *sPlist = [[NSString alloc] initWithData:plist encoding:NSUTF8StringEncoding];
 
-	sqlite3_reset(saveTracedCallStmt);
-	sqlite3_bind_text(saveTracedCallStmt, 1, [ [tracedCall className] UTF8String], -1, nil);
-	sqlite3_bind_text(saveTracedCallStmt, 2, [ [tracedCall methodName] UTF8String], -1, nil);
-
-	NSData *plist = [tracedCall serializeArgs];
-	if (plist == nil) {
-		NSLog(@"IntrospySQLiteStorage::saveTraceCall: can't print plist");
-		return NO;
-	}
-
-	NSString *sPlist = [[NSString alloc] initWithData:plist encoding:NSUTF8StringEncoding];
-	sqlite3_bind_text(saveTracedCallStmt, 3, [sPlist UTF8String], -1, nil);
+    // Do the query; has to be atomic or we get random SQLITE_PROTOCOL errors
+    @synchronized(defaultDBFileFormat) {
+    	sqlite3_reset(saveTracedCallStmt);
+    	sqlite3_bind_text(saveTracedCallStmt, 1, [ [tracedCall className] UTF8String], -1, nil);
+    	sqlite3_bind_text(saveTracedCallStmt, 2, [ [tracedCall methodName] UTF8String], -1, nil);
+    	sqlite3_bind_text(saveTracedCallStmt, 3, [sPlist UTF8String], -1, nil);
+        queryResult = sqlite3_step(saveTracedCallStmt);
+    }
 
     if (logToConsole) {
         NSLog(@"\n*****Introspy*****\nCalled %@::%@ with arguments:\n%@\n******************\n", [tracedCall className], [tracedCall methodName], sPlist);
     }
 
     [sPlist release];	
-	// Do the query
-    if (sqlite3_step(saveTracedCallStmt) != SQLITE_DONE) {
-        NSLog(@"IntrospySQLiteStorage - Commit Failed!");
+
+    if (queryResult != SQLITE_DONE) {
+        NSLog(@"IntrospySQLiteStorage - Commit Failed: %x!", queryResult);
     	return NO;
     }
     return YES;
