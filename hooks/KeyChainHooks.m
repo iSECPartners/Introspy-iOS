@@ -11,12 +11,13 @@ extern IntrospySQLiteStorage *traceStorage;
 
 
 // Hook SecItemAdd()
+// Will crash with a certificate
 static OSStatus (*original_SecItemAdd)(CFDictionaryRef attributes, CFTypeRef *result);
 
 static OSStatus replaced_SecItemAdd(CFDictionaryRef attributes, CFTypeRef *result){
     CallTracer *tracer = [[CallTracer alloc] initWithClass:@"C" andMethod:@"SecItemAdd"];
     [tracer addArgFromDictionary:(NSDictionary*)attributes withKey:@"attributes"];
-    [traceStorage saveTracedCall: tracer];
+    //[traceStorage saveTracedCall: tracer];
     [tracer release];
     return original_SecItemAdd(attributes, result);
     // TODO: Log result as well ?
@@ -60,6 +61,20 @@ static OSStatus replaced_SecItemUpdate(CFDictionaryRef query, CFDictionaryRef at
 }
 
 
+// Hook SecPKCS12Import() - TBD
+/*
+static OSStatus (*original_SecPKCS12Import)(CFDataRef pkcs12_data, CFDictionaryRef options, CFArrayRef *items);
+
+static OSStatus replaced_SecPKCS12Import(CFDataRef pkcs12_data, CFDictionaryRef options, CFArrayRef *items) {
+    CallTracer *tracer = [[CallTracer alloc] initWithClass:@"C" andMethod:@"SecPKCS12Import"];
+    [tracer addArgFromDictionary:(NSDictionary*)options withKey:@"options"];
+    [traceStorage saveTracedCall: tracer];
+    [tracer release];  
+    return original_SecPKCS12Import(pkcs12_data, options, items);
+
+}
+*/
+
 @implementation KeyChainHooks : NSObject 
 
 + (void)enableHooks {
@@ -67,6 +82,8 @@ static OSStatus replaced_SecItemUpdate(CFDictionaryRef query, CFDictionaryRef at
     MSHookFunction(SecItemCopyMatching, replaced_SecItemCopyMatching, (void **) &original_SecItemCopyMatching);
     MSHookFunction(SecItemDelete, replaced_SecItemDelete, (void **) &original_SecItemDelete);
     MSHookFunction(SecItemUpdate, replaced_SecItemUpdate, (void **) &original_SecItemUpdate);
+    //MSHookFunction((void *) SecPKCS12Import,(void *)  replaced_SecPKCS12Import, (void **) &original_SecPKCS12Import);
+
     // TODO: Hook the rest of the keychain API ?
 }
 
