@@ -16,16 +16,15 @@ static sqlite3_stmt *saveTracedCallStmt;
 static sqlite3 *dbConnection;
 
 
-- (IntrospySQLiteStorage *)initWithDefaultDBFilePath {
+- (IntrospySQLiteStorage *)initWithDefaultDBFilePathAndlogToConsole: (BOOL) shouldLog {
 	// Put application name in the DB's filename to avoid confusion
     NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
 	NSString *DBFilePath = [NSString stringWithFormat:defaultDBFileFormat, appId];
-	NSLog(@"DB PATH = %@", [DBFilePath stringByExpandingTildeInPath]);
-	return [self initWithDBFilePath: [DBFilePath stringByExpandingTildeInPath]];
+	return [self initWithDBFilePath: [DBFilePath stringByExpandingTildeInPath] andLogToConsole: shouldLog];
 }
 
 
-- (IntrospySQLiteStorage *)initWithDBFilePath:(NSString *) DBFilePath {
+- (IntrospySQLiteStorage *)initWithDBFilePath:(NSString *) DBFilePath andLogToConsole: (BOOL) shouldLog {
     self = [super init];
     sqlite3 *dbConn;
 
@@ -55,6 +54,7 @@ static sqlite3 *dbConnection;
     
     saveTracedCallStmt = statement;
     dbConnection = dbConn;
+    logToConsole = shouldLog;
     return self;
 }
 
@@ -80,7 +80,7 @@ static sqlite3 *dbConnection;
     }
 
     if (logToConsole) {
-        NSLog(@"\n*****Introspy*****\nCalled %@::%@ with arguments:\n%@\n******************\n", [tracedCall className], [tracedCall methodName], sPlist);
+        NSLog(@"\n*****Introspy*****\nCalled %@::%@ with arguments:\n\n%@\n******************\n", [tracedCall className], [tracedCall methodName], sPlist);
     }
 
     [sPlist release];	

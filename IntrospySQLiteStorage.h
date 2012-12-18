@@ -4,8 +4,8 @@
 
 }
 
-- (IntrospySQLiteStorage *)initWithDefaultDBFilePath;
-- (IntrospySQLiteStorage *)initWithDBFilePath: (NSString *) DBFilePath;
+- (IntrospySQLiteStorage *)initWithDefaultDBFilePathAndlogToConsole: (BOOL) shouldLog;
+- (IntrospySQLiteStorage *)initWithDBFilePath:(NSString *) DBFilePath andLogToConsole: (BOOL) shouldLog;
 - (BOOL)saveTracedCall: (CallTracer*) tracedCall;
 
 

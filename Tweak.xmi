@@ -50,8 +50,9 @@ IntrospySQLiteStorage *traceStorage;
 
     if ([shouldHook boolValue]) { 
 		// Initialize DB storage
-		// TODO: if logToConsole
-		traceStorage = [[IntrospySQLiteStorage alloc] initWithDefaultDBFilePath];
+		// TODO: shouldLog = [preferences shouldLog]
+		BOOL shouldLog = YES;
+		traceStorage = [[IntrospySQLiteStorage alloc] initWithDefaultDBFilePathAndlogToConsole: shouldLog];
 		if (traceStorage != nil) {
 
 	    	// Initialize hooks
