@@ -11,16 +11,19 @@ extern IntrospySQLiteStorage *traceStorage;
 
 
 // Hook SecItemAdd()
-// Will crash with a certificate
+// Will crash with a certificate. TODO: Sanitize the dictionnary before logging it
 static OSStatus (*original_SecItemAdd)(CFDictionaryRef attributes, CFTypeRef *result);
 
 static OSStatus replaced_SecItemAdd(CFDictionaryRef attributes, CFTypeRef *result){
+    OSStatus origResult = original_SecItemAdd(attributes, result);
     CallTracer *tracer = [[CallTracer alloc] initWithClass:@"C" andMethod:@"SecItemAdd"];
-    [tracer addArgFromDictionary:(NSDictionary*)attributes withKey:@"attributes"];
-    //[traceStorage saveTracedCall: tracer];
+    [tracer addArgFromPlistObject:(NSDictionary*)attributes withKey:@"attributes"];
+    // Store the pointer value of result for now
+    [tracer addArgFromPlistObject: [NSNumber numberWithUnsignedInt: (unsigned int)result] withKey:@"result"];
+    [tracer addReturnValueFromPlistObject: [NSNumber numberWithInt:origResult]];
+    [traceStorage saveTracedCall: tracer];
     [tracer release];
-    return original_SecItemAdd(attributes, result);
-    // TODO: Log result as well ?
+    return origResult;
 }
 
 
@@ -28,11 +31,14 @@ static OSStatus replaced_SecItemAdd(CFDictionaryRef attributes, CFTypeRef *resul
 static OSStatus (*original_SecItemCopyMatching)(CFDictionaryRef query, CFTypeRef *result);
 
 static OSStatus replaced_SecItemCopyMatching(CFDictionaryRef query, CFTypeRef *result){
+    OSStatus origResult = original_SecItemCopyMatching(query, result);
     CallTracer *tracer = [[CallTracer alloc] initWithClass:@"C" andMethod:@"SecItemCopyMatching"];
-    [tracer addArgFromDictionary:(NSDictionary*)query withKey:@"query"];
+    [tracer addArgFromPlistObject:(NSDictionary*)query withKey:@"query"];
+    [tracer addArgFromPlistObject: [NSNumber numberWithUnsignedInt: (unsigned int)result] withKey:@"result"];
+    [tracer addReturnValueFromPlistObject: [NSNumber numberWithInt:origResult]];
     [traceStorage saveTracedCall: tracer];
     [tracer release];
-    return original_SecItemCopyMatching(query, result);
+    return origResult;
 }
 
 
@@ -40,11 +46,13 @@ static OSStatus replaced_SecItemCopyMatching(CFDictionaryRef query, CFTypeRef *r
 static OSStatus (*original_SecItemDelete)(CFDictionaryRef query);
 
 static OSStatus replaced_SecItemDelete(CFDictionaryRef query){
+    OSStatus origResult = original_SecItemDelete(query);
     CallTracer *tracer = [[CallTracer alloc] initWithClass:@"C" andMethod:@"SecItemDelete"];
-    [tracer addArgFromDictionary:(NSDictionary*)query withKey:@"query"];
+    [tracer addArgFromPlistObject:(NSDictionary*)query withKey:@"query"];
+    [tracer addReturnValueFromPlistObject: [NSNumber numberWithInt:origResult]];
     [traceStorage saveTracedCall: tracer];
     [tracer release];
-    return original_SecItemDelete(query);
+    return origResult;
 }
 
 
@@ -52,16 +60,18 @@ static OSStatus replaced_SecItemDelete(CFDictionaryRef query){
 static OSStatus (*original_SecItemUpdate)(CFDictionaryRef query, CFDictionaryRef attributesToUpdate);
 
 static OSStatus replaced_SecItemUpdate(CFDictionaryRef query, CFDictionaryRef attributesToUpdate){
+    OSStatus origResult = original_SecItemUpdate(query, attributesToUpdate);
     CallTracer *tracer = [[CallTracer alloc] initWithClass:@"C" andMethod:@"SecItemUpdate"];
-    [tracer addArgFromDictionary:(NSDictionary*)query withKey:@"query"];
-    [tracer addArgFromDictionary:(NSDictionary*)attributesToUpdate withKey:@"attributesToUpdate"];
+    [tracer addArgFromPlistObject:(NSDictionary*)query withKey:@"query"];
+    [tracer addArgFromPlistObject:(NSDictionary*)attributesToUpdate withKey:@"attributesToUpdate"];
+    [tracer addReturnValueFromPlistObject: [NSNumber numberWithInt:origResult]];
     [traceStorage saveTracedCall: tracer];
     [tracer release];
-    return original_SecItemUpdate(query, attributesToUpdate);
+    return origResult;
 }
 
 
-// Hook SecPKCS12Import() - TBD
+// Hook SecPKCS12Import() - TODO: Useful for secure containers that use client certs to connect to the server
 /*
 static OSStatus (*original_SecPKCS12Import)(CFDataRef pkcs12_data, CFDictionaryRef options, CFArrayRef *items);
 

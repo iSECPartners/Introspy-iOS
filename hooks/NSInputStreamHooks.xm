@@ -16,35 +16,44 @@ IntrospySQLiteStorage *traceStorage;
 
 
 + (id)inputStreamWithFileAtPath:(NSString *)path {
+	id origResult = %orig(path);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSInputStream" andMethod:@"inputStreamWithFileAtPath:"];
-	[tracer addArgFromString:path withKey:@"path"];
+	[tracer addArgFromPlistObject:path withKey:@"path"];
+	// Just store the pointer value for the return value
+	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
-	return %orig(path);
+	return origResult;
 }
 
 + (id)inputStreamWithURL:(NSURL *)url {
+	id origResult = %orig(url);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSInputStream" andMethod:@"inputStreamWithURL:"];
 	[tracer addArgFromURL:url withKey:@"url"];
+	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
-	return %orig(url);
+	return origResult;
 }
 
 - (id)initWithFileAtPath:(NSString *)path {
+	id origResult = %orig(path);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSInputStream" andMethod:@"initWithFileAtPath:"];
-	[tracer addArgFromString:path withKey:@"path"];
+	[tracer addArgFromPlistObject:path withKey:@"path"];
+	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
-	return %orig(path);
+	return origResult;
 }
 
 - (id)initWithURL:(NSURL *)url {
+	id origResult = %orig(url);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSInputStream" andMethod:@"initWithURL:"];
 	[tracer addArgFromURL:url withKey:@"url"];
+	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
-	return %orig(url);
+	return origResult;
 }
 
 

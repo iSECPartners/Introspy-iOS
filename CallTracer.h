@@ -8,15 +8,19 @@
 @property (retain) NSDictionary *args;
 @property (retain) NSString *className;
 @property (retain) NSString *methodName;
+@property (retain) NSDictionary *returnValue;
 
 - (CallTracer*)initWithClass:(NSString *)clazz andMethod:(NSString *)meth;
-- (BOOL) addArgFromString:(NSString *)str withKey:(NSString *)key;
-- (BOOL) addArgFromData:(NSData *)str withKey:(NSString *)key;
-- (BOOL) addArgFromDictionary:(NSDictionary *)dict withKey:(NSString *)key;
-- (BOOL) addArgFromBOOL:(BOOL)boolean withKey:(NSString *)key;
-- (BOOL) addArgFromInteger:(NSUInteger)val withKey:(NSString *)key;
-- (BOOL) addArgFromFloat:(float)val withKey:(NSString *)key;
-- (BOOL) addArgFromDouble:(double)val withKey:(NSString *)key;
+
+// Plist objects are string, number, boolean, date, data, dictionary and array.
+- (BOOL) addArgFromPlistObject:(id) arg withKey:(NSString *)key;
+
+// Return value should be transformed into an NSNumber
+- (BOOL) addReturnValueFromPlistObject:(id) result;
 - (BOOL) addArgFromURL:(NSURL *)aURL withKey:(NSString *)key;
+
 - (NSData *) serializeArgs;
+- (NSData *) serializeReturnValue;
+
+
 @end

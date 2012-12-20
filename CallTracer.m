@@ -7,6 +7,7 @@
 @synthesize args;
 @synthesize className;
 @synthesize methodName;
+@synthesize returnValue;
 
 - (CallTracer*)initWithClass:(NSString *)clazz andMethod:(NSString *)meth {
 	/* initialize the call tracer with class and method names */
@@ -14,59 +15,26 @@
 	args = [[NSMutableDictionary alloc] init];
 	className = clazz;
 	methodName = meth;
+	returnValue = [[NSMutableDictionary alloc] init];
 	return self;
 }
 
-- (BOOL) addArgFromString:(NSString *)str withKey:(NSString *)key {
-	/* add a string argument to the plist of method arguments */
-	if(str != nil) {
-		[args setValue:str forKey:key];
+- (BOOL) addArgFromPlistObject:(id) arg withKey:(NSString *)key {
+	if(arg != nil) {
+		[args setValue:arg forKey:key];
 		return true;
 	}
 	return false;
 }
 
-- (BOOL) addArgFromData:(NSData *)data withKey:(NSString *)key {
-	/* add an NSData argument to the plist of method arguments */
-	if (data != nil) {
-		[args setValue:data forKey:key];
+- (BOOL) addReturnValueFromPlistObject:(id) result {
+	if(result != nil) {
+		[returnValue setValue:result forKey:@"returnValue"];
 		return true;
 	}
 	return false;
 }
 
-- (BOOL) addArgFromDictionary:(NSDictionary *)dict withKey:(NSString *)key {
-	/* add an NSDictionary argument to the plist of method arguments */
-	if (dict != nil) {
-		[args setValue:dict forKey:key];
-		return true;
-	}
-	return false;
-}
-
-- (BOOL) addArgFromBOOL:(BOOL)boolean withKey:(NSString *)key {
-	/* add a BOOL argument to the plist of method arguments */
-	[args setValue:[NSNumber numberWithBool:boolean] forKey:key];
-	return true;
-}
-
-- (BOOL) addArgFromInteger:(NSUInteger)val withKey:(NSString *)key {
-	/* add a BOOL argument to the plist of method arguments */
-	[args setValue:[NSNumber numberWithInt:val] forKey:key];
-	return true;
-}
-
-- (BOOL) addArgFromFloat:(float)val withKey:(NSString *)key {
-	/* add a BOOL argument to the plist of method arguments */
-	[args setValue:[NSNumber numberWithFloat:val] forKey:key];
-	return true;
-}
-
-- (BOOL) addArgFromDouble:(double)val withKey:(NSString *)key {
-	/* add a BOOL argument to the plist of method arguments */
-	[args setValue:[NSNumber numberWithDouble:val] forKey:key];
-	return true;
-}
 
 - (BOOL) addArgFromURL:(NSURL *)aURL withKey:(NSString *)key {
 	/* creates a dictionary of the NSURL attributes and adds it to the plist */
@@ -99,7 +67,7 @@
 		} else {
 		  return false;
 		}
-		[self addArgFromDictionary:url_dict withKey:key];
+		[self addArgFromPlistObject:url_dict withKey:key];
 		return true;
 	}
 	return false;
@@ -120,9 +88,24 @@
 	return plist;
 }
 
+- (NSData *) serializeReturnValue {
+	/* serialize the NSDictionary of return value into a plist */
+	NSError *error;
+	NSData *plist = [NSPropertyListSerialization dataWithPropertyList:(id)returnValue
+   							     format:NSPropertyListXMLFormat_v1_0 // for testing
+   							    options:0
+   							      error:&error];
+//	if (error != nil) {
+//		NSLog(@"CallTracer::serializeArgs: %@", error);
+//		return nil;
+//	}
+	return plist;	
+}
+
 - (void)dealloc
 {
     [args release];
+    [returnValue release];
     [super dealloc];
 }
 
