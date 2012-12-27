@@ -26,7 +26,7 @@ IntrospySQLiteStorage *traceStorage;
 + (id)outputStreamWithURL:(NSURL *)url append:(BOOL)shouldAppend {
 	id origResult = %orig(url, shouldAppend);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSOutputStream" andMethod:@"outputStreamWithURL:append:"];
-	[tracer addArgFromURL:url withKey:@"url"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: url] withKey:@"url"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithBool: shouldAppend] withKey:@"shouldAppend"];
 	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall: tracer];
@@ -48,7 +48,7 @@ IntrospySQLiteStorage *traceStorage;
 - (id)initWithURL:(NSURL *)url append:(BOOL)shouldAppend {
 	id origResult = %orig(url, shouldAppend);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSOutputStream" andMethod:@"initWithURL:append:"];
-	[tracer addArgFromURL:url withKey:@"url"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: url] withKey:@"url"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithBool: shouldAppend] withKey:@"shouldAppend"];
 	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall: tracer];

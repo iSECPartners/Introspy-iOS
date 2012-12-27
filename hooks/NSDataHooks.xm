@@ -38,7 +38,7 @@ IntrospySQLiteStorage *traceStorage;
 - (BOOL)writeToURL:(NSURL *)aURL atomically:(BOOL)flag {
 	BOOL origResult = %orig(aURL, flag);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"writeToURL:atomically:"];
-	[tracer addArgFromURL:aURL withKey:@"aURL"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: aURL] withKey:@"aURL"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithBool: flag] withKey:@"flag"];
 	[tracer addReturnValueFromPlistObject:[NSNumber numberWithBool: origResult]];
 	[traceStorage saveTracedCall: tracer];
@@ -49,7 +49,7 @@ IntrospySQLiteStorage *traceStorage;
 - (BOOL)writeToURL:(NSURL *)aURL options:(NSDataWritingOptions)mask error:(NSError **)errorPtr {
 	BOOL origResult = %orig(aURL, mask, errorPtr);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"writeToURL:options:error:"];
-	[tracer addArgFromURL:aURL withKey:@"aURL"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: aURL] withKey:@"aURL"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithInteger:mask] withKey:@"mask"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) errorPtr] withKey:@"errorPtr"];
 	[tracer addReturnValueFromPlistObject:[NSNumber numberWithBool: origResult]];
@@ -84,7 +84,7 @@ IntrospySQLiteStorage *traceStorage;
 + (id)dataWithContentsOfURL:(NSURL *)aURL {
 	id origResult = %orig(aURL);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"dataWithContentsOfURL:"];
-	[tracer addArgFromURL:aURL withKey:@"aURL"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: aURL] withKey:@"aURL"];
 	[tracer addReturnValueFromPlistObject: origResult];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
@@ -94,7 +94,7 @@ IntrospySQLiteStorage *traceStorage;
 + (id)dataWithContentsOfURL:(NSURL *)aURL options:(NSDataReadingOptions)mask error:(NSError **)errorPtr {
 	id origResult = %orig(aURL, mask, errorPtr);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"dataWithContentsOfURL:options:error:"];
-	[tracer addArgFromURL:aURL withKey:@"aURL"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: aURL] withKey:@"aURL"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithInteger:mask] withKey:@"mask"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) errorPtr] withKey:@"errorPtr"];
 	[tracer addReturnValueFromPlistObject: origResult];
@@ -128,7 +128,7 @@ IntrospySQLiteStorage *traceStorage;
 - (id)initWithContentsOfURL:(NSURL *)aURL {
 	id origResult = %orig(aURL);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"initWithContentsOfURL:"];
-	[tracer addArgFromURL:aURL withKey:@"aURL"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: aURL] withKey:@"aURL"];
 	[tracer addReturnValueFromPlistObject: origResult];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
@@ -138,7 +138,7 @@ IntrospySQLiteStorage *traceStorage;
 - (id)initWithContentsOfURL:(NSURL *)aURL options:(NSDataReadingOptions)mask error:(NSError **)errorPtr {
 	id origResult = %orig(aURL, mask, errorPtr);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"initWithContentsOfURL:options:error:"];
-	[tracer addArgFromURL:aURL withKey:@"aURL"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: aURL] withKey:@"aURL"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithInteger:mask] withKey:@"mask"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) errorPtr] withKey:@"errorPtr"];
 	[tracer addReturnValueFromPlistObject: origResult];

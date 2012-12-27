@@ -25,7 +25,7 @@ IntrospySQLiteStorage *traceStorage;
 + (id)fileHandleForReadingFromURL:(NSURL *)url error:(NSError **)error {
 	id origResult = %orig(url, error);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileHandle" andMethod:@"fileHandleForReadingFromURL:error:"];
-	[tracer addArgFromURL:url withKey:@"url"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: url] withKey:@"url"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) error] withKey:@"error"];
 	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall: tracer];
@@ -46,7 +46,7 @@ IntrospySQLiteStorage *traceStorage;
 + (id)fileHandleForUpdatingURL:(NSURL *)url error:(NSError **)error {
 	id origResult = %orig(url, error);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileHandle" andMethod:@"fileHandleForUpdatingURL:error:"];
-	[tracer addArgFromURL:url withKey:@"url"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: url] withKey:@"url"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) error] withKey:@"error"];
 	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall: tracer];
@@ -67,7 +67,7 @@ IntrospySQLiteStorage *traceStorage;
 + (id)fileHandleForWritingToURL:(NSURL *)url error:(NSError **)error {
 	id origResult = %orig(url, error);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileHandle" andMethod:@"fileHandleForWritingToURL:error:"];
-	[tracer addArgFromURL:url withKey:@"url"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: url] withKey:@"url"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) error] withKey:@"error"];
 	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall: tracer];

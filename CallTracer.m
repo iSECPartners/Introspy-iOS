@@ -36,44 +36,6 @@
 }
 
 
-- (BOOL) addArgFromURL:(NSURL *)aURL withKey:(NSString *)key {
-	/* creates a dictionary of the NSURL attributes and adds it to the plist */
-	if (aURL != nil) {
-		NSDictionary *url_dict;
-		if ([[aURL scheme] isEqualToString:@"file"]) {
-		  url_dict = [NSDictionary dictionaryWithObjects:
-				   [NSArray arrayWithObjects: [aURL absoluteString],
-							      nil]
-						     forKeys: [NSArray arrayWithObjects:
-						    	      @"absoluteString",
-							      nil]];
-		} else if ([[aURL scheme] isEqualToString:@"http"]) {
-		  url_dict = [NSDictionary dictionaryWithObjects:
-				   [NSArray arrayWithObjects: [aURL absoluteString],
-				 			      [aURL scheme],
-							      [aURL host],
-							      [aURL port],
-							      [aURL path],
-							      [aURL parameterString],
-							      [aURL query], nil]
-						     forKeys: [NSArray arrayWithObjects:
-						    	      @"absoluteString",
-						    	      @"scheme",
-							      @"host",
-							      @"port",
-							      @"path",
-							      @"parameterString",
-							      @"query", nil]];
-		} else {
-		  return false;
-		}
-		[self addArgFromPlistObject:url_dict withKey:key];
-		return true;
-	}
-	return false;
-}
-
-
 - (NSData *) serializeArgs {
 	/* serialize the NSDictionary of arguments into a plist */
 	NSError *error;

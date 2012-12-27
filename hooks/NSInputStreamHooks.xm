@@ -29,7 +29,7 @@ IntrospySQLiteStorage *traceStorage;
 + (id)inputStreamWithURL:(NSURL *)url {
 	id origResult = %orig(url);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSInputStream" andMethod:@"inputStreamWithURL:"];
-	[tracer addArgFromURL:url withKey:@"url"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: url] withKey:@"url"];
 	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
@@ -49,7 +49,7 @@ IntrospySQLiteStorage *traceStorage;
 - (id)initWithURL:(NSURL *)url {
 	id origResult = %orig(url);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSInputStream" andMethod:@"initWithURL:"];
-	[tracer addArgFromURL:url withKey:@"url"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: url] withKey:@"url"];
 	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];

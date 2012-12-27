@@ -17,7 +17,6 @@
 
 // Return value should be transformed into an NSNumber
 - (BOOL) addReturnValueFromPlistObject:(id) result;
-- (BOOL) addArgFromURL:(NSURL *)aURL withKey:(NSString *)key;
 
 - (NSData *) serializeArgs;
 - (NSData *) serializeReturnValue;
