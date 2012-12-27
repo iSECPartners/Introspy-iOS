@@ -179,8 +179,7 @@ IntrospySQLiteStorage *traceStorage;
 	NSURL *origResult = %orig(defaultName);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSUserDefaults" andMethod:@"URLForKey:"];
 	[tracer addArgFromPlistObject:defaultName withKey:@"defaultName"];
-	//TODO: Parse URL
-	//[tracer addReturnValueFromPlistObject: origResult];
+	[tracer addReturnValueFromPlistObject: [PlistObjectConverter convertURL: origResult]];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return origResult;
