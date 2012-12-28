@@ -12,19 +12,19 @@ extern IntrospySQLiteStorage *traceStorage;
 
 
 // Utiity function
-static int getIVLength(CCAlgorithm alg) {
+static size_t getIVLength(CCAlgorithm alg) {
     
     switch(alg) {
         case kCCAlgorithmAES128:
-            return 16;
+            return kCCBlockSizeAES128;
         case kCCAlgorithmDES:
-            return 8;
+            return kCCBlockSizeDES;
         case kCCAlgorithm3DES:
-            return 8;
+            return kCCBlockSize3DES;
         case kCCAlgorithmCAST:
-            return 8;
+            return kCCBlockSizeCAST;
         case kCCAlgorithmRC2:
-            return 8;
+            return kCCBlockSizeRC2;
         default:
             return 0;
     }    
@@ -51,7 +51,6 @@ static CCCryptorStatus replaced_CCCryptorCreate(
     const void *iv, 
     CCCryptorRef *cryptorRef) 
 {
-
 
     CCCryptorStatus origResult = original_CCCryptorCreate(op, alg, options, key, keyLength, iv, cryptorRef);
 

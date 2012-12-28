@@ -21,9 +21,8 @@ static char testData[16] = "s3cret 123";
     char dataOut[16];
     size_t dataOutMoved;
      
-    // CCCrypt() will call Create(), Update() and Final() in one shot
-    CCCrypt(kCCEncrypt, kCCAlgorithmAES128, kCCOptionPKCS7Padding, testKey, 16, testIv, testData, 16, dataOut, 16, &dataOutMoved);
-
+    CCCrypt(kCCEncrypt, kCCAlgorithmAES128, kCCOptionPKCS7Padding, testKey, 16, 
+        testIv, testData, 16, dataOut, 16, &dataOutMoved);
 }
 
 
@@ -33,9 +32,10 @@ static char testData[16] = "s3cret 123";
     size_t dataOutMoved;
 
      
-    CCCryptorCreateFromData(kCCEncrypt, kCCAlgorithmAES128, kCCOptionPKCS7Padding, testKey, 16, testIv, 
-        testData, 16, &cryptorRef, &dataOutMoved);
-    CCCryptorCreate(kCCEncrypt, kCCAlgorithmAES128, kCCOptionPKCS7Padding, testKey, 16, testIv, &cryptorRef);
+    CCCryptorCreateFromData(kCCEncrypt, kCCAlgorithmAES128, kCCOptionPKCS7Padding, 
+        testKey, 16, testIv, testData, 16, &cryptorRef, &dataOutMoved);
+    CCCryptorCreate(kCCEncrypt, kCCAlgorithmAES128, kCCOptionPKCS7Padding, 
+        testKey, 16, testIv, &cryptorRef);
     CCCryptorUpdate(cryptorRef,  testData, 16, dataOut, 0, &dataOutMoved);
     CCCryptorFinal(cryptorRef, dataOut, 16, &dataOutMoved);
 }

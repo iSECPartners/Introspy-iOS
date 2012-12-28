@@ -12,6 +12,7 @@ static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/
 // Hooks for C functions directly use MobileSubstrate
 #import "hooks/KeyChainHooks.h"
 #import "hooks/CCCryptorHooks.h"
+#import "hooks/CCHmacHooks.h"
 
 
 // Hooks for ObjC methods rely on the Logos pre-processor
@@ -64,6 +65,7 @@ IntrospySQLiteStorage *traceStorage;
 	    	%init(FileSystemHooks);
 	    	[KeyChainHooks enableHooks];
 	    	[CCCryptorHooks enableHooks];
+	    	[CCHmacHooks enableHooks];
 		}
 		else {
 			NSLog(@"Introspy - DB Initialization error; disabling hooks.");
