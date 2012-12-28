@@ -38,4 +38,18 @@
 	return url_dict;
 }
 
+
+// Convert a C buffer to a string of hex numbers
++ (NSString *) convertCBuffer:(const void *) buffer withLength: (size_t) length {
+
+	if (buffer == nil)
+		return nil;
+
+	NSMutableString *hexStream = [NSMutableString stringWithCapacity: length*2];
+	for(int i=0;i<length;i++) {
+		[hexStream appendFormat:@"%02x", ((unsigned char*) buffer)[i]];
+	}
+	return hexStream;
+}
+
 @end

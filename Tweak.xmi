@@ -17,6 +17,7 @@ static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/
 // H4ck to split Logos hooking code into separate files: we're including actual code, not headers
 IntrospySQLiteStorage *traceStorage;
 
+
 %group FileSystemHooks
 #include "hooks/NSDataHooks.xm"
 #include "hooks/NSFileHandleHooks.xm"
@@ -61,7 +62,7 @@ IntrospySQLiteStorage *traceStorage;
 	    	%init(UserPreferencesHooks);
 	    	%init(FileSystemHooks);
 	    	[KeyChainHooks enableHooks];
-	    	//[CCCryptorHooks enableHooks];
+	    	[CCCryptorHooks enableHooks];
 		}
 		else {
 			NSLog(@"Introspy - DB Initialization error; disabling hooks.");
