@@ -3,7 +3,7 @@
 #import "FileSystemTester.h"
 #import "UserPreferencesTester.h"
 #import "KeyChainTester.h"
-#import "CCCryptorTester.h"
+#import "CryptoTester.h"
 
 
 @implementation RootViewController
@@ -34,7 +34,7 @@
     [UserPreferencesTester runAllTests];
 
     // Crypto
-    [CCCryptorTester runAllTests];
+    [CryptoTester runAllTests];
 
 }
 @end
