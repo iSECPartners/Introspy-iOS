@@ -3,6 +3,7 @@
 #import "CallTracer.h"
 #import "IntrospySQLiteStorage.h"
 #import "PlistObjectConverter.h"
+#import "CallStackInspector.h"
 
 
 static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/com.isecpartners.introspy.plist";

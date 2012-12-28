@@ -4,10 +4,25 @@
 @implementation CallStackInspector : NSObject
 
 
-+ (BOOL) wasCalledInternally{
-	// TODO Add all the internal APIs
-	NSString *internalAPI = @"Security"; // Security framework: SSL, etc...
-	return [self wasCalledBy:internalAPI];
+
+
++ (BOOL) wasDirectlyCalledByApp {
+    //  NSLog(@"%@",[NSThread callStackSymbols]);
+
+    NSString *appProcessName = [[NSProcessInfo processInfo] processName];
+    NSArray *callStack = [NSThread callStackSymbols];
+
+    // Not ideal: Check if the app's process name is close enough in the call stack
+    NSRange caller2 = [[callStack objectAtIndex:2] rangeOfString: appProcessName];
+    NSRange caller3 = [[callStack objectAtIndex:3] rangeOfString: appProcessName];
+    NSRange caller4 = [[callStack objectAtIndex:4] rangeOfString: appProcessName];
+    NSRange caller5 = [[callStack objectAtIndex:5] rangeOfString: appProcessName];
+
+    if ((caller2.location == NSNotFound) && (caller3.location == NSNotFound)
+             && (caller4.location == NSNotFound) && (caller5.location == NSNotFound)) {
+        return false;
+    }
+    return true;
 }
 
 

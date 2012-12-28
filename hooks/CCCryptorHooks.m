@@ -59,7 +59,7 @@ static CCCryptorStatus replaced_CCCryptorCreate(
     CCCryptorStatus origResult = original_CCCryptorCreate(op, alg, options, key, keyLength, iv, cryptorRef);
 
     // Only log what the application directly calls. For example we don't want to log internal SSL crypto calls
-    //if (![CallStackInspector wasCalledInternally]) {
+    if ([CallStackInspector wasDirectlyCalledByApp]) {
         
         CallTracer *tracer = [[CallTracer alloc] initWithClass:@"C" andMethod:@"CCCryptorCreate"];
         [tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) op] withKey:@"op"];
@@ -71,7 +71,7 @@ static CCCryptorStatus replaced_CCCryptorCreate(
         [tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:origResult]];
         [traceStorage saveTracedCall: tracer];
         [tracer release];
-    //}
+    }
     return origResult;
 }
 
@@ -97,7 +97,7 @@ static CCCryptorStatus replaced_CCCryptorUpdate(
     
     CCCryptorStatus origResult = original_CCCryptorUpdate(cryptorRef, dataIn, dataInLength, dataOut, dataOutAvailable, dataOutMoved);
 
-    if (![CallStackInspector wasCalledInternally]) {
+    if ([CallStackInspector wasDirectlyCalledByApp]) {
         
         CallTracer *tracer = [[CallTracer alloc] initWithClass:@"C" andMethod:@"CCCryptorUpdate"];
         [tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) cryptorRef] withKey:@"cryptorRef"];
@@ -112,6 +112,7 @@ static CCCryptorStatus replaced_CCCryptorUpdate(
 
 
 // Hook CCCryptorFinal()
+// TODO: Make sure it's working
 static CCCryptorStatus (*original_CCCryptorFinal)(
     CCCryptorRef cryptorRef,
     void *dataOut,
@@ -126,7 +127,7 @@ static CCCryptorStatus replaced_CCCryptorFinal(
 {
     CCCryptorStatus origResult = original_CCCryptorFinal(cryptorRef, dataOut, dataOutAvailable, dataOutMoved);
 
-    if (![CallStackInspector wasCalledInternally]) {
+    if ([CallStackInspector wasDirectlyCalledByApp]) {
         
         CallTracer *tracer = [[CallTracer alloc] initWithClass:@"C" andMethod:@"CCCryptorFinal"];
         [tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) cryptorRef] withKey:@"cryptorRef"];
