@@ -13,7 +13,7 @@ IntrospySQLiteStorage *traceStorage;
 
 - (BOOL)writeToFile:(NSString *)path atomically:(BOOL)flag {
 	BOOL origResult = %orig(path, flag);
-	// NSData methods are called a lot by other iOS APIs and we don't want to log that
+	// NSData methods are called a lot by other iOS APIs and we don't want to log that so we use the CallStackInspector
     if ([CallStackInspector wasDirectlyCalledByApp]) {
 		CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"writeToFile:atomically:"];
 		[tracer addArgFromPlistObject:path withKey:@"path"];

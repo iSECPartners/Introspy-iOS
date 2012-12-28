@@ -6,8 +6,9 @@
 
 
 
+
 + (BOOL) wasDirectlyCalledByApp {
-    //  NSLog(@"%@",[NSThread callStackSymbols]);
+    //NSLog(@"%@",[NSThread callStackSymbols]);
 
     NSString *appProcessName = [[NSProcessInfo processInfo] processName];
     NSArray *callStack = [NSThread callStackSymbols];
@@ -15,17 +16,16 @@
     // Not ideal: Check if the app's process name is close enough in the call stack
     NSRange caller2 = [[callStack objectAtIndex:2] rangeOfString: appProcessName];
     NSRange caller3 = [[callStack objectAtIndex:3] rangeOfString: appProcessName];
-    NSRange caller4 = [[callStack objectAtIndex:4] rangeOfString: appProcessName];
-    NSRange caller5 = [[callStack objectAtIndex:5] rangeOfString: appProcessName];
-
-    if ((caller2.location == NSNotFound) && (caller3.location == NSNotFound)
-             && (caller4.location == NSNotFound) && (caller5.location == NSNotFound)) {
+   
+    if ((caller2.location == NSNotFound) && (caller3.location == NSNotFound)) {
         return false;
     }
     return true;
 }
 
 
+
+/*
 + (BOOL) wasCalledBy:(NSString *) name {
 
 	// Check if the name is in the call stack string
@@ -43,6 +43,6 @@
     else
     	return true;
 }
-
+*/
 
 @end

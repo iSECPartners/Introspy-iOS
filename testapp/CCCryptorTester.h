@@ -5,6 +5,7 @@
 + (void)runAllTests;
 
 + (void) testCCCrypt;
++ (void) testCCCryptor;
 
 @end
 

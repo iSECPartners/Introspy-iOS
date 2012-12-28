@@ -72,6 +72,7 @@ static OSStatus replaced_SecItemUpdate(CFDictionaryRef query, CFDictionaryRef at
 
 
 // Hook SecPKCS12Import() - TODO: Useful for secure containers that use client certs to connect to the server
+// TODO: SecKeyEncrypt for PKI
 /*
 static OSStatus (*original_SecPKCS12Import)(CFDataRef pkcs12_data, CFDictionaryRef options, CFArrayRef *items);
 
