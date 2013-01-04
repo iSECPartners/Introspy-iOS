@@ -78,9 +78,20 @@ IntrospySQLiteStorage *traceStorage;
     [preferences release];
 
     // Log all custom URL schemes registered
-    // TODO: where should we store these
+    // TODO: should we refactor this out of the main Tweak?
     NSArray *url_schemes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
-    NSLog(@"\n-----INTROSPY-----\nFOUND URL SCHEMES:\n%@\n---------------", url_schemes);
+    for (id schemeBundle in url_schemes) {
+	    NSString *name = [schemeBundle objectForKey:@"CFBundleURLName"];
+	    NSNumber *isPrivate = [schemeBundle objectForKey:@"CFBundleURLIsPrivate"];
+	    for (id scheme in [schemeBundle objectForKey:@"CFBundleURLSchemes"]) {
+		CallTracer *tracer = [[CallTracer alloc] initWithClass:@"CFBundleURLTypes" andMethod:@"CFBundleURLSchemes"];
+		[tracer addArgFromPlistObject:name withKey:@"CFBundleURLName"];
+		[tracer addArgFromPlistObject:isPrivate withKey:@"CFBundleURLIsPrivate"];
+		[tracer addArgFromPlistObject:scheme withKey:@"CFBundleURLScheme"];
+		[traceStorage saveTracedCall:tracer];
+		[tracer release];
+	    }
+    }
 
     [pool drain];
 }
