@@ -26,51 +26,63 @@ IntrospySQLiteStorage *traceStorage;
 #include "hooks/NSFileManagerHooks.xm"
 #include "hooks/NSInputStreamHooks.xm"
 #include "hooks/NSOutputStreamHooks.xm"
+#include "hooks/UIPasteboardHooks.xm"
 %end
 
 %group UserPreferencesHooks
 #include "hooks/NSUserDefaultsHooks.xm"
 %end
 
+%group UIPasteboardHooks
+#include "hooks/UIPasteboardHooks.xm"
+%end
 
 
 %ctor {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	// Only hook Apps the user has selected in Introspy's settings panel
-	NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
-	if (appId == nil) {
-		[pool drain];
-		return;
-	}
-	
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    // Only hook Apps the user has selected in Introspy's settings panel
+    NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
+    if (appId == nil) {
+	[pool drain];
+	return;
+    }
+
     NSMutableDictionary* preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:preferenceFilePath];
-	NSLog(@"APPNAME = %@", appId);
-	id shouldHook = [preferences objectForKey:appId];
+    NSLog(@"APPNAME = %@", appId);
+    id shouldHook = [preferences objectForKey:appId];
     if (shouldHook == nil) {
-    	[preferences release];
-		[pool drain];
-		return;
-	} 
+	[preferences release];
+	[pool drain];
+	return;
+    }
 
-    if ([shouldHook boolValue]) { 
-		// Initialize DB storage
-		// TODO: shouldLog = [preferences shouldLog]
-		BOOL shouldLog = YES;
-		traceStorage = [[IntrospySQLiteStorage alloc] initWithDefaultDBFilePathAndlogToConsole: shouldLog];
-		if (traceStorage != nil) {
-
+    if ([shouldHook boolValue]) {
+	// Initialize DB storage
+	// TODO: shouldLog = [preferences shouldLog]
+	BOOL shouldLog = YES;
+	traceStorage = [[IntrospySQLiteStorage alloc] initWithDefaultDBFilePathAndlogToConsole: shouldLog];
+	if (traceStorage != nil) {
 	    	// Initialize hooks
 	    	// TODO: if Datastorage.is_enabled etc...
 	    	%init(UserPreferencesHooks);
-	    	%init(FileSystemHooks);
+		%init(FileSystemHooks);
+		%init(UIPasteboardHooks);
 	    	[KeyChainHooks enableHooks];
 	    	[CCCryptorHooks enableHooks];
 	    	[CCHmacHooks enableHooks];
-		}
-		else {
-			NSLog(@"Introspy - DB Initialization error; disabling hooks.");
-		}
 	}
-	[preferences release];
-	[pool drain];
+	else {
+		NSLog(@"Introspy - DB Initialization error; disabling hooks.");
+	}
+    }
+    [preferences release];
+
+    // Log all custom URL schemes registered
+    // TODO: where should we store these
+    NSArray *url_schemes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
+    NSLog(@"\n-----INTROSPY-----\nFOUND URL SCHEMES:\n%@\n---------------", url_schemes);
+
+    [pool drain];
 }
+
+/* vim: set filetype=objc : */

@@ -17,10 +17,10 @@ static sqlite3 *dbConnection;
 
 
 - (IntrospySQLiteStorage *)initWithDefaultDBFilePathAndlogToConsole: (BOOL) shouldLog {
-	// Put application name in the DB's filename to avoid confusion
+    // Put application name in the DB's filename to avoid confusion
     NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
-	NSString *DBFilePath = [NSString stringWithFormat:defaultDBFileFormat, appId];
-	return [self initWithDBFilePath: [DBFilePath stringByExpandingTildeInPath] andLogToConsole: shouldLog];
+    NSString *DBFilePath = [NSString stringWithFormat:defaultDBFileFormat, appId];
+    return [self initWithDBFilePath: [DBFilePath stringByExpandingTildeInPath] andLogToConsole: shouldLog];
 }
 
 
@@ -31,27 +31,27 @@ static sqlite3 *dbConnection;
     // Open the DB file if it's already there
     if (sqlite3_open_v2([DBFilePath UTF8String], &dbConn, SQLITE_OPEN_READWRITE, NULL) != SQLITE_OK) {
 
-		// If not, create the DB file
-		if (sqlite3_open_v2([DBFilePath UTF8String], &dbConn, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL) != SQLITE_OK) {
-        	NSLog(@"IntrospySQLiteStorage - Unable to open database!");
-        	return nil;			
+	// If not, create the DB file
+	if (sqlite3_open_v2([DBFilePath UTF8String], &dbConn, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL) != SQLITE_OK) {
+       	 	NSLog(@"IntrospySQLiteStorage - Unable to open database!");
+       		return nil;
     	}
-    	else {
+	else {
     		// Create the tables in the DB we just created
     		if (sqlite3_exec(dbConn, createTableStmtStr, NULL, NULL, NULL) != SQLITE_OK) {
-        		NSLog(@"IntrospySQLiteStorage - Unable to create tables!");
-        		return nil;
+			NSLog(@"IntrospySQLiteStorage - Unable to create tables!");
+			return nil;
     		}
     	}
-	}
+    }
 
-	// Prepare the INSERT statement we'll use to store everything
+    // Prepare the INSERT statement we'll use to store everything
     sqlite3_stmt *statement = nil;
     if (sqlite3_prepare_v2(dbConn, saveTracedCallStmtStr, -1, &statement, NULL) != SQLITE_OK) {
         NSLog(@"IntrospySQLiteStorage - Unable to prepare statement!");
         return nil;
     }
-    
+
     saveTracedCallStmt = statement;
     dbConnection = dbConn;
     logToConsole = shouldLog;
@@ -61,7 +61,7 @@ static sqlite3 *dbConnection;
 
 - (BOOL)saveTracedCall: (CallTracer*) tracedCall {
     int queryResult = SQLITE_ERROR;
-    
+
     // Serialize arguments and return value to an XML plist
     NSData *argsData = [tracedCall serializeArgs];
     NSData *returnData = [tracedCall serializeReturnValue];
@@ -87,7 +87,7 @@ static sqlite3 *dbConnection;
     }
 
     [argsStr release];
-    [returnStr release];	
+    [returnStr release];
 
     if (queryResult != SQLITE_DONE) {
         NSLog(@"IntrospySQLiteStorage - Commit Failed: %x!", queryResult);

@@ -46,3 +46,5 @@ IntrospySQLiteStorage *traceStorage;
 }
 
 %end
+
+/* vim: set filetype=objc : */

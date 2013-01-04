@@ -43,10 +43,6 @@
    							     format:NSPropertyListXMLFormat_v1_0 // for testing
    							    options:0
    							      error:&error];
-//	if (error != nil) {
-//		NSLog(@"CallTracer::serializeArgs: %@", error);
-//		return nil;
-//	}
 	return plist;
 }
 
@@ -57,18 +53,14 @@
    							     format:NSPropertyListXMLFormat_v1_0 // for testing
    							    options:0
    							      error:&error];
-//	if (error != nil) {
-//		NSLog(@"CallTracer::serializeArgs: %@", error);
-//		return nil;
-//	}
-	return plist;	
+	return plist;
 }
 
 - (void)dealloc
 {
-    [args release];
-    [returnValue release];
-    [super dealloc];
+	[args release];
+	[returnValue release];
+	[super dealloc];
 }
 
 @end

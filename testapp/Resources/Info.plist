@@ -13,4 +13,27 @@
     DTSDKName = iphoneos3.0;
     LSRequiresIPhoneOS = 1;
     MinimumOSVersion = 3.0;
+    CFBundleURLTypes = 	(
+	        {
+	        CFBundleURLName = "com.isecpartners.introspytestapp.scheme1"
+	        CFBundleURLSchemes =         (
+	            scheme1
+	        );
+	    },
+	        {
+	        CFBundleURLIsPrivate = 0;
+	        CFBundleURLName = "com.isecpartners.introspytestapp.scheme2"
+	        CFBundleURLSchemes =         (
+	            "scheme2-1",
+	            "scheme2-2",
+	        );
+	    },
+	        {
+	        CFBundleURLIsPrivate = 1;
+	        CFBundleURLName = "com.isecpartners.introspytestapp.scheme3"
+	        CFBundleURLSchemes =         (
+	            scheme3
+	        );
+	    }
+	)
 }

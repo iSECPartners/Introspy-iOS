@@ -19,6 +19,7 @@ static OSStatus replaced_SecItemAdd(CFDictionaryRef attributes, CFTypeRef *resul
     CallTracer *tracer = [[CallTracer alloc] initWithClass:@"C" andMethod:@"SecItemAdd"];
     [tracer addArgFromPlistObject:(NSDictionary*)attributes withKey:@"attributes"];
     // Store the pointer value of result for now
+    // TODO: if we have the attributes, why do we need to parse the result?
     [tracer addArgFromPlistObject: [NSNumber numberWithUnsignedInt: (unsigned int)result] withKey:@"result"];
     [tracer addReturnValueFromPlistObject: [NSNumber numberWithInt:origResult]];
     [traceStorage saveTracedCall: tracer];

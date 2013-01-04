@@ -8,15 +8,8 @@
 	NSDictionary *url_dict = nil;
 
 	if (aURL != nil) {
-
-		if ([[aURL scheme] isEqualToString:@"file"]) {
-		  url_dict = [NSDictionary dictionaryWithObjects:
-				   [NSArray arrayWithObjects: [aURL absoluteString],
-							      nil]
-						     forKeys: [NSArray arrayWithObjects:
-						    	      @"absoluteString",
-							      nil]];
-		} else if ([[aURL scheme] isEqualToString:@"http"]) {
+		// store specific infoz if its an HTTP URL
+		if ([[aURL scheme] isEqualToString:@"http"]) {
 		  url_dict = [NSDictionary dictionaryWithObjects:
 				   [NSArray arrayWithObjects: [aURL absoluteString],
 				 			      [aURL scheme],
@@ -33,7 +26,17 @@
 							      @"path",
 							      @"parameterString",
 							      @"query", nil]];
-		} 
+		// otherwise just store the whole string for now.
+		// TODO: enumerate these options.
+		} else {
+		  url_dict = [NSDictionary dictionaryWithObjects:
+				   [NSArray arrayWithObjects: [aURL absoluteString],
+							      nil]
+						     forKeys: [NSArray arrayWithObjects:
+						    	      @"absoluteString",
+							      nil]];
+		}
+
 	}
 	return url_dict;
 }

@@ -1,6 +1,7 @@
 #import "RootViewController.h"
 
 #import "FileSystemTester.h"
+#import "UIPasteboardTester.h"
 #import "UserPreferencesTester.h"
 #import "KeyChainTester.h"
 #import "CryptoTester.h"
@@ -27,6 +28,9 @@
     [fileSystemTests runAllTests];
     [fileSystemTests release];
 
+    // UIPasteboard
+    [UIPasteboardTester runAllTests];
+
     // KeyChain
     [KeyChainTester runAllTests];
 
@@ -38,3 +42,5 @@
 
 }
 @end
+
+/* vim: set filetype=objc : */

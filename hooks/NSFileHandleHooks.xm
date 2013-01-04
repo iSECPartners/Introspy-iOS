@@ -16,10 +16,13 @@ IntrospySQLiteStorage *traceStorage;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileHandle" andMethod:@"fileHandleForReadingAtPath:"];
 	[tracer addArgFromPlistObject:path withKey:@"path"];
 	// Only store the value of the pointer for now. TODO: Convert NSFilehandle to Plist object
+	// TODO: what do you want to parse what out of it? i.e., do you want to
+	// actually make instance calls to the filehandle? to e.g., get the
+	// data? [NSFileHandle readDataToEndOfFile]?
 	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
-	return origResult;	
+	return origResult;
 }
 
 + (id)fileHandleForReadingFromURL:(NSURL *)url error:(NSError **)error {
@@ -76,3 +79,5 @@ IntrospySQLiteStorage *traceStorage;
 }
 
 %end
+
+/* vim: set filetype=objc : */
