@@ -8,6 +8,7 @@
 
 + (NSDictionary*) convertURL:(NSURL *)aURL;
 + (NSDictionary *) convertNSURLRequest:(NSURLRequest *)request;
++ (NSDictionary *) convertNSURLAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
 + (NSString *) convertCBuffer:(const void *) buffer withLength: (size_t) length;
 
 @end

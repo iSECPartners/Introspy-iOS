@@ -60,6 +60,44 @@
 	return url_req;
 }
 
+// Convert an NSURLAuthenticationChallenge to an NSDictionary suitable for plist storage
++ (NSDictionary *) convertNSURLAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+	NSURLCredential *cred = [challenge proposedCredential];
+	NSString *authMethod = [[challenge protectionSpace] authenticationMethod];
+	NSDictionary *authChallenge = nil;
+	// determine if the credential is password or certificate based.
+	// is this sufficient detection?? <- need negative test cases.
+	if (authMethod == NSURLAuthenticationMethodClientCertificate) {
+		authChallenge = [NSDictionary dictionaryWithObjects:
+						[NSArray arrayWithObjects:
+							[cred user],
+							[cred certificates],
+							authMethod,
+							[NSNumber numberWithInteger:[cred persistence]], nil]
+				      forKeys:
+					    	[NSArray arrayWithObjects:
+							@"user",
+					    		@"certificates",
+							@"authMethod",
+							@"persistence", nil]];
+	// password based
+	} else {
+		authChallenge = [NSDictionary dictionaryWithObjects:
+						[NSArray arrayWithObjects:
+							[cred user],
+							[cred password],
+							authMethod,
+							[NSNumber numberWithInteger:[cred persistence]], nil]
+				      forKeys:
+					    	[NSArray arrayWithObjects:
+							@"user",
+					    		@"password",
+							@"authMethod",
+							@"persistence", nil]];
+	}
+	return authChallenge;
+}
+
 // Convert a C buffer to a string of hex numbers
 + (NSString *) convertCBuffer:(const void *) buffer withLength: (size_t) length {
 
