@@ -12,7 +12,6 @@ IntrospySQLiteStorage *traceStorage;
 + (NSURLConnection *)connectionWithRequest:(NSURLRequest *)request delegate:(id < NSURLConnectionDelegate >)delegate {
 	NSURLConnection *origResult = %orig(request, delegate);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"connectionWithRequst:delegate"];
-	//extract pertinent info from the NSURLRequest
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
 	//  we'll hook NSURLConnectionDelegate seperately so no need to extract the info here.
 	//  TODO: but do we want anything out of the NSURLConnection returned?

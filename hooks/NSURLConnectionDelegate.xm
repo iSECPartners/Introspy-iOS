@@ -9,6 +9,23 @@ IntrospySQLiteStorage *traceStorage;
 
 %hook NSURLConnectionDelegate
 
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+	%orig(connection, response);
+	// TODO: do we actually want anything from this? the response data is in
+	// connection:didReceiveData: ...
+	return;
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+	%orig(connection, data);
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnectionDelegate" andMethod:@"connection:didReceiveData:"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:[connection currentRequest]] withKey:@"connection"];
+	[tracer addARgFromPlistObject:data withKey:@"data"];
+	[traceStorage saveTracedCall:tracer];
+	[tracer release];
+	return;
+}
+
 - (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
 	%orig(connection, challenge);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnectionDelegate" andMethod:@"connection:didReceiveAuthenticationChallenge:"];
@@ -27,7 +44,6 @@ IntrospySQLiteStorage *traceStorage;
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
 	return;
-
 }
 
 %end

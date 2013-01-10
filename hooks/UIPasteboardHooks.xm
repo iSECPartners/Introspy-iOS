@@ -83,6 +83,15 @@ IntrospySQLiteStorage *traceStorage;
 	return;
 }
 
+- (void)addItems:(NSArray *)items {
+	%orig(items);
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"UIPasteboard" andMethod:@"addItems:"];
+	[tracer addArgFromPlistObject:items withKey:@"items"];
+	[traceStorage saveTracedCall:tracer];
+	[tracer release];
+	return;
+}
+
 - (id)valueForPasteboardType:(NSString *)pasteboardType {
 	id origResult = %orig(pasteboardType);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"UIPasteboard" andMethod:@"valueForPasteboardType:"];
