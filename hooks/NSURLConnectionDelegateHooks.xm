@@ -20,7 +20,7 @@ IntrospySQLiteStorage *traceStorage;
 	%orig(connection, data);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnectionDelegate" andMethod:@"connection:didReceiveData:"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:[connection currentRequest]] withKey:@"connection"];
-	[tracer addARgFromPlistObject:data withKey:@"data"];
+	[tracer addArgFromPlistObject:data withKey:@"data"];
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
 	return;

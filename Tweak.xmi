@@ -27,8 +27,9 @@ IntrospySQLiteStorage *traceStorage;
 #include "hooks/NSInputStreamHooks.xm"
 #include "hooks/NSOutputStreamHooks.xm"
 #include "hooks/UIPasteboardHooks.xm"
-#include "hooks/NSURLConnection.xm"
-#include "hooks/NSURLConnectionDelegate.xm"
+#include "hooks/NSURLConnectionHooks.xm"
+#include "hooks/NSURLConnectionDelegateHooks.xm"
+#include "hooks/NSHTTPCookieHooks.xm"
 %end
 
 %group UserPreferencesHooks
