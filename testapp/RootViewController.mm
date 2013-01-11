@@ -3,6 +3,7 @@
 #import "FileSystemTester.h"
 #import "UIPasteboardTester.h"
 #import "UserPreferencesTester.h"
+#import "NSURLConnectionTester.h"
 #import "KeyChainTester.h"
 #import "CryptoTester.h"
 
@@ -31,14 +32,17 @@
     // UIPasteboard
     [UIPasteboardTester runAllTests];
 
+    // NSURLConnection
+    [NSURLConnectionTester runAllTests];
+
     // KeyChain
-    [KeyChainTester runAllTests];
+//    [KeyChainTester runAllTests];
 
     // User Preferences
     [UserPreferencesTester runAllTests];
 
     // Crypto
-    [CryptoTester runAllTests];
+//    [CryptoTester runAllTests];
 
 }
 @end

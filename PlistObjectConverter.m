@@ -6,10 +6,10 @@
 // Convert an NSURL to an NSDictionary suitable for plist storage.
 + (NSDictionary *) convertURL:(NSURL *)aURL {
 	NSDictionary *url_dict = nil;
-
+	NSString *scheme = [aURL scheme];
 	if (aURL != nil) {
 		// store specific infoz if its an HTTP URL
-		if ([[aURL scheme] isEqualToString:@"http"]) {
+		if ([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"]) {
 
 // TODO: implement code to check if values are nil before adding them. hooked
 // apps kept crashing with nll values for port and parameterString so i just
@@ -50,13 +50,15 @@
 				[NSArray arrayWithObjects:
 					 		[self convertURL:[request URL]],
 							[request HTTPMethod],
-							[request HTTPBody],
-						     	[NSNumber numberWithInteger:[request cachePolicy]], nil]
+//							[request HTTPBody],
+//						     	[NSNumber numberWithInteger:[request cachePolicy]], nil]
+							nil]
 						forKeys: [NSArray arrayWithObjects:
 							@"URL",
 							@"HTTPMethod",
-							@"HTTPBody",
-							@"cachePolicy", nil]];
+//							@"HTTPBody",
+//							@"cachePolicy", nil]];
+							nil]];
 	return url_req;
 }
 
