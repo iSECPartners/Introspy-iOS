@@ -7,6 +7,7 @@ Tweak.xmi includes/defines the following things:
 IntrospySQLiteStorage *traceStorage;
 */
 
+// TODO: NSURLConnectionDelegate is not a class but a protocol. Not sure if this is going to work; need to double check.
 %hook NSURLConnectionDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {

@@ -26,7 +26,9 @@ IntrospySQLiteStorage *traceStorage;
 #include "hooks/NSFileManagerHooks.xm"
 #include "hooks/NSInputStreamHooks.xm"
 #include "hooks/NSOutputStreamHooks.xm"
-#include "hooks/UIPasteboardHooks.xm"
+%end
+
+%group HTTPHooks
 #include "hooks/NSURLConnectionHooks.xm"
 #include "hooks/NSURLConnectionDelegateHooks.xm"
 #include "hooks/NSHTTPCookieHooks.xm"
@@ -36,7 +38,7 @@ IntrospySQLiteStorage *traceStorage;
 #include "hooks/NSUserDefaultsHooks.xm"
 %end
 
-%group UIPasteboardHooks
+%group PasteboardHooks
 #include "hooks/UIPasteboardHooks.xm"
 %end
 
@@ -65,14 +67,15 @@ IntrospySQLiteStorage *traceStorage;
 	BOOL shouldLog = YES;
 	traceStorage = [[IntrospySQLiteStorage alloc] initWithDefaultDBFilePathAndlogToConsole: shouldLog];
 	if (traceStorage != nil) {
-	    	// Initialize hooks
-	    	// TODO: if Datastorage.is_enabled etc...
-	    	%init(UserPreferencesHooks);
+	    // Initialize hooks
+	    // TODO: if Datastorage.is_enabled etc...
+	    %init(UserPreferencesHooks);
 		%init(FileSystemHooks);
-		%init(UIPasteboardHooks);
-	    	[KeyChainHooks enableHooks];
-	    	[CCCryptorHooks enableHooks];
-	    	[CCHmacHooks enableHooks];
+		%init(PasteboardHooks);
+	    %init(HTTPHooks);
+	    [KeyChainHooks enableHooks];
+	    [CCCryptorHooks enableHooks];
+	    [CCHmacHooks enableHooks];
 	}
 	else {
 		NSLog(@"Introspy - DB Initialization error; disabling hooks.");
