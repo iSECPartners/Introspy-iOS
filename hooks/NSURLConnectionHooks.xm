@@ -71,6 +71,35 @@ IntrospySQLiteStorage *traceStorage;
 	return origResult;
 }
 
+
+// The following methods are not explicitely part of NSURLConnection.
+// However, when implementing custom cert validation using the NSURLConnectionDelegate protocol,
+// the application sends the result of the validation (server cert was OK/bad) to [challenge sender].
+// The class of [challenge sender] is NSURLConnection because it implements the NSURLAuthenticationChallengeSender
+// protocol. So we're hooking this in order to find when the validation might have been disabled.
+
+// The usual way of disabling SSL cert validation
+- (void)continueWithoutCredentialForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+	%orig(challenge);
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"continueWithoutCredentialForAuthenticationChallenge:"];
+	// TODO: Log and parse [challenge protectionSpace] so we know which server certificate is in the challenge
+	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)challenge] withKey:@"challenge"];
+	[traceStorage saveTracedCall:tracer];
+	[tracer release];
+}
+
+// Might indicate client certificates or cert pinning. TODO: Investigate
+- (void)useCredential:(NSURLCredential *)credential forAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+	%orig(credential, challenge);
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"useCredential:forAuthenticationChallenge:"];
+	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)credential] withKey:@"credential"];
+	// TODO: Log and parse [challenge protectionSpace] so we know which server certificate is in the challenge
+	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)challenge] withKey:@"challenge"];
+	[traceStorage saveTracedCall:tracer];
+	[tracer release];
+}
+
+
 %end
 
 /* vim: set filetype=objc : */

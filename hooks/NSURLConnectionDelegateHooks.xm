@@ -7,7 +7,11 @@ Tweak.xmi includes/defines the following things:
 IntrospySQLiteStorage *traceStorage;
 */
 
-// TODO: NSURLConnectionDelegate is not a class but a protocol. Not sure if this is going to work; need to double check.
+// TODO: NSURLConnectionDelegate is not a class but a protocol that any class can choose to implement.
+// We need to figure out at runtime the class that's actually implementing this protocol.
+// We could use that to detect basic auth and SSL client auth I think. Possibly dump the passwords/certs.
+
+#if 0
 %hook NSURLConnectionDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -48,5 +52,5 @@ IntrospySQLiteStorage *traceStorage;
 }
 
 %end
-
+#endif
 /* vim: set filetype=objc : */
