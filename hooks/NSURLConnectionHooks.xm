@@ -11,10 +11,12 @@ IntrospySQLiteStorage *traceStorage;
 
 + (NSURLConnection *)connectionWithRequest:(NSURLRequest *)request delegate:(id < NSURLConnectionDelegate >)delegate {
 	NSURLConnection *origResult = %orig(request, delegate);
-	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"connectionWithRequst:delegate"];
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"connectionWithRequest:delegate:"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
-	//  we'll hook NSURLConnectionDelegate seperately so no need to extract the info here.
+	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)origResult] withKey:@"delegate"];
 	//  TODO: but do we want anything out of the NSURLConnection returned?
+	// Let's store the pointer for now, just for consistency
+	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
 	return origResult;
@@ -26,6 +28,7 @@ IntrospySQLiteStorage *traceStorage;
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
 	[tracer addArgFromPlistObject:[queue name] withKey:@"queue"];
 	// TODO: do we want to extract any infoz about the handler?
+	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)handler] withKey:@"handler"];
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
 	return;
@@ -35,6 +38,8 @@ IntrospySQLiteStorage *traceStorage;
 	NSData *origResult = %orig(request, response, error);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"sendSynchronousRequest:returningResponse:error:"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
+	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)response] withKey:@"response"];
+	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)error] withKey:@"error"];
 	[tracer addReturnValueFromPlistObject:origResult];
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
@@ -45,8 +50,9 @@ IntrospySQLiteStorage *traceStorage;
 	id origResult = %orig(request, delegate);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"initWithRequest:delegate:"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
+	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)delegate] withKey:@"delegate"];
 	// doesn't like CFType in the plist -- we can parse it if we need to tho
-//	[tracer addReturnValueFromPlistObject:origResult];
+	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
 	return origResult;
@@ -56,9 +62,10 @@ IntrospySQLiteStorage *traceStorage;
 	id origResult = %orig(request, delegate, startImmediately);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"initWithRequest:delegate:startImmediately:"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
+	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)delegate] withKey:@"delegate"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithBool:startImmediately] withKey:@"startImmediately"];
 	// doesn't like CFType in the plist -- we can parse it if we need to tho
-//	[tracer addReturnValueFromPlistObject:origResult];
+	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
 	return origResult;
