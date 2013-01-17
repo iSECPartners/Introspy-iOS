@@ -1,6 +1,6 @@
-#import "NSURLConnectionTester.h"
+#import "HTTPTester.h"
 
-@implementation NSURLConnectionTester : NSObject
+@implementation HTTPTester : NSObject
 
 + (void)runAllTests {
 	[self testNSURLConnectionClassMethods];
@@ -54,9 +54,8 @@
 @end
 
 
-// Helpers classes 
+// Helpers classes for NSURLConnection testing
 @implementation NSURLConnectionDelegate1 : NSObject
-
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
     
     // Disable cert validation #1
@@ -65,12 +64,9 @@
         [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
         }
 }
-
 @end
 
-
 @implementation NSURLConnectionDelegate2 : NSObject
-
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
 
     // Disable cert validation #2
@@ -81,5 +77,4 @@
              forAuthenticationChallenge:challenge];
         }
 }
-
 @end

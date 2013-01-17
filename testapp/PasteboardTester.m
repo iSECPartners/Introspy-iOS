@@ -1,6 +1,6 @@
-#import "UIPasteboardTester.h"
+#import "PasteboardTester.h"
 
-@implementation UIPasteboardTester : NSObject
+@implementation PasteboardTester : NSObject
 
 + (void)runAllTests {
 	[self testUIPasteboardClassMethods];

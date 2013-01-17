@@ -1,4 +1,4 @@
-@interface NSURLConnectionTester: NSObject {
+@interface HTTPTester: NSObject {
 
 }
 
@@ -11,13 +11,11 @@
 
 @interface NSURLConnectionDelegate1: NSObject {
 }
-
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
 @end
 
 
 @interface NSURLConnectionDelegate2: NSObject {
 }
-
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
 @end

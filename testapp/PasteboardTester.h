@@ -1,4 +1,4 @@
-@interface UIPasteboardTester : NSObject {
+@interface PasteboardTester : NSObject {
 
 }
 

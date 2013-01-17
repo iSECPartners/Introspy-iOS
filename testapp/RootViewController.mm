@@ -1,9 +1,9 @@
 #import "RootViewController.h"
 
 #import "FileSystemTester.h"
-#import "UIPasteboardTester.h"
+#import "PasteboardTester.h"
 #import "UserPreferencesTester.h"
-#import "NSURLConnectionTester.h"
+#import "HTTPTester.h"
 #import "KeyChainTester.h"
 #import "CryptoTester.h"
 
@@ -29,20 +29,20 @@
     [fileSystemTests runAllTests];
     [fileSystemTests release];
 
-    // UIPasteboard
-    [UIPasteboardTester runAllTests];
+    // Pasteboard
+    [PasteboardTester runAllTests];
 
-    // NSURLConnection
-    [NSURLConnectionTester runAllTests];
+    // HTTP
+    [HTTPTester runAllTests];
 
     // KeyChain
-//    [KeyChainTester runAllTests];
+    [KeyChainTester runAllTests];
 
     // User Preferences
     [UserPreferencesTester runAllTests];
 
     // Crypto
-//    [CryptoTester runAllTests];
+    [CryptoTester runAllTests];
 
 }
 @end
