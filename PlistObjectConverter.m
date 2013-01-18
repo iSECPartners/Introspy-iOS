@@ -1,7 +1,21 @@
 #import "PlistObjectConverter.h"
 
 
+
+
 @implementation PlistObjectConverter : NSObject
+
+
+// Utility function to automatically convert nil to an empty string
++ (id) autoConvertNil:(id) pointer {
+	if (pointer == nil) {
+		return @"";
+	}
+	else {
+		return pointer;
+	}
+}
+
 
 // Convert an NSURL to an NSDictionary suitable for plist storage.
 + (NSDictionary *) convertURL:(NSURL *)aURL {
@@ -62,43 +76,70 @@
 	return url_req;
 }
 
+
 // Convert an NSURLAuthenticationChallenge to an NSDictionary suitable for plist storage
 + (NSDictionary *) convertNSURLAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+
+	// Parse the protection space
+	NSURLProtectionSpace *pSpace = [challenge protectionSpace];
+	NSDictionary *pSpaceDict = [NSDictionary dictionaryWithObjects:
+									[NSArray arrayWithObjects:
+										[pSpace authenticationMethod],
+										[PlistObjectConverter autoConvertNil: [pSpace distinguishedNames]],
+										[pSpace host],
+										[NSNumber numberWithBool: [pSpace isProxy]],
+										[NSNumber numberWithUnsignedInt: [pSpace port]],
+										[PlistObjectConverter autoConvertNil: [pSpace protocol]],
+										[PlistObjectConverter autoConvertNil: [pSpace proxyType]],
+										[PlistObjectConverter autoConvertNil: [pSpace realm]],
+										[NSNumber numberWithBool: [pSpace receivesCredentialSecurely]],
+										nil]
+									forKeys:
+										[NSArray arrayWithObjects:
+											@"authenticationMethod",
+											@"distinguishedNames",
+											@"host",
+											@"isProxy",
+											@"port",
+											@"protocol",
+											@"proxyType",
+											@"realm",
+											@"receivesCredentialSecurely",
+											nil]];
+
+
+	// Parse the proposed credential
 	NSURLCredential *cred = [challenge proposedCredential];
-	NSString *authMethod = [[challenge protectionSpace] authenticationMethod];
-	NSDictionary *authChallenge = nil;
-	// determine if the credential is password or certificate based.
-	// is this sufficient detection?? <- need negative test cases.
-	if (authMethod == NSURLAuthenticationMethodClientCertificate) {
-		authChallenge = [NSDictionary dictionaryWithObjects:
+	NSDictionary *credentialDict = nil;
+	// TODO: store [cred identity] to extract the cert and private key for client auth
+	credentialDict = [NSDictionary dictionaryWithObjects:
 						[NSArray arrayWithObjects:
-							[cred user],
-							[cred certificates],
-							authMethod,
-							[NSNumber numberWithInteger:[cred persistence]], nil]
-				      forKeys:
-					    	[NSArray arrayWithObjects:
-							@"user",
-					    		@"certificates",
-							@"authMethod",
-							@"persistence", nil]];
-	// password based
-	} else {
-		authChallenge = [NSDictionary dictionaryWithObjects:
+						[PlistObjectConverter autoConvertNil: [cred user]],
+						[PlistObjectConverter autoConvertNil: [cred password]],
+						[PlistObjectConverter autoConvertNil: [cred certificates]],
+						[NSNumber numberWithUnsignedInt: [cred persistence]], 
+						nil]
+			      	forKeys:
+				    	[NSArray arrayWithObjects:
+						@"user",
+				    	@"password",
+				    	@"certificate",
+						@"persistence", 
+						nil]];
+
+	// All done
+	NSDictionary *challengeDict = [NSDictionary dictionaryWithObjects:
 						[NSArray arrayWithObjects:
-							[cred user],
-							[cred password],
-							authMethod,
-							[NSNumber numberWithInteger:[cred persistence]], nil]
-				      forKeys:
-					    	[NSArray arrayWithObjects:
-							@"user",
-					    		@"password",
-							@"authMethod",
-							@"persistence", nil]];
-	}
-	return authChallenge;
+						pSpaceDict,
+						credentialDict, nil]
+					forKeys:
+						[NSArray arrayWithObjects:
+						@"protectionSpace",
+						@"proposedCredential", nil]];
+
+	return challengeDict;
 }
+
 
 // Convert a C buffer to a string of hex numbers
 + (NSString *) convertCBuffer:(const void *) buffer withLength: (size_t) length {

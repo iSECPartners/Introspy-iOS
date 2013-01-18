@@ -82,8 +82,7 @@ IntrospySQLiteStorage *traceStorage;
 - (void)continueWithoutCredentialForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
 	%orig(challenge);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"continueWithoutCredentialForAuthenticationChallenge:"];
-	// TODO: Log and parse [challenge protectionSpace] so we know which server certificate is in the challenge
-	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)challenge] withKey:@"challenge"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLAuthenticationChallenge: challenge] withKey:@"challenge"];
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
 }
@@ -93,12 +92,10 @@ IntrospySQLiteStorage *traceStorage;
 	%orig(credential, challenge);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"useCredential:forAuthenticationChallenge:"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)credential] withKey:@"credential"];
-	// TODO: Log and parse [challenge protectionSpace] so we know which server certificate is in the challenge
-	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)challenge] withKey:@"challenge"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLAuthenticationChallenge: challenge] withKey:@"challenge"];
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
 }
-
 
 %end
 
