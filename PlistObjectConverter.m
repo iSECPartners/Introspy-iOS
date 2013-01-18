@@ -2,7 +2,7 @@
 
 
 
-
+// TODO: This is going to be a huge file. We should split it in some way
 @implementation PlistObjectConverter : NSObject
 
 
@@ -31,7 +31,7 @@
 					      	[PlistObjectConverter autoConvertNil: [aURL port]],
 					      	[aURL path],
 							[PlistObjectConverter autoConvertNil: [aURL parameterString]],
-					      	[aURL query], nil]
+					      	[PlistObjectConverter autoConvertNil: [aURL query]], nil]
 			      	   	forKeys:
 					    [NSArray arrayWithObjects:
 				    	    @"absoluteString",
@@ -53,6 +53,7 @@
 	}
 	return url_dict;
 }
+
 
 // Convert an NSURLRequest to an NSDictionary suitable for plist storage.
 + (NSDictionary *) convertNSURLRequest:(NSURLRequest *)request {
@@ -134,6 +135,49 @@
 						@"proposedCredential", nil]];
 
 	return challengeDict;
+}
+
+
++ (NSDictionary *) convertNSHTTPCookie: (NSHTTPCookie*) cookie {
+	if (cookie == nil) {
+		return nil;
+	}
+
+	NSDictionary *cookieDict;
+	cookieDict = [NSDictionary dictionaryWithObjects:
+					[NSArray arrayWithObjects:
+						[PlistObjectConverter autoConvertNil: [cookie comment]],
+						[PlistObjectConverter autoConvertNil: [PlistObjectConverter convertURL: [cookie commentURL]]],
+						[cookie domain],
+						[PlistObjectConverter autoConvertNil: [cookie expiresDate]],
+						[NSNumber numberWithBool: [cookie isHTTPOnly]],
+						[NSNumber numberWithBool: [cookie isSecure]],
+						[NSNumber numberWithBool: [cookie isSessionOnly]],
+						[cookie name],
+						[cookie path],
+						[PlistObjectConverter autoConvertNil: [cookie portList]],
+						[cookie properties],
+						[cookie value],
+						[NSNumber numberWithUnsignedInt: [cookie version]],
+						nil]
+					forKeys:
+					[NSArray arrayWithObjects:
+						@"comment",
+						@"commentURL",
+						@"domain",
+						@"expiresDate",
+						@"isHTTPOnly",
+						@"isSecure",
+						@"isSessionOnly",
+						@"name",
+						@"path",
+						@"portList",
+						@"properties",
+						@"value",
+						@"version",
+						nil]];
+
+	return cookieDict;
 }
 
 

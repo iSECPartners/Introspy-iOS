@@ -9,5 +9,6 @@
 + (NSDictionary*) convertURL:(NSURL *)aURL;
 + (NSDictionary *) convertNSURLRequest:(NSURLRequest *)request;
 + (NSDictionary *) convertNSURLAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
++ (NSDictionary *) convertNSHTTPCookie: (NSHTTPCookie*) cookie;
 + (NSString *) convertCBuffer:(const void *) buffer withLength: (size_t) length;
 @end

@@ -9,6 +9,12 @@ IntrospySQLiteStorage *traceStorage;
 
 %hook NSHTTPCookie
 
+// No need to hook +cookieWithProperties: because it just calls –initWithProperties: 
+
+
+// This might be unnecessary. We should see the cookies getting created as we hook the constructor.
+// TODO: Double check
+#if 0
 + (NSArray *)cookiesWithResponseHeaderFields:(NSDictionary *)headerFields forURL:(NSURL *)theURL {
 	NSArray *origResult = %orig(headerFields, theURL);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSHTTPCookie" andMethod:@"cookiesWithResponseHeaderFields:forURL:"];
@@ -19,22 +25,14 @@ IntrospySQLiteStorage *traceStorage;
 	[tracer release];
 	return origResult;
 }
+#endif 
 
-+ (id)cookieWithProperties:(NSDictionary *)properties {
-	id origResult = %orig(properties);
-	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSHTTPCookie" andMethod:@"cookieWithProperties:"];
-	[tracer addArgFromPlistObject:properties withKey:@"properties"];
-	[tracer addReturnValueFromPlistObject:[origResult properties]];
-	[traceStorage saveTracedCall:tracer];
-	[tracer release];
-	return origResult;
-}
 
 - (id)initWithProperties:(NSDictionary *)properties {
 	id origResult = %orig(properties);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSHTTPCookie" andMethod:@"initWithProperties:"];
 	[tracer addArgFromPlistObject:properties withKey:@"properties"];
-	[tracer addReturnValueFromPlistObject:[origResult properties]];
+	[tracer addReturnValueFromPlistObject:[PlistObjectConverter convertNSHTTPCookie:origResult]];
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
 	return origResult;
