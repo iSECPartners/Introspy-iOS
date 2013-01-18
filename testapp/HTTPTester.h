@@ -5,6 +5,7 @@
 + (void)runAllTests;
 + (void)testNSURLConnectionClassMethods;
 + (void)testNSURLConnectionInstanceMethods;
++ (void) testNSHTTPCookie;
 
 @end
 

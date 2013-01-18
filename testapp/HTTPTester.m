@@ -5,6 +5,7 @@
 + (void)runAllTests {
 	[self testNSURLConnectionClassMethods];
 	[self testNSURLConnectionInstanceMethods];
+    [self testNSHTTPCookie];
 }
 
 + (void)testNSURLConnectionClassMethods {
@@ -49,6 +50,20 @@
 	     startImmediately:YES];
 	[conn2 release];
 	[deleg2 release];
+}
+
+
++ (void)testNSHTTPCookie {
+
+    NSDictionary *properties = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    @"www.isecpartners.com", NSHTTPCookieDomain,
+                                    @"\test", NSHTTPCookiePath,
+                                    @"testCookies", NSHTTPCookieName,
+                                    @"1", NSHTTPCookieValue,
+                                    nil];
+    [NSHTTPCookie cookieWithProperties:properties];
+    NSHTTPCookie *cookie = [[NSHTTPCookie alloc] initWithProperties:properties];
+    [cookie release];
 }
 
 @end
