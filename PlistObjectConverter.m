@@ -24,27 +24,23 @@
 	if (aURL != nil) {
 		// store specific infoz if its an HTTP URL
 		if ([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"]) {
-
-// TODO: implement code to check if values are nil before adding them. hooked
-// apps kept crashing with nll values for port and parameterString so i just
-// commented it out for the time being.
-		  url_dict = [NSDictionary dictionaryWithObjects:
-				   [NSArray arrayWithObjects: [aURL absoluteString],
-				 			      [aURL scheme],
-							      [aURL host],
-//							      [aURL port],
-							      [aURL path],
-//							      [aURL parameterString],
-							      [aURL query], nil]
-					      	     forKeys:
-							      [NSArray arrayWithObjects:
-						    	      @"absoluteString",
-	      						      @"scheme",
-							      @"host",
-//							      @"port",
-							      @"path",
-//							      @"parameterString",
-							      @"query", nil]];
+		  	url_dict = [NSDictionary dictionaryWithObjects:
+				   		[NSArray arrayWithObjects: [aURL absoluteString],
+		 			      	[aURL scheme],
+					      	[aURL host],
+					      	[PlistObjectConverter autoConvertNil: [aURL port]],
+					      	[aURL path],
+							[PlistObjectConverter autoConvertNil: [aURL parameterString]],
+					      	[aURL query], nil]
+			      	   	forKeys:
+					    [NSArray arrayWithObjects:
+				    	    @"absoluteString",
+  						    @"scheme",
+					      	@"host",
+							@"port",
+					    	@"path",
+							@"parameterString",
+					      	@"query", nil]];
 		// otherwise just store the whole string for now.
 		} else {
 		  url_dict = [NSDictionary dictionaryWithObjects:
