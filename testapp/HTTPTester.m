@@ -35,7 +35,7 @@
         initWithRequest:[NSURLRequest requestWithURL:
 			[NSURL URLWithString:@"https://www.isecpartners.com/?method=initWithRequest:delegate:"]]
         delegate:deleg1];
-    //[deleg1 release]; // Give ownership to the connection
+    [deleg1 release]; // Give ownership to the connection
 	[conn start];
 
 	NSURLConnectionDelegateTester2* deleg2 = [[NSURLConnectionDelegateTester2 alloc] init];
@@ -45,7 +45,7 @@
         delegate:deleg2
         startImmediately:NO];
     [conn2 start];
-    //[deleg2 release]; // Give ownership to the connection
+    [deleg2 release]; // Give ownership to the connection
 }
 
 

@@ -3,7 +3,7 @@
 #include <CommonCrypto/CommonHmac.h>
 
 
-@implementation CryptoTester : NSObject 
+@implementation CryptoTester 
 
 
 static char testKey[16] = "Key 123";

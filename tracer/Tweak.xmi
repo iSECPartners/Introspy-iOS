@@ -42,6 +42,10 @@ IntrospySQLiteStorage *traceStorage;
 #include "hooks/UIPasteboardHooks.xm"
 %end
 
+%group XMLHooks
+#include "hooks/NSXMLParserHooks.xm"
+%end
+
 
 %ctor {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -73,6 +77,7 @@ IntrospySQLiteStorage *traceStorage;
 		%init(FileSystemHooks);
 		%init(PasteboardHooks);
 	    %init(HTTPHooks);
+        %init(XMLHooks);
 	    [KeyChainHooks enableHooks];
 	    [CCCryptorHooks enableHooks];
 	    [CCHmacHooks enableHooks];
