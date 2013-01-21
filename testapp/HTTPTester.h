@@ -10,13 +10,23 @@
 @end
 
 
-@interface NSURLConnectionDelegate1: NSObject {
+@interface NSURLConnectionDelegateTester: NSObject {
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection;
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error;
+- (NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse;
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response;
+- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse;
+@end
+
+@interface NSURLConnectionDelegateTester1: NSURLConnectionDelegateTester {
 }
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
 @end
 
 
-@interface NSURLConnectionDelegate2: NSObject {
+@interface NSURLConnectionDelegateTester2: NSURLConnectionDelegateTester {
 }
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
 @end
