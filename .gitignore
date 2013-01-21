@@ -2,8 +2,9 @@
 .theos
 theos
 *.deb
-obj
-_/*
+/tracer/obj/*
+/tracer/_/*
 testapp/_/*
+/testapp/obj/*
 *.swp
 .gitconfig
