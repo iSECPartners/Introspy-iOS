@@ -11,8 +11,8 @@
 
 + (void)testNSURLConnectionClassMethods {
     [NSURLConnection connectionWithRequest: [NSURLRequest requestWithURL:
-					[NSURL URLWithString:@"https://www.google.com/?method=connectionWithRequest"]]
-				delegate:nil];
+		  [NSURL URLWithString:@"https://www.google.com/?method=connectionWithRequest"]]
+	   delegate:nil];
 
 	NSOperationQueue *queue = [[NSOperationQueue alloc] init];
 	[NSURLConnection sendAsynchronousRequest: [NSURLRequest requestWithURL:
