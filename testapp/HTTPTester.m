@@ -10,8 +10,7 @@
 
 
 + (void)testNSURLConnectionClassMethods {
-	NSURLConnection *conn;
-    conn = [NSURLConnection connectionWithRequest: [NSURLRequest requestWithURL:
+    [NSURLConnection connectionWithRequest: [NSURLRequest requestWithURL:
 					[NSURL URLWithString:@"https://www.google.com/?method=connectionWithRequest"]]
 				delegate:nil];
 
