@@ -61,14 +61,14 @@
 				[NSArray arrayWithObjects:
 					 		[self convertURL:[request URL]],
 							[request HTTPMethod],
-//							[request HTTPBody],
-//						     	[NSNumber numberWithInteger:[request cachePolicy]], nil]
-							nil]
+							[PlistObjectConverter autoConvertNil: [request HTTPBody]],
+					     	[NSNumber numberWithInteger:[request cachePolicy]], 
+					     	nil]
 						forKeys: [NSArray arrayWithObjects:
 							@"URL",
 							@"HTTPMethod",
-//							@"HTTPBody",
-//							@"cachePolicy", nil]];
+							@"HTTPBody",
+							@"cachePolicy",
 							nil]];
 	return url_req;
 }
