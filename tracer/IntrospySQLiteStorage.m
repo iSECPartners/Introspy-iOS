@@ -16,7 +16,7 @@ static sqlite3_stmt *saveTracedCallStmt;
 static sqlite3 *dbConnection;
 
 
-- (IntrospySQLiteStorage *)initWithDefaultDBFilePathAndlogToConsole: (BOOL) shouldLog {
+- (IntrospySQLiteStorage *)initWithDefaultDBFilePathAndLogToConsole: (BOOL) shouldLog {
     // Put application name in the DB's filename to avoid confusion
     NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
     NSString *DBFilePath = [NSString stringWithFormat:defaultDBFileFormat, appId];

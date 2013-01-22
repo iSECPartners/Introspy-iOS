@@ -49,46 +49,63 @@ IntrospySQLiteStorage *traceStorage;
 %end
 
 
+static BOOL getBoolFromPreferences(NSMutableDictionary *preferences, NSString *preferenceValue) {
+    id value = [preferences objectForKey:preferenceValue];
+    if (value == nil) {
+        return YES; // default to YES
+    }
+    return [value boolValue];
+}
+
+
 %ctor {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     // Only hook Apps the user has selected in Introspy's settings panel
     NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
-    if (appId == nil) {
-	[pool drain];
-	return;
-    }
-
-    NSMutableDictionary* preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:preferenceFilePath];
-    NSLog(@"APPNAME = %@", appId);
+    // Load Introspy preferences
+    NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:preferenceFilePath];
     id shouldHook = [preferences objectForKey:appId];
-    if (shouldHook == nil) {
-	[preferences release];
-	[pool drain];
+    if ( (shouldHook == nil) || (! [shouldHook boolValue]) ) {
+        NSLog(@"Introspy - Profiling disabled for %@", appId);
+    	[preferences release];
+    	[pool drain];
 	return;
     }
 
-    if ([shouldHook boolValue]) {
 	// Initialize DB storage
-	// TODO: shouldLog = [preferences shouldLog]
-	BOOL shouldLog = YES;
-	traceStorage = [[IntrospySQLiteStorage alloc] initWithDefaultDBFilePathAndlogToConsole: shouldLog];
+    NSLog(@"Introspy - Profiling enabled for %@", appId);
+    BOOL shouldLog = getBoolFromPreferences(preferences, @"LogToTheConsole");
+	traceStorage = [[IntrospySQLiteStorage alloc] initWithDefaultDBFilePathAndLogToConsole: shouldLog];
 	if (traceStorage != nil) {
 	    // Initialize hooks
-	    // TODO: if Datastorage.is_enabled etc...
-	    %init(UserPreferencesHooks);
-		%init(FileSystemHooks);
-		%init(PasteboardHooks);
-	    %init(HTTPHooks);
-        %init(XMLHooks);
-	    [KeyChainHooks enableHooks];
-	    [CCCryptorHooks enableHooks];
-	    [CCHmacHooks enableHooks];
-        [CCKeyDerivationPBKDFHooks enableHooks];
+        if (getBoolFromPreferences(preferences, @"UserPreferencesHooks")) {
+            %init(UserPreferencesHooks);
+        }
+        if (getBoolFromPreferences(preferences, @"FileSystemHooks")) {
+            %init(FileSystemHooks);
+        }
+        if (getBoolFromPreferences(preferences, @"HTTPHooks")) {
+            %init(HTTPHooks);
+        }
+        if (getBoolFromPreferences(preferences, @"XMLHooks")) {
+            %init(XMLHooks);
+        }
+        if (getBoolFromPreferences(preferences, @"PasteboardHooks")) {
+            %init(PasteboardHooks);
+        }
+        if (getBoolFromPreferences(preferences, @"KeyChainHooks")) {
+            [KeyChainHooks enableHooks];
+        }
+        if (getBoolFromPreferences(preferences, @"CryptoHooks")) {
+            [CCCryptorHooks enableHooks];
+            [CCHmacHooks enableHooks];
+            [CCKeyDerivationPBKDFHooks enableHooks];
+        }
 	}
 	else {
 		NSLog(@"Introspy - DB Initialization error; disabling hooks.");
 	}
-    }
+    
     [preferences release];
 
     // Log all custom URL schemes registered

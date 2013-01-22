@@ -25,9 +25,9 @@
             <key>default</key>
             <true/>
             <key>defaults</key>
-            <string>com.isecpartners.introspy.plist</string>
+            <string>com.isecpartners.introspy</string>
             <key>key</key>
-            <string>FileSystem</string>
+            <string>FileSystemHooks</string>
             <key>label</key>
             <string>File System</string>
          </dict>
@@ -37,9 +37,9 @@
             <key>default</key>
             <true/>
             <key>defaults</key>
-            <string>com.isecpartners.introspy.plist</string>
+            <string>com.isecpartners.introspy</string>
             <key>key</key>
-            <string>HTTP</string>
+            <string>HTTPHooks</string>
             <key>label</key>
             <string>HTTP</string>
          </dict>
@@ -49,9 +49,9 @@
             <key>default</key>
             <true/>
             <key>defaults</key>
-            <string>com.isecpartners.introspy.plist</string>
+            <string>com.isecpartners.introspy</string>
             <key>key</key>
-            <string>UserPreferences</string>
+            <string>UserPreferencesHooks</string>
             <key>label</key>
             <string>User Preferences</string>
          </dict>
@@ -61,9 +61,9 @@
             <key>default</key>
             <true/>
             <key>defaults</key>
-            <string>com.isecpartners.introspy.plist</string>
+            <string>com.isecpartners.introspy</string>
             <key>key</key>
-            <string>Pasteboard</string>
+            <string>PasteboardHooks</string>
             <key>label</key>
             <string>Pasteboard</string>
          </dict>
@@ -73,9 +73,9 @@
             <key>default</key>
             <true/>
             <key>defaults</key>
-            <string>com.isecpartners.introspy.plist</string>
+            <string>com.isecpartners.introspy</string>
             <key>key</key>
-            <string>XML</string>
+            <string>XMLHooks</string>
             <key>label</key>
             <string>XML</string>
          </dict>
@@ -85,9 +85,9 @@
             <key>default</key>
             <true/>
             <key>defaults</key>
-            <string>com.isecpartners.introspy.plist</string>
+            <string>com.isecpartners.introspy</string>
             <key>key</key>
-            <string>Crypto</string>
+            <string>CryptoHooks</string>
             <key>label</key>
             <string>Crypto</string>
          </dict>
@@ -97,9 +97,9 @@
             <key>default</key>
             <true/>
             <key>defaults</key>
-            <string>com.isecpartners.introspy.plist</string>
+            <string>com.isecpartners.introspy</string>
             <key>key</key>
-            <string>KeyChain</string>
+            <string>KeyChainHooks</string>
             <key>label</key>
             <string>KeyChain</string>
          </dict>
@@ -115,7 +115,7 @@
             <key>default</key>
             <true/>
             <key>defaults</key>
-            <string>com.isecpartners.introspy.plist</string>
+            <string>com.isecpartners.introspy</string>
             <key>key</key>
             <string>LogToTheConsole</string>
             <key>label</key>
