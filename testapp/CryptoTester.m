@@ -1,6 +1,7 @@
 #import "CryptoTester.h"
 #include <CommonCrypto/CommonCryptor.h>
 #include <CommonCrypto/CommonHmac.h>
+#include <CommonCrypto/CommonKeyDerivation.h>
 
 
 @implementation CryptoTester 
@@ -15,6 +16,7 @@ static char testData[16] = "s3cret 123";
 
     [self testCCHmac];
     [self testCCCryptor];
+    [self testCCKeyDerivationPBKDF];
 }
 
 
@@ -46,6 +48,21 @@ static char testData[16] = "s3cret 123";
 
     CCCrypt(kCCEncrypt, kCCAlgorithmAES128, kCCOptionPKCS7Padding, testKey, 16, 
         testIv, testData, 16, dataOut, 16, &dataOutMoved);
+}
+
+
++ (void) testCCKeyDerivationPBKDF {
+    CCPBKDFAlgorithm algorithm = kCCPBKDF2;
+    const char password[9] = "s3cretPW";
+    size_t passwordLen = 9;
+    const uint8_t salt[4] = "abc";
+    size_t saltLen = 4; 
+    CCPseudoRandomAlgorithm prf = kCCPRFHmacAlgSHA384; 
+    uint rounds = 123;
+    uint8_t derivedKey[33];
+    size_t derivedKeyLen = 33;
+
+    CCKeyDerivationPBKDF(algorithm, password, passwordLen, salt, saltLen, prf, rounds, derivedKey, derivedKeyLen);
 }
 
 @end
