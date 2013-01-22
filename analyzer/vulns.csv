@@ -1,0 +1,6 @@
+Medium,Item added to KeyChain with weak accessibility options (kSecAttrAccessibleAlways),C,SecItemAdd,attributes/pdmn,dk
+Medium,Item added to KeyChain with accessibility options (kSecAttrAccessibleAlwaysThisDeviceOnly),C,SecItemAdd,attributes/pdmn,dku
+Low,Item added to KeyChain with weak accessibility options (kSecAttrAccessibleAfterFirstUnlock),C,SecItemAdd,attributes/pdmn,ck
+Low,Item added to KeyChain with accessibility options (kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly),C,SecItemAdd,attributes/pdmn,cku
+Informational,Item added to KeyChain with accessibility options (kSecAttrAccessibleWhenUnlocked),C,SecItemAdd,attributes/pdmn,ak
+Informational,Item added to KeyChain with accessibility options (kSecAttrAccessibleWhenUnlockedThisDeviceOnly),C,SecItemAdd,attributes/pdmn,aku
