@@ -12,9 +12,7 @@ IntrospySQLiteStorage *traceStorage;
 + (UIPasteboard *)generalPasteboard {
 	UIPasteboard *origResult = %orig;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"UIPasteboard" andMethod:@"generalPasteboard"];
-	// TODO: what should we store for the return value here? currently just
-	// stuffing the pb contents into the plist"
-	[tracer addReturnValueFromPlistObject:origResult.strings];
+	[tracer addReturnValueFromPlistObject:[PlistObjectConverter convertUIPasteboard: origResult]];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return origResult;
@@ -25,7 +23,7 @@ IntrospySQLiteStorage *traceStorage;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"UIPasteboard" andMethod:@"pasteboardWithName:create:"];
 	[tracer addArgFromPlistObject:pasteboardName withKey:@"pasteboardName"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithBool:create] withKey:@"create"];
-	[tracer addReturnValueFromPlistObject:origResult.strings];
+	[tracer addReturnValueFromPlistObject:[PlistObjectConverter convertUIPasteboard: origResult]];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return origResult;
@@ -35,7 +33,7 @@ IntrospySQLiteStorage *traceStorage;
 	UIPasteboard *origResult = %orig;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"UIPasteboard" andMethod:@"pasteboardWithUniqueName"];
 	[tracer addArgFromPlistObject:origResult.name withKey:@"uniqueName"];
-	[tracer addReturnValueFromPlistObject:origResult.strings];
+	[tracer addReturnValueFromPlistObject:[PlistObjectConverter convertUIPasteboard: origResult]];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return origResult;

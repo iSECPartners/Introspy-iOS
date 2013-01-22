@@ -181,6 +181,35 @@
 }
 
 
+
++ (NSDictionary *) convertUIPasteboard: (UIPasteboard*) pasteboard {
+	if (pasteboard == nil)
+		return nil;
+
+	NSDictionary *pasteboardDict;
+	pasteboardDict = [NSDictionary dictionaryWithObjects:
+		[NSArray arrayWithObjects:
+			[pasteboard name],
+			[NSNumber numberWithUnsignedInt: [pasteboard numberOfItems]],
+			[NSNumber numberWithBool: pasteboard.persistent],
+			[PlistObjectConverter autoConvertNil: [pasteboard string]],
+			[PlistObjectConverter autoConvertNil: [PlistObjectConverter convertURL: [pasteboard URL]]],
+			[PlistObjectConverter autoConvertNil: UIImagePNGRepresentation([pasteboard image])],
+			nil]
+		forKeys:
+		[NSArray arrayWithObjects:
+			@"name",
+			@"numberOfItems",
+			@"persistent",
+			@"string",
+			@"URL",
+			@"image",
+			nil]];
+
+	return pasteboardDict;
+}
+
+
 // Convert a C buffer to a string of hex numbers
 + (NSString *) convertCBuffer:(const void *) buffer withLength: (size_t) length {
 

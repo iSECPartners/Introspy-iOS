@@ -10,5 +10,6 @@
 + (NSDictionary *) convertNSURLRequest:(NSURLRequest *)request;
 + (NSDictionary *) convertNSURLAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
 + (NSDictionary *) convertNSHTTPCookie: (NSHTTPCookie*) cookie;
++ (NSDictionary *) convertUIPasteboard: (UIPasteboard*) pasteboard;
 + (NSString *) convertCBuffer:(const void *) buffer withLength: (size_t) length;
 @end
