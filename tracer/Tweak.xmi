@@ -13,6 +13,8 @@ static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/
 #import "hooks/KeyChainHooks.h"
 #import "hooks/CCCryptorHooks.h"
 #import "hooks/CCHmacHooks.h"
+#import "hooks/CCKeyDerivationPBKDF.h"
+
 
 
 // Hooks for ObjC methods rely on the Logos pre-processor
@@ -40,6 +42,10 @@ IntrospySQLiteStorage *traceStorage;
 
 %group PasteboardHooks
 #include "hooks/UIPasteboardHooks.xm"
+%end
+
+%group XMLHooks
+#include "hooks/NSXMLParserHooks.xm"
 %end
 
 
@@ -73,9 +79,11 @@ IntrospySQLiteStorage *traceStorage;
 		%init(FileSystemHooks);
 		%init(PasteboardHooks);
 	    %init(HTTPHooks);
+        %init(XMLHooks);
 	    [KeyChainHooks enableHooks];
 	    [CCCryptorHooks enableHooks];
 	    [CCHmacHooks enableHooks];
+        [CCKeyDerivationPBKDFHooks enableHooks];
 	}
 	else {
 		NSLog(@"Introspy - DB Initialization error; disabling hooks.");

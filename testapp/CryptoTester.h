@@ -6,6 +6,7 @@
 
 + (void) testCCHmac;
 + (void) testCCCryptor;
++ (void) testCCKeyDerivationPBKDF;
 
 @end
 

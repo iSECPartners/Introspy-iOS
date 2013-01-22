@@ -6,6 +6,7 @@
 #import "HTTPTester.h"
 #import "KeyChainTester.h"
 #import "CryptoTester.h"
+#import "XMLTester.h"
 
 
 @implementation RootViewController
@@ -32,9 +33,6 @@
     // Pasteboard
     [PasteboardTester runAllTests];
 
-    // HTTP
-    [HTTPTester runAllTests];
-
     // KeyChain
     [KeyChainTester runAllTests];
 
@@ -44,6 +42,11 @@
     // Crypto
     [CryptoTester runAllTests];
 
+    // HTTP
+    [HTTPTester runAllTests];
+
+    // XML
+    [XMLTester runAllTests];
 }
 @end
 
