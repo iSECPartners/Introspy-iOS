@@ -7,7 +7,7 @@
       <key>cell</key>
          <string>PSLinkCell</string>
          <key>icon</key>
-         <string>/Applications/Preferences.app/Settings.png</string>
+         <string>introspy.png</string>
          <key>label</key>
          <string>Introspy - Settings</string>
       </dict>

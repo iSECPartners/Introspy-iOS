@@ -1,7 +1,7 @@
 entry = {
   bundle = AppList;
   cell = PSLinkCell;
-  icon = "/Applications/Preferences.app/Settings.png";
+  icon = "/Library/PreferenceLoader/Preferences/introspy.png";
   isController = 1;
   label = "Introspy - Apps";
   ALSettingsPath = "/var/mobile/Library/Preferences/com.isecpartners.introspy.plist";
