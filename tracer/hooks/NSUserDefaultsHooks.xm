@@ -11,6 +11,10 @@ IntrospySQLiteStorage *traceStorage;
 %hook NSUserDefaults
 
 
+// setObject:forKey: is called by every other setXXX functions. Let's not hook it
+// object:forKey: is called by every other functions. Let's not hook it
+
+
 - (void)setBool:(BOOL)value forKey:(NSString *)defaultName {
 	%orig(value, defaultName);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSUserDefaults" andMethod:@"setBool:forKey:"];
@@ -40,17 +44,6 @@ IntrospySQLiteStorage *traceStorage;
 	[tracer release];
 	return;
 }
-
-/* setObject:forKey: is called by every other setXXX functions. Not sure we want to hook it.
-- (void)setObject:(id)value forKey:(NSString *)defaultName {
-	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSUserDefaults" andMethod:@"setObject:forKey:"];
-	//[tracer addArgFromFloat:value withKey:@"value"]; TODO: What do we do with this
-	[tracer addArgFromString:defaultName withKey:@"defaultName"];
-	[traceStorage saveTracedCall: tracer];
-	[tracer release];
-	return %orig(value, defaultName);
-}
-*/
 
 - (void)setURL:(NSURL *)url forKey:(NSString *)defaultName {
 	%orig(url, defaultName);
@@ -144,16 +137,6 @@ IntrospySQLiteStorage *traceStorage;
 	[tracer release];
 	return origResult;
 }
-
-/* object:forKey: is called by every other functions. Not sure we want to hook it.
-- (id)objectForKey:(NSString *)defaultName {
-	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSUserDefaults" andMethod:@"objectForKey:"];
-	[tracer addArgFromString:defaultName withKey:@"defaultName"];
-	[traceStorage saveTracedCall: tracer];
-	[tracer release];
-	return %orig(defaultName);
-}
-*/
 
 - (NSArray *)stringArrayForKey:(NSString *)defaultName {
 	NSArray *origResult = %orig(defaultName);
