@@ -9,6 +9,5 @@
 // So we use this to figure out who called the function we're hooking.
 + (BOOL) wasDirectlyCalledByApp;
 
-//+ (BOOL) wasCalledBy:(NSString *) name;
 
 @end
