@@ -13,7 +13,7 @@ static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/
 #import "hooks/KeyChainHooks.h"
 #import "hooks/CCCryptorHooks.h"
 #import "hooks/CCHmacHooks.h"
-#import "hooks/CCKeyDerivationPBKDF.h"
+#import "hooks/CCKeyDerivationPBKDFHooks.h"
 
 
 
