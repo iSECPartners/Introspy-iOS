@@ -13,6 +13,7 @@ class Vuln:
 		return self.desc
 
 	def checkConditions(self, trace):
+		findings = []
 		for call in trace:
 			if call.clazz == self.clazz and \
  			   call.method == self.method:
@@ -23,7 +24,9 @@ class Vuln:
 					except KeyError, e:
 						break
 				if attribute == self.val:
-					print "%s\n\t%s" % (self, call)
+					call.vuln = self
+					findings.append(call)
+		return findings
 
 class Analyzer:
 	def __init__(self, db, vulns):
@@ -36,12 +39,21 @@ class Analyzer:
 		for line in vulnList:
 			args = line.split(',')
 			self.addVulnToTestFor(
-			  Vuln(args[0], args[1], args[2], args[3], args[4], args[5].strip()))
+			  Vuln(args[0],			# severity
+			       args[1],			# description
+			       args[2],			# class name
+			       args[3],			# method name
+			       args[4],			# attribute to test for
+			       args[5].strip())) 	# attribute value
 
 	def addVulnToTestFor(self, vuln):
 		self.vulns_to_test_for.append(vuln)
 
 	def runTests(self):
+		findings = []
 		for vuln in self.vulns_to_test_for:
-			vuln.checkConditions(self.trace.calls)
+			result = vuln.checkConditions(self.trace.calls)
+			if result:
+				findings.append(result)
+		return findings
 

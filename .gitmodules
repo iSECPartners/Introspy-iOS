@@ -1,0 +1,3 @@
+[submodule "analyzer/submodules"]
+	path = analyzer/submodules
+	url = git://github.com/mitsuhiko/jinja2.git

@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>Introspy Results</title>
+</head>
+<body>
+	<ul id="vulns">
+	  {% for finding in findings %}
+	  {% for trace in finding %}
+	  		<li>{{trace.vuln.desc}}</li>
+			<li>{{trace.clazz}}:{{trace.method}}</li>
+		{% endfor %}
+	  {% endfor %}
+  	</ul>
+</body>
+</html>
