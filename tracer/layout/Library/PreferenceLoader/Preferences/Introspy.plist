@@ -3,7 +3,7 @@ entry = {
   cell = PSLinkCell;
   icon = "/Applications/Preferences.app/Settings.png";
   isController = 1;
-  label = "Introspy";
+  label = "Introspy - Apps";
   ALSettingsPath = "/var/mobile/Library/Preferences/com.isecpartners.introspy.plist";
   ALSettingsKeyPrefix = "";
   ALChangeNotification = "com.isecpartners.introspy";
@@ -22,7 +22,6 @@ entry = {
       "cell-class-name" = "ALSwitchCell";
       "icon-size" = 29;
       "suppress-hidden-apps" = 1;
-      "footer-title" = "© iSEC Partners";
     }
   );
 };
