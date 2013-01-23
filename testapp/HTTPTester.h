@@ -6,6 +6,7 @@
 + (void)testNSURLConnectionClassMethods;
 + (void)testNSURLConnectionInstanceMethods;
 + (void) testNSHTTPCookie;
++ (void)testNSURLCredential;
 
 @end
 

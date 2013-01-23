@@ -10,6 +10,7 @@ IntrospySQLiteStorage *traceStorage;
 
 %hook NSURLCredential
 
+//credentialWithXXX all call initWithXXX so we don't hook them
 
 - (id)initWithUser:(NSString *)user password:(NSString *)password persistence:(NSURLCredentialPersistence)persistence {
 	id origResult = %orig(user, password, persistence);
@@ -23,7 +24,8 @@ IntrospySQLiteStorage *traceStorage;
 	return origResult;
 }
 
-
+// TODO: Hook server and client cert stuff
+#if 0
 - (id)initWithTrust:(SecTrustRef)trust {
 	id origResult = %orig(trust);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLCredential" andMethod:@"initWithTrust:"];
@@ -45,7 +47,7 @@ IntrospySQLiteStorage *traceStorage;
 	[tracer release];
 	return origResult;
 }
-
+#endif
 
 %end
 

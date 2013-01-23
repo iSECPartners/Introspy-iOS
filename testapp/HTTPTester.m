@@ -6,7 +6,16 @@
     [self testNSURLConnectionInstanceMethods];
 	[self testNSURLConnectionClassMethods];
     [self testNSHTTPCookie];
+    [self testNSURLCredential];
 }
+
+
++ (void)testNSURLCredential {
+
+    [[NSURLCredential alloc] initWithUser:@"User" password:@"S3cr3t" persistence:NSURLCredentialPersistencePermanent];
+    [NSURLCredential credentialWithUser:@"User" password:@"S3cr3t" persistence:NSURLCredentialPersistencePermanent];
+
+} 
 
 
 + (void)testNSURLConnectionClassMethods {
