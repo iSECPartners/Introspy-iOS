@@ -3,11 +3,11 @@
 #include <Security/Security.h>
 
 #import "KeyChainHooks.h"
-#import "../IntrospySQLiteStorage.h"
+#import "../SQLiteStorage.h"
 
 
 // Nice global
-extern IntrospySQLiteStorage *traceStorage;
+extern SQLiteStorage *traceStorage;
 
 
 // Hook SecItemAdd()
@@ -87,7 +87,7 @@ static OSStatus replaced_SecPKCS12Import(CFDataRef pkcs12_data, CFDictionaryRef 
 }
 */
 
-@implementation KeyChainHooks : NSObject 
+@implementation KeyChainHooks 
 
 + (void)enableHooks {
     MSHookFunction(SecItemAdd, replaced_SecItemAdd, (void **) &original_SecItemAdd);

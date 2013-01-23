@@ -3,12 +3,12 @@
 #include <CommonCrypto/CommonHMAC.h>
 
 #import "CCHmacHooks.h"
-#import "../IntrospySQLiteStorage.h"
+#import "../SQLiteStorage.h"
 #import "../PlistObjectConverter.h"
 #import "../CallStackInspector.h"
 
 // Nice global
-extern IntrospySQLiteStorage *traceStorage;
+extern SQLiteStorage *traceStorage;
 
 // from CommonDigest.h
 #define HMAC_MAX_BLOCK_SIZE	CC_SHA512_BLOCK_BYTES
@@ -146,7 +146,7 @@ static void replaced_CCHmac(CCHmacAlgorithm algorithm, const void *key, size_t k
     return;
 }
 
-@implementation CCHmacHooks : NSObject
+@implementation CCHmacHooks
 
 + (void)enableHooks {
     MSHookFunction(CCHmacInit, replaced_CCHmacInit, (void **) &original_CCHmacInit);

@@ -14,8 +14,6 @@
 
 // Plist objects are string, number, boolean, date, data, dictionary and array.
 - (BOOL) addArgFromPlistObject:(id) arg withKey:(NSString *)key;
-
-// Return value should be transformed into an NSNumber
 - (BOOL) addReturnValueFromPlistObject:(id) result;
 
 - (NSData *) serializeArgs;

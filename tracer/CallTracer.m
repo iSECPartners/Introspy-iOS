@@ -1,8 +1,8 @@
 #import "CallTracer.h"
-#import "IntrospySQLiteStorage.h"
+#import "SQLiteStorage.h"
 
 
-@implementation CallTracer : NSObject
+@implementation CallTracer
 
 @synthesize args;
 @synthesize className;

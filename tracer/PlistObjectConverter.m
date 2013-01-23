@@ -3,7 +3,7 @@
 
 
 // TODO: This is going to be a huge file. We should split it in some way
-@implementation PlistObjectConverter : NSObject
+@implementation PlistObjectConverter
 
 
 // Utility function to automatically convert nil to an empty string

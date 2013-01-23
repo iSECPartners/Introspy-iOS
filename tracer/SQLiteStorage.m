@@ -1,7 +1,7 @@
-#import "IntrospySQLiteStorage.h"
+#import "SQLiteStorage.h"
 #include <sqlite3.h>
 
-@implementation IntrospySQLiteStorage : NSObject 
+@implementation SQLiteStorage 
 
 
 // Database settings
@@ -16,7 +16,7 @@ static sqlite3_stmt *saveTracedCallStmt;
 static sqlite3 *dbConnection;
 
 
-- (IntrospySQLiteStorage *)initWithDefaultDBFilePathAndLogToConsole: (BOOL) shouldLog {
+- (SQLiteStorage *)initWithDefaultDBFilePathAndLogToConsole: (BOOL) shouldLog {
     // Put application name in the DB's filename to avoid confusion
     NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
     NSString *DBFilePath = [NSString stringWithFormat:defaultDBFileFormat, appId];
@@ -24,7 +24,7 @@ static sqlite3 *dbConnection;
 }
 
 
-- (IntrospySQLiteStorage *)initWithDBFilePath:(NSString *) DBFilePath andLogToConsole: (BOOL) shouldLog {
+- (SQLiteStorage *)initWithDBFilePath:(NSString *) DBFilePath andLogToConsole: (BOOL) shouldLog {
     self = [super init];
     sqlite3 *dbConn;
 

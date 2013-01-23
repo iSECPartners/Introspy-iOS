@@ -1,7 +1,7 @@
 
 // Utility functions
 #import "CallTracer.h"
-#import "IntrospySQLiteStorage.h"
+#import "SQLiteStorage.h"
 #import "PlistObjectConverter.h"
 #import "CallStackInspector.h"
 
@@ -19,7 +19,7 @@ static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/
 
 // Hooks for ObjC methods rely on the Logos pre-processor
 // H4ck to split Logos hooking code into separate files: we're including actual code, not headers
-IntrospySQLiteStorage *traceStorage;
+SQLiteStorage *traceStorage;
 
 
 %group FileSystemHooks
@@ -76,7 +76,7 @@ static BOOL getBoolFromPreferences(NSMutableDictionary *preferences, NSString *p
 	// Initialize DB storage
     NSLog(@"Introspy - Profiling enabled for %@", appId);
     BOOL shouldLog = getBoolFromPreferences(preferences, @"LogToTheConsole");
-	traceStorage = [[IntrospySQLiteStorage alloc] initWithDefaultDBFilePathAndLogToConsole: shouldLog];
+	traceStorage = [[SQLiteStorage alloc] initWithDefaultDBFilePathAndLogToConsole: shouldLog];
 	if (traceStorage != nil) {
 	    // Initialize hooks
         if (getBoolFromPreferences(preferences, @"UserPreferencesHooks")) {

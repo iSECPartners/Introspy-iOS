@@ -3,12 +3,12 @@
 #include <CommonCrypto/CommonKeyDerivation.h>
 
 #import "CCKeyDerivationPBKDFHooks.h"
-#import "../IntrospySQLiteStorage.h"
+#import "../SQLiteStorage.h"
 #import "../PlistObjectConverter.h"
 #import "../CallStackInspector.h"
 
 // Nice global
-extern IntrospySQLiteStorage *traceStorage;
+extern SQLiteStorage *traceStorage;
 
 
 

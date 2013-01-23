@@ -3,12 +3,12 @@
 #include <CommonCrypto/CommonCryptor.h>
 
 #import "CCCryptorHooks.h"
-#import "../IntrospySQLiteStorage.h"
+#import "../SQLiteStorage.h"
 #import "../PlistObjectConverter.h"
 #import "../CallStackInspector.h"
 
 // Nice global
-extern IntrospySQLiteStorage *traceStorage;
+extern SQLiteStorage *traceStorage;
 
 
 // Utiity function
@@ -233,7 +233,7 @@ static CCCryptorStatus replaced_CCCrypt(
 }
 
 
-@implementation CCCryptorHooks : NSObject 
+@implementation CCCryptorHooks 
 
 + (void)enableHooks {
      MSHookFunction((void *) CCCryptorCreate, (void *)  replaced_CCCryptorCreate, (void **) &original_CCCryptorCreate);
