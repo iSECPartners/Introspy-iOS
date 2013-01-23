@@ -107,22 +107,7 @@
 
 	// Parse the proposed credential
 	NSURLCredential *cred = [challenge proposedCredential];
-	NSDictionary *credentialDict = nil;
-	// TODO: store [cred identity] to extract the cert and private key for client auth
-	credentialDict = [NSDictionary dictionaryWithObjects:
-						[NSArray arrayWithObjects:
-						[PlistObjectConverter autoConvertNil: [cred user]],
-						[PlistObjectConverter autoConvertNil: [cred password]],
-						[PlistObjectConverter autoConvertNil: [cred certificates]],
-						[NSNumber numberWithUnsignedInt: [cred persistence]], 
-						nil]
-			      	forKeys:
-				    	[NSArray arrayWithObjects:
-						@"user",
-				    	@"password",
-				    	@"certificate",
-						@"persistence", 
-						nil]];
+	NSDictionary *credentialDict = [PlistObjectConverter convertNSURLCredential:cred];
 
 	// All done
 	NSDictionary *challengeDict = [NSDictionary dictionaryWithObjects:
@@ -135,6 +120,32 @@
 						@"proposedCredential", nil]];
 
 	return challengeDict;
+}
+
+
++ (NSDictionary *) convertNSURLCredential: (NSURLCredential*) credential {
+	if (credential == nil)
+		return nil;
+
+	NSDictionary *credentialDict = nil;
+	// TODO: store [cred identity] to extract the cert and private key for client auth
+	credentialDict = [NSDictionary dictionaryWithObjects:
+						[NSArray arrayWithObjects:
+						[PlistObjectConverter autoConvertNil: [credential user]],
+						[PlistObjectConverter autoConvertNil: [credential password]],
+						[NSNumber numberWithUnsignedInt: (unsigned int)[credential certificates]], //TODO: Store the certs
+						[NSNumber numberWithUnsignedInt: (unsigned int)[credential identity]],
+						[NSNumber numberWithUnsignedInt: [credential persistence]], 
+						nil]
+			      	forKeys:
+				    	[NSArray arrayWithObjects:
+						@"user",
+				    	@"password",
+				    	@"certificates",
+				    	@"identity",
+						@"persistence", 
+						nil]];
+	return credentialDict;
 }
 
 
