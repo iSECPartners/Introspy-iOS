@@ -1,15 +1,17 @@
 #import "PlistObjectConverter.h"
 
 
-
-// TODO: This is going to be a huge file. We should split it in some way
 @implementation PlistObjectConverter
+
+
+// What we store in the plist if the object's pointer is nil
+static NSString *serializedNilValue = @"nil";
 
 
 // Utility function to automatically convert nil to an empty string
 + (id) autoConvertNil:(id) pointer {
 	if (pointer == nil) {
-		return @"";
+		return serializedNilValue;
 	}
 	else {
 		return pointer;
@@ -17,8 +19,11 @@
 }
 
 
-// Convert an NSURL to an NSDictionary suitable for plist storage.
 + (NSDictionary *) convertURL:(NSURL *)aURL {
+	if (aURL == nil) {
+		return [NSDictionary dictionary];
+	}
+
 	NSDictionary *url_dict = nil;
 	NSString *scheme = [aURL scheme];
 	if (aURL != nil) {
@@ -57,6 +62,9 @@
 
 // Convert an NSURLRequest to an NSDictionary suitable for plist storage.
 + (NSDictionary *) convertNSURLRequest:(NSURLRequest *)request {
+	if (request == nil)
+		return [NSDictionary dictionary];
+	
 	NSDictionary *url_req = [NSDictionary dictionaryWithObjects:
 				[NSArray arrayWithObjects:
 					 		[self convertURL:[request URL]],
@@ -74,11 +82,50 @@
 }
 
 
-// Convert an NSURLAuthenticationChallenge to an NSDictionary suitable for plist storage
-+ (NSDictionary *) convertNSURLAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
++ (NSDictionary *) convertNSURLResponse:(NSURLResponse *)response {
+	if (response == nil)
+		return [NSDictionary dictionary];
 
-	// Parse the protection space
-	NSURLProtectionSpace *pSpace = [challenge protectionSpace];
+	NSDictionary *responseDict = [NSDictionary dictionaryWithObjects:
+		[NSArray arrayWithObjects:
+			 		[self convertURL:[response URL]],
+					[response MIMEType],
+					[response suggestedFilename],
+			     	nil]
+				forKeys: [NSArray arrayWithObjects:
+					@"URL",
+					@"MIMEType",
+					@"suggestedFilename",
+					nil]];
+	return responseDict;
+}
+
+
++ (NSDictionary *) convertNSCachedURLResponse:(NSCachedURLResponse *)response {
+	if (response == nil)
+		return [NSDictionary dictionary];
+
+	// Do we want to store the actual data ?
+	NSDictionary *responseDict = [NSDictionary dictionaryWithObjects:
+		[NSArray arrayWithObjects:
+			 		[self convertNSURLResponse:[response response]],
+					[response storagePolicy],
+					[PlistObjectConverter autoConvertNil:[response userInfo]],
+			     	nil]
+				forKeys: [NSArray arrayWithObjects:
+					@"response",
+					@"storagePolicy",
+					@"userInfo",
+					nil]];
+	return responseDict;
+}
+
+
++ (NSDictionary *) convertNSURLProtectionSpace:(NSURLProtectionSpace *)pSpace {
+	if (pSpace == nil) {
+		return [NSDictionary dictionary];
+	}
+
 	NSDictionary *pSpaceDict = [NSDictionary dictionaryWithObjects:
 									[NSArray arrayWithObjects:
 										[pSpace authenticationMethod],
@@ -103,6 +150,20 @@
 											@"realm",
 											@"receivesCredentialSecurely",
 											nil]];
+	return pSpaceDict;
+}
+
+
+// Convert an NSURLAuthenticationChallenge to an NSDictionary suitable for plist storage
++ (NSDictionary *) convertNSURLAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+
+	if (challenge == nil) {
+		return [NSDictionary dictionary];
+	}
+
+	// Parse the protection space
+	NSURLProtectionSpace *pSpace = [challenge protectionSpace];
+	NSDictionary *pSpaceDict = [PlistObjectConverter convertNSURLProtectionSpace:pSpace];
 
 
 	// Parse the proposed credential
@@ -125,7 +186,7 @@
 
 + (NSDictionary *) convertNSURLCredential: (NSURLCredential*) credential {
 	if (credential == nil)
-		return nil;
+		return [NSDictionary dictionary];
 
 	NSDictionary *credentialDict = nil;
 	// TODO: store [cred identity] to extract the cert and private key for client auth
@@ -151,7 +212,7 @@
 
 + (NSDictionary *) convertNSHTTPCookie: (NSHTTPCookie*) cookie {
 	if (cookie == nil) {
-		return nil;
+		return [NSDictionary dictionary];
 	}
 
 	NSDictionary *cookieDict;
@@ -195,7 +256,7 @@
 
 + (NSDictionary *) convertUIPasteboard: (UIPasteboard*) pasteboard {
 	if (pasteboard == nil)
-		return nil;
+		return [NSDictionary dictionary];
 
 	NSDictionary *pasteboardDict;
 	pasteboardDict = [NSDictionary dictionaryWithObjects:
@@ -225,7 +286,7 @@
 + (NSString *) convertCBuffer:(const void *) buffer withLength: (size_t) length {
 
 	if (buffer == nil)
-		return nil;
+		return [NSDictionary dictionary];
 
 	NSMutableString *hexStream = [NSMutableString stringWithCapacity: length*2];
 	for(int i=0;i<length;i++) {

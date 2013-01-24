@@ -8,7 +8,10 @@
 + (id) autoConvertNil: (id) pointer;
 + (NSDictionary*) convertURL:(NSURL *)aURL;
 + (NSDictionary *) convertNSURLRequest:(NSURLRequest *)request;
++ (NSDictionary *) convertNSURLResponse:(NSURLResponse *)response;
++ (NSDictionary *) convertNSCachedURLResponse:(NSCachedURLResponse *)response;
 + (NSDictionary *) convertNSURLAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
++ (NSDictionary *) convertNSURLProtectionSpace:(NSURLProtectionSpace *)pSpace;
 + (NSDictionary *) convertNSURLCredential: (NSURLCredential*) credential;
 + (NSDictionary *) convertNSHTTPCookie: (NSHTTPCookie*) cookie;
 + (NSDictionary *) convertUIPasteboard: (UIPasteboard*) pasteboard;
