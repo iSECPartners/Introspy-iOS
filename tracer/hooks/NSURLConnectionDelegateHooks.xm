@@ -7,20 +7,23 @@ Tweak.xmi includes/defines the following things:
 IntrospySQLiteStorage *traceStorage;
 */
 
-// TODO: NSURLConnectionDelegate is not a class but a protocol that any class can choose to implement.
-// We need to figure out at runtime the class that's actually implementing this protocol.
-// We could use that to detect basic auth and SSL client auth I think. Possibly dump the passwords/certs.
 
-#if 0
+
 %hook NSURLConnectionDelegate
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-	%orig(connection, response);
-	// TODO: do we actually want anything from this? the response data is in
-	// connection:didReceiveData: ...
-	return;
+
+- (NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse {
+	id origResult = %orig(connection, cachedResponse);
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnectionDelegate" andMethod:@"connection:willCacheResponse:"];
+	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) connection] withKey:@"connection"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSCachedURLResponse: cachedResponse] withKey:@"cachedResponse"];
+	[tracer addReturnValueFromPlistObject: [PlistObjectConverter convertNSCachedURLResponse:origResult]];
+	[traceStorage saveTracedCall:tracer];
+	[tracer release];
+	return origResult;
 }
 
+#if 0
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
 	%orig(connection, data);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnectionDelegate" andMethod:@"connection:didReceiveData:"];
@@ -50,7 +53,7 @@ IntrospySQLiteStorage *traceStorage;
 	[tracer release];
 	return;
 }
-
-%end
 #endif
+%end
+
 /* vim: set filetype=objc : */

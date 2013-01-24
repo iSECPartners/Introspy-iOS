@@ -22,6 +22,19 @@ static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/
 SQLiteStorage *traceStorage;
 
 
+// Delegate hooks => classes are not known until runtime
+
+// Logos h4ck => There are two methods where we need to initialize NSURLConnectionDelegate hooks
+%group NSURLConnectionDelegateHooks1
+#include "hooks/NSURLConnectionDelegateHooks.xm"
+%end
+%group NSURLConnectionDelegateHooks2
+#include "hooks/NSURLConnectionDelegateHooks.xm"
+%end
+
+
+
+// Regular hooks
 %group FileSystemHooks
 #include "hooks/NSDataHooks.xm"
 #include "hooks/NSFileHandleHooks.xm"
@@ -32,7 +45,6 @@ SQLiteStorage *traceStorage;
 
 %group HTTPHooks
 #include "hooks/NSURLConnectionHooks.xm"
-#include "hooks/NSURLConnectionDelegateHooks.xm"
 #include "hooks/NSHTTPCookieHooks.xm"
 #include "hooks/NSURLCredentialHooks.xm"
 %end
@@ -50,6 +62,7 @@ SQLiteStorage *traceStorage;
 %end
 
 
+// Utility function to parse the preference file
 static BOOL getBoolFromPreferences(NSMutableDictionary *preferences, NSString *preferenceValue) {
     id value = [preferences objectForKey:preferenceValue];
     if (value == nil) {

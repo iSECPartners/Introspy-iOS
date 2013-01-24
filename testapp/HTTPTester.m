@@ -86,7 +86,7 @@
 }
 // TODO: Hook Delegate to see if they are caching responses
 - (NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse {
-    return nil;
+    return cachedResponse;
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {

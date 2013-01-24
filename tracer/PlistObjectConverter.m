@@ -88,14 +88,16 @@ static NSString *serializedNilValue = @"nil";
 
 	NSDictionary *responseDict = [NSDictionary dictionaryWithObjects:
 		[NSArray arrayWithObjects:
-			 		[self convertURL:[response URL]],
+			 		[PlistObjectConverter convertURL:[response URL]],
 					[response MIMEType],
 					[response suggestedFilename],
+					[PlistObjectConverter autoConvertNil: [response textEncodingName]],
 			     	nil]
 				forKeys: [NSArray arrayWithObjects:
 					@"URL",
 					@"MIMEType",
 					@"suggestedFilename",
+					@"textEncodingName",
 					nil]];
 	return responseDict;
 }
@@ -108,8 +110,8 @@ static NSString *serializedNilValue = @"nil";
 	// Do we want to store the actual data ?
 	NSDictionary *responseDict = [NSDictionary dictionaryWithObjects:
 		[NSArray arrayWithObjects:
-			 		[self convertNSURLResponse:[response response]],
-					[response storagePolicy],
+			 		[PlistObjectConverter convertNSURLResponse:[response response]],
+					[NSNumber numberWithUnsignedInt:[response storagePolicy]],
 					[PlistObjectConverter autoConvertNil:[response userInfo]],
 			     	nil]
 				forKeys: [NSArray arrayWithObjects:

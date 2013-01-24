@@ -27,8 +27,8 @@ IntrospySQLiteStorage *traceStorage;
 
 - (id)initWithRequest:(NSURLRequest *)request delegate:(id < NSURLConnectionDelegate >)delegate {
 	// Initialize Delegate hooks when the connection starts	
-	//Class delegateClass = [delegate class] ?: [self class];
-	//%init(NSURLConnectionDelegateHooks, NSURLConnectionDelegate = delegateClass);
+	Class delegateClass = [delegate class] ?: [self class];
+	%init(NSURLConnectionDelegateHooks1, NSURLConnectionDelegate = delegateClass);
 
 	id origResult = %orig(request, delegate);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"initWithRequest:delegate:"];
@@ -42,6 +42,10 @@ IntrospySQLiteStorage *traceStorage;
 }
 
 - (id)initWithRequest:(NSURLRequest *)request delegate:(id < NSURLConnectionDelegate >)delegate startImmediately:(BOOL)startImmediately {
+	// Initialize Delegate hooks when the connection starts	
+	Class delegateClass = [delegate class] ?: [self class];
+	%init(NSURLConnectionDelegateHooks2, NSURLConnectionDelegate = delegateClass);
+
 	id origResult = %orig(request, delegate, startImmediately);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"initWithRequest:delegate:startImmediately:"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
