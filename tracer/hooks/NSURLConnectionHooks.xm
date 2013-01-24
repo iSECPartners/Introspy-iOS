@@ -9,30 +9,9 @@ IntrospySQLiteStorage *traceStorage;
 
 %hook NSURLConnection
 
-+ (NSURLConnection *)connectionWithRequest:(NSURLRequest *)request delegate:(id < NSURLConnectionDelegate >)delegate {
-	NSURLConnection *origResult = %orig(request, delegate);
-	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"connectionWithRequest:delegate:"];
-	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
-	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)origResult] withKey:@"delegate"];
-	//  TODO: but do we want anything out of the NSURLConnection returned?
-	// Let's store the pointer for now, just for consistency
-	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
-	[traceStorage saveTracedCall:tracer];
-	[tracer release];
-	return origResult;
-}
-
-+ (void)sendAsynchronousRequest:(NSURLRequest *)request queue:(NSOperationQueue *)queue completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))handler {
-	%orig(request, queue, handler);
-	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"sendAsynchronousRequest:queue:completionHandler:"];
-	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
-	[tracer addArgFromPlistObject:[queue name] withKey:@"queue"];
-	// TODO: do we want to extract any infoz about the handler?
-	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)handler] withKey:@"handler"];
-	[traceStorage saveTracedCall:tracer];
-	[tracer release];
-	return;
-}
+// Not hooking these methods:
+// + connectionWithRequest:delegate: ends up calling initWithRequest:delegate:
+// + sendAsynchronousRequest:queue:completionHandler: ends up calling sendSynchronousRequest:returningResponse:error:
 
 + (NSData *)sendSynchronousRequest:(NSURLRequest *)request returningResponse:(NSURLResponse **)response error:(NSError **)error {
 	NSData *origResult = %orig(request, response, error);
@@ -47,6 +26,10 @@ IntrospySQLiteStorage *traceStorage;
 }
 
 - (id)initWithRequest:(NSURLRequest *)request delegate:(id < NSURLConnectionDelegate >)delegate {
+	// Initialize Delegate hooks when the connection starts	
+	//Class delegateClass = [delegate class] ?: [self class];
+	//%init(NSURLConnectionDelegateHooks, NSURLConnectionDelegate = delegateClass);
+
 	id origResult = %orig(request, delegate);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"initWithRequest:delegate:"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
