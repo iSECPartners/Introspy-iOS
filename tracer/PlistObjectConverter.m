@@ -67,10 +67,10 @@ static NSString *serializedNilValue = @"nil";
 	
 	NSDictionary *url_req = [NSDictionary dictionaryWithObjects:
 				[NSArray arrayWithObjects:
-					 		[self convertURL:[request URL]],
+					 		[PlistObjectConverter convertURL:[request URL]],
 							[request HTTPMethod],
 							[PlistObjectConverter autoConvertNil: [request HTTPBody]],
-					     	[NSNumber numberWithInteger:[request cachePolicy]], 
+					     	[NSNumber numberWithUnsignedInt:[request cachePolicy]], 
 					     	nil]
 						forKeys: [NSArray arrayWithObjects:
 							@"URL",
@@ -89,7 +89,7 @@ static NSString *serializedNilValue = @"nil";
 	NSDictionary *responseDict = [NSDictionary dictionaryWithObjects:
 		[NSArray arrayWithObjects:
 			 		[PlistObjectConverter convertURL:[response URL]],
-					[response MIMEType],
+					[PlistObjectConverter autoConvertNil: [response MIMEType]],
 					[response suggestedFilename],
 					[PlistObjectConverter autoConvertNil: [response textEncodingName]],
 			     	nil]
@@ -289,7 +289,7 @@ static NSString *serializedNilValue = @"nil";
 
 	if (buffer == nil)
 		return [NSDictionary dictionary];
-
+	// TODO: Base64 encode it for consistency with NSData ?
 	NSMutableString *hexStream = [NSMutableString stringWithCapacity: length*2];
 	for(int i=0;i<length;i++) {
 		[hexStream appendFormat:@"%02x", ((unsigned char*) buffer)[i]];

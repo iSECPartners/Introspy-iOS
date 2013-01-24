@@ -23,6 +23,18 @@ IntrospySQLiteStorage *traceStorage;
 	return origResult;
 }
 
+- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse {
+	id origResult = %orig(connection, request, redirectResponse);
+	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnectionDelegate" andMethod:@"connection:willSendRequest:redirectResponse:"];
+	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) connection] withKey:@"connection"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLResponse:redirectResponse] withKey:@"redirectResponse"];
+	[tracer addReturnValueFromPlistObject: [PlistObjectConverter convertNSURLRequest:origResult]];
+	[traceStorage saveTracedCall:tracer];
+	[tracer release];
+	return origResult;
+}
+
 #if 0
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
 	%orig(connection, data);

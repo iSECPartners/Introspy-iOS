@@ -40,9 +40,10 @@
 
 + (void)testNSURLConnectionInstanceMethods {
 	NSURLConnectionDelegateTester1* deleg1 = [[NSURLConnectionDelegateTester1 alloc] init];
+    // Connect over HTTP to trigger a redirection
 	NSURLConnection *conn = [[NSURLConnection alloc] 
         initWithRequest:[NSURLRequest requestWithURL:
-			[NSURL URLWithString:@"https://www.isecpartners.com/?method=initWithRequest:delegate:"]]
+			[NSURL URLWithString:@"http://www.isecpartners.com/?method=initWithRequest:delegate:"]]
         delegate:deleg1];
     [deleg1 release]; // Give ownership to the connection
 	[conn start];
@@ -75,7 +76,7 @@
 
 
 
-// Helpers classes for NSURLConnection testing
+// Helpers classes for NSURLConnection and NSURLConnectionDelegate testing
 @implementation NSURLConnectionDelegateTester
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     [connection release];
@@ -84,7 +85,7 @@
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     [connection release];
 }
-// TODO: Hook Delegate to see if they are caching responses
+
 - (NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse {
     return cachedResponse;
 }
