@@ -10,7 +10,7 @@ static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/
 
 
 // Hooks for C functions directly use MobileSubstrate
-#import "hooks/KeyChainHooks.h"
+#import "hooks/SecurityHooks.h"
 #import "hooks/CCCryptorHooks.h"
 #import "hooks/CCHmacHooks.h"
 #import "hooks/CCKeyDerivationPBKDFHooks.h"
@@ -108,7 +108,7 @@ static BOOL getBoolFromPreferences(NSMutableDictionary *preferences, NSString *p
             %init(PasteboardHooks);
         }
         if (getBoolFromPreferences(preferences, @"KeyChainHooks")) {
-            [KeyChainHooks enableHooks];
+            [SecurityHooks enableHooks];
         }
         if (getBoolFromPreferences(preferences, @"CryptoHooks")) {
             [CCCryptorHooks enableHooks];

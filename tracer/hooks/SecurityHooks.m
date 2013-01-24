@@ -2,7 +2,7 @@
 #include <substrate.h>
 #include <Security/Security.h>
 
-#import "KeyChainHooks.h"
+#import "SecurityHooks.h"
 #import "../SQLiteStorage.h"
 
 
@@ -10,6 +10,26 @@
 extern SQLiteStorage *traceStorage;
 
 
+
+// Public Crypto Hook
+// Hook SecPKCS12Import() - If the app uses a client cert
+/*
+static OSStatus (*original_SecPKCS12Import)(CFDataRef pkcs12_data, CFDictionaryRef options, CFArrayRef *items);
+
+static OSStatus replaced_SecPKCS12Import(CFDataRef pkcs12_data, CFDictionaryRef options, CFArrayRef *items) {
+    OSStatus origResult = original_SecPKCS12Import(pkcs12_data, options, items);
+    CallTracer *tracer = [[CallTracer alloc] initWithClass:@"C" andMethod:@"SecPKCS12Import"];
+    [tracer addArgFromDictionary:(NSDictionary*)options withKey:@"options"];
+    [tracer addReturnValueFromPlistObject: [NSNumber numberWithInt:origResult]];
+    [traceStorage saveTracedCall: tracer];
+    [tracer release];  
+    return original_SecPKCS12Import(pkcs12_data, options, items);
+
+}
+*/
+
+
+// Keychain Hooks
 // Hook SecItemAdd()
 // Will crash with a certificate. TODO: Sanitize the dictionnary before logging it
 static OSStatus (*original_SecItemAdd)(CFDictionaryRef attributes, CFTypeRef *result);
@@ -72,22 +92,7 @@ static OSStatus replaced_SecItemUpdate(CFDictionaryRef query, CFDictionaryRef at
 }
 
 
-// Hook SecPKCS12Import() - TODO: Useful for secure containers that use client certs to connect to the server
-// TODO: SecKeyEncrypt for PKI
-/*
-static OSStatus (*original_SecPKCS12Import)(CFDataRef pkcs12_data, CFDictionaryRef options, CFArrayRef *items);
-
-static OSStatus replaced_SecPKCS12Import(CFDataRef pkcs12_data, CFDictionaryRef options, CFArrayRef *items) {
-    CallTracer *tracer = [[CallTracer alloc] initWithClass:@"C" andMethod:@"SecPKCS12Import"];
-    [tracer addArgFromDictionary:(NSDictionary*)options withKey:@"options"];
-    [traceStorage saveTracedCall: tracer];
-    [tracer release];  
-    return original_SecPKCS12Import(pkcs12_data, options, items);
-
-}
-*/
-
-@implementation KeyChainHooks 
+@implementation SecurityHooks 
 
 + (void)enableHooks {
     MSHookFunction(SecItemAdd, replaced_SecItemAdd, (void **) &original_SecItemAdd);
