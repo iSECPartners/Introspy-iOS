@@ -186,9 +186,55 @@ static NSString *serializedNilValue = @"nil";
 }
 
 
++ (NSDictionary *) convertSecCertificateRef: (SecCertificateRef) certificate {
+	if (certificate == nil)
+		return [NSDictionary dictionary];
+
+	// Just store the summary of the certificate
+	NSString *certSummary = (NSString *)SecCertificateCopySubjectSummary(certificate);
+	NSDictionary *credentialDict = [NSDictionary dictionaryWithObjects:
+			[NSArray arrayWithObjects:
+			certSummary,
+			nil]
+	  	forKeys:
+	    	[NSArray arrayWithObjects:
+			@"subjectSummary",
+			nil]];
+
+	return credentialDict;
+}
+
+
++ (NSDictionary *) convertSecTrustRef:(SecTrustRef) trust {
+	if (trust == nil)
+		return [NSDictionary dictionary];
+
+	// This is getting complicated...
+	// Just store the summary of the each certificate for now
+	unsigned int certNB = SecTrustGetCertificateCount(trust);
+	NSMutableDictionary *trustDict = [NSMutableDictionary dictionaryWithCapacity:certNB];
+	for(int i=0; i<certNB; i++) {
+		SecCertificateRef certificate = SecTrustGetCertificateAtIndex(trust, i);
+		[trustDict setValue:[PlistObjectConverter convertSecCertificateRef: certificate] forKey:[NSString stringWithFormat:@"cert %d", i]];
+	}
+	return trustDict;
+}
+
+
 + (NSDictionary *) convertNSURLCredential: (NSURLCredential*) credential {
 	if (credential == nil)
 		return [NSDictionary dictionary];
+
+	// Parse the array of certificates
+	NSArray *certificates = [credential certificates];
+	NSMutableArray *certsSummary = [NSMutableArray array]; // array of NSString
+	if (certificates != nil) {
+
+		for(id cert in certificates)
+			{
+				[certsSummary addObject:[PlistObjectConverter convertSecCertificateRef:(SecCertificateRef)cert]];
+			}
+	}
 
 	NSDictionary *credentialDict = nil;
 	// TODO: store [cred identity] to extract the cert and private key for client auth
@@ -196,7 +242,7 @@ static NSString *serializedNilValue = @"nil";
 						[NSArray arrayWithObjects:
 						[PlistObjectConverter autoConvertNil: [credential user]],
 						[PlistObjectConverter autoConvertNil: [credential password]],
-						[NSNumber numberWithUnsignedInt: (unsigned int)[credential certificates]], //TODO: Store the certs
+						certsSummary,
 						[NSNumber numberWithUnsignedInt: (unsigned int)[credential identity]],
 						[NSNumber numberWithUnsignedInt: [credential persistence]], 
 						nil]
