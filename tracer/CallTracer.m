@@ -13,8 +13,8 @@
 	/* initialize the call tracer with class and method names */
 	[super init];
 	args = [[NSMutableDictionary alloc] init];
-	className = clazz;
-	methodName = meth;
+	className = [[NSString alloc] initWithString:clazz];
+	methodName = [[NSString alloc] initWithString:meth];
 	returnValue = [[NSMutableDictionary alloc] init];
 	return self;
 }
@@ -60,6 +60,8 @@
 {
 	[args release];
 	[returnValue release];
+	[className release];
+	[methodName release];
 	[super dealloc];
 }
 
