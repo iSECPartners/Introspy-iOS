@@ -139,6 +139,7 @@ static NSString *serializedNilValue = @"nil";
 										[PlistObjectConverter autoConvertNil: [pSpace proxyType]],
 										[PlistObjectConverter autoConvertNil: [pSpace realm]],
 										[NSNumber numberWithBool: [pSpace receivesCredentialSecurely]],
+										[PlistObjectConverter convertSecTrustRef: [pSpace serverTrust]],
 										nil]
 									forKeys:
 										[NSArray arrayWithObjects:
@@ -151,6 +152,7 @@ static NSString *serializedNilValue = @"nil";
 											@"proxyType",
 											@"realm",
 											@"receivesCredentialSecurely",
+											@"serverTrust",
 											nil]];
 	return pSpaceDict;
 }
