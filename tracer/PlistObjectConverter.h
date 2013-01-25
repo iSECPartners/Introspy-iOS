@@ -15,5 +15,7 @@
 + (NSDictionary *) convertNSURLCredential: (NSURLCredential*) credential;
 + (NSDictionary *) convertNSHTTPCookie: (NSHTTPCookie*) cookie;
 + (NSDictionary *) convertUIPasteboard: (UIPasteboard*) pasteboard;
++ (NSDictionary *) convertSecCertificateRef: (SecCertificateRef) certificate;
++ (NSDictionary *) convertSecTrustRef:(SecTrustRef) trust;
 + (NSString *) convertCBuffer:(const void *) buffer withLength: (size_t) length;
 @end

@@ -10,7 +10,7 @@ IntrospySQLiteStorage *traceStorage;
 
 %hook NSURLCredential
 
-//credentialWithXXX all call initWithXXX so we don't hook them
+//credentialWithXXX() all call initWithXXX() so we don't hook them
 
 - (id)initWithUser:(NSString *)user password:(NSString *)password persistence:(NSURLCredentialPersistence)persistence {
 	id origResult = %orig(user, password, persistence);
@@ -24,18 +24,19 @@ IntrospySQLiteStorage *traceStorage;
 	return origResult;
 }
 
-// TODO: Hook server and client cert stuff
-#if 0
 - (id)initWithTrust:(SecTrustRef)trust {
 	id origResult = %orig(trust);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLCredential" andMethod:@"initWithTrust:"];
-	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) trust] withKey:@"trust"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertSecTrustRef: trust] withKey:@"trust"];
 	[tracer addReturnValueFromPlistObject: [PlistObjectConverter convertNSURLCredential:origResult]];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return origResult;
 }
 
+
+// We probably don't need this as we can already see client cert stuff by hooking NSURLConnection
+#if 0
 - (id)initWithIdentity:(SecIdentityRef)identity certificates:(NSArray *)certArray persistence:(NSURLCredentialPersistence)persistence {
 	id origResult = %orig(identity, certArray, persistence);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLCredential" andMethod:@"initWithIdentity:certificates:persistence:"];

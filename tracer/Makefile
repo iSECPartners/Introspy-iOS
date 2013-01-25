@@ -1,4 +1,4 @@
-#TARGET = iphone:5.1
+TARGET = iphone:5.1
 ARCHS = armv6
 include theos/makefiles/common.mk
 

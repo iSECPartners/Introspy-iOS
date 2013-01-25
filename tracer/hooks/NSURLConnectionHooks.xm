@@ -34,7 +34,6 @@ IntrospySQLiteStorage *traceStorage;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"initWithRequest:delegate:"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)delegate] withKey:@"delegate"];
-	// doesn't like CFType in the plist -- we can parse it if we need to tho
 	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
@@ -51,7 +50,6 @@ IntrospySQLiteStorage *traceStorage;
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)delegate] withKey:@"delegate"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithBool:startImmediately] withKey:@"startImmediately"];
-	// doesn't like CFType in the plist -- we can parse it if we need to tho
 	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
@@ -78,7 +76,7 @@ IntrospySQLiteStorage *traceStorage;
 - (void)useCredential:(NSURLCredential *)credential forAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
 	%orig(credential, challenge);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"useCredential:forAuthenticationChallenge:"];
-	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)credential] withKey:@"credential"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLCredential:credential] withKey:@"credential"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLAuthenticationChallenge: challenge] withKey:@"challenge"];
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
