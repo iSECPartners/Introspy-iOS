@@ -11,7 +11,7 @@
 
 - (CallTracer*)initWithClass:(NSString *)clazz andMethod:(NSString *)meth {
 	/* initialize the call tracer with class and method names */
-	[super init];
+	self = [super init];
 	args = [[NSMutableDictionary alloc] init];
 	className = [[NSString alloc] initWithString:clazz];
 	methodName = [[NSString alloc] initWithString:meth];
