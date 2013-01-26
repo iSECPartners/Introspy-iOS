@@ -33,7 +33,7 @@ IntrospySQLiteStorage *traceStorage;
 
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"initWithRequest:delegate:"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
-	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)delegate] withKey:@"delegate"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLConnectionDelegate:delegate] withKey:@"delegate"];
 	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
@@ -45,10 +45,10 @@ IntrospySQLiteStorage *traceStorage;
 	// Proxy the delegate so we can hook it
 	NSURLConnectionDelegateProx *delegateProxy = [[NSURLConnectionDelegateProx alloc] initWithOriginalDelegate:delegate];
 	id origResult = %orig(request, delegateProxy, startImmediately);
-	
+
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"initWithRequest:delegate:startImmediately:"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
-	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)delegate] withKey:@"delegate"];
+	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLConnectionDelegate:delegate] withKey:@"delegate"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithBool:startImmediately] withKey:@"startImmediately"];
 	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
 	[traceStorage saveTracedCall:tracer];

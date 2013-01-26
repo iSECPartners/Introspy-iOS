@@ -17,5 +17,6 @@
 + (NSDictionary *) convertUIPasteboard: (UIPasteboard*) pasteboard;
 + (NSDictionary *) convertSecCertificateRef: (SecCertificateRef) certificate;
 + (NSDictionary *) convertSecTrustRef:(SecTrustRef) trust;
++ (NSDictionary *) convertNSURLConnectionDelegate: (id) delegate;
 + (NSString *) convertCBuffer:(const void *) buffer withLength: (size_t) length;
 @end

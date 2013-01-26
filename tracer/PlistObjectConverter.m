@@ -332,6 +332,47 @@ static NSString *serializedNilValue = @"nil";
 }
 
 
+// We just store a list of implemented delegate methods
++ (NSDictionary *) convertNSURLConnectionDelegate: (id) delegate {
+	if (delegate == nil)
+		return [NSDictionary dictionary];
+
+	NSDictionary *delegateDict;
+	delegateDict = [NSDictionary dictionaryWithObjects:
+		[NSArray arrayWithObjects:
+			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:willSendRequestForAuthenticationChallenge:)]],
+			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:canAuthenticateAgainstProtectionSpace:)]],
+			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:didCancelAuthenticationChallenge:)]],
+			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:didReceiveAuthenticationChallenge:)]],
+			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connectionShouldUseCredentialStorage:)]],
+			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:didFailWithError:)]],
+			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:willCacheResponse:)]],
+			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:didReceiveResponse:)]],
+			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:needNewBodyStream:)]],
+			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:willSendRequest:redirectResponse:)]],
+			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connectionDidFinishLoading:)]],
+			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite:)]],
+			nil]
+		forKeys:
+		[NSArray arrayWithObjects:
+			@"connection:willSendRequestForAuthenticationChallenge:",
+			@"connection:canAuthenticateAgainstProtectionSpace:",
+			@"connection:didCancelAuthenticationChallenge:",
+			@"connection:didReceiveAuthenticationChallenge:",
+			@"connectionShouldUseCredentialStorage:",
+			@"connection:didFailWithError:",
+			@"connection:willCacheResponse: ",
+			@"connection:didReceiveResponse:",
+			@"connection:needNewBodyStream:",
+			@"connection:willSendRequest:redirectResponse:",
+			@"connectionDidFinishLoading:",
+			@"connection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite:",
+			nil]];
+
+	return delegateDict;
+} 
+
+
 // Convert a C buffer to a string of hex numbers
 + (NSString *) convertCBuffer:(const void *) buffer withLength: (size_t) length {
 
