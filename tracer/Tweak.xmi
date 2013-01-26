@@ -22,15 +22,8 @@ static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/
 SQLiteStorage *traceStorage;
 
 
-// Delegate hooks => classes are not known until runtime
-
-// Logos h4ck => There are two methods where we need to initialize NSURLConnectionDelegate hooks
-%group NSURLConnectionDelegateHooks1
-#include "hooks/NSURLConnectionDelegateHooks.xm"
-%end
-%group NSURLConnectionDelegateHooks2
-#include "hooks/NSURLConnectionDelegateHooks.xm"
-%end
+// Delegate hooks => We proxy the delegate objects
+#import "hooks/NSURLConnectionDelegateProx.h"
 
 
 

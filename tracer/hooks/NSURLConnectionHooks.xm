@@ -26,11 +26,11 @@ IntrospySQLiteStorage *traceStorage;
 }
 
 - (id)initWithRequest:(NSURLRequest *)request delegate:(id < NSURLConnectionDelegate >)delegate {
-	// Initialize Delegate hooks when the connection starts	
-	Class delegateClass = [delegate class] ?: [self class];
-	%init(NSURLConnectionDelegateHooks1, NSURLConnectionDelegate = delegateClass);
 
-	id origResult = %orig(request, delegate);
+	// Proxy the delegate so we can hook it
+	NSURLConnectionDelegateProx *delegateProxy = [[NSURLConnectionDelegateProx alloc] initWithOriginalDelegate:delegate];
+	id origResult = %orig(request, delegateProxy);
+
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"initWithRequest:delegate:"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)delegate] withKey:@"delegate"];
@@ -41,11 +41,11 @@ IntrospySQLiteStorage *traceStorage;
 }
 
 - (id)initWithRequest:(NSURLRequest *)request delegate:(id < NSURLConnectionDelegate >)delegate startImmediately:(BOOL)startImmediately {
-	// Initialize Delegate hooks when the connection starts	
-	Class delegateClass = [delegate class] ?: [self class];
-	%init(NSURLConnectionDelegateHooks2, NSURLConnectionDelegate = delegateClass);
 
-	id origResult = %orig(request, delegate, startImmediately);
+	// Proxy the delegate so we can hook it
+	NSURLConnectionDelegateProx *delegateProxy = [[NSURLConnectionDelegateProx alloc] initWithOriginalDelegate:delegate];
+	id origResult = %orig(request, delegateProxy, startImmediately);
+	
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"initWithRequest:delegate:startImmediately:"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)delegate] withKey:@"delegate"];
