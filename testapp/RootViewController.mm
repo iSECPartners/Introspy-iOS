@@ -33,11 +33,12 @@
     // Pasteboard
     [PasteboardTester runAllTests];
 
-    // KeyChain
-    [KeyChainTester runAllTests];
 
     // User Preferences
     [UserPreferencesTester runAllTests];
+
+    // XML
+    [XMLTester runAllTests];
 
     // Crypto
     [CryptoTester runAllTests];
@@ -45,8 +46,9 @@
     // HTTP
     [HTTPTester runAllTests];
 
-    // XML
-    [XMLTester runAllTests];
+    // Security Framework
+    [KeyChainTester runAllTests];
+
 }
 @end
 

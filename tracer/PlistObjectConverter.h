@@ -6,7 +6,7 @@
 // Plist objects are string, number, boolean, date, data, dictionary and array.
 // We need to convert anything that's not a plist object to a dictionnary so we can store it.
 + (id) autoConvertNil: (id) pointer;
-+ (NSDictionary*) convertURL:(NSURL *)aURL;
++ (NSDictionary *) convertURL:(NSURL *)aURL;
 + (NSDictionary *) convertNSURLRequest:(NSURLRequest *)request;
 + (NSDictionary *) convertNSURLResponse:(NSURLResponse *)response;
 + (NSDictionary *) convertNSCachedURLResponse:(NSCachedURLResponse *)response;
@@ -15,8 +15,15 @@
 + (NSDictionary *) convertNSURLCredential: (NSURLCredential*) credential;
 + (NSDictionary *) convertNSHTTPCookie: (NSHTTPCookie*) cookie;
 + (NSDictionary *) convertUIPasteboard: (UIPasteboard*) pasteboard;
++ (NSDictionary *) convertNSURLConnectionDelegate: (id) delegate;
+
+// Security framework objects
+// TODO : Split PlistObjectConverter in multiple files
++ (NSDictionary *) convertSecItemAttributesDict: (CFDictionaryRef) attributes;
 + (NSDictionary *) convertSecCertificateRef: (SecCertificateRef) certificate;
 + (NSDictionary *) convertSecTrustRef:(SecTrustRef) trust;
-+ (NSDictionary *) convertNSURLConnectionDelegate: (id) delegate;
++ (NSDictionary *) convertSecIdentityRef: (SecIdentityRef) identity;
++ (NSDictionary *) convertSecKeyRef:(SecKeyRef) key;
+
 + (NSString *) convertCBuffer:(const void *) buffer withLength: (size_t) length;
 @end

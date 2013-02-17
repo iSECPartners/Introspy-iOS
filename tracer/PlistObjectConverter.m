@@ -1,6 +1,8 @@
 #import "PlistObjectConverter.h"
 
 
+
+
 @implementation PlistObjectConverter
 
 
@@ -204,6 +206,97 @@ static NSString *serializedNilValue = @"nil";
 			nil]];
 
 	return credentialDict;
+}
+
+
+// attributes dictionnary when calling SecItemAdd() and SecItemUpdate()
++ (NSDictionary *) convertSecItemAttributesDict: (CFDictionaryRef) attributes {
+
+    // Need to make the content of attributes serializable
+    NSMutableDictionary *attributesPlist = [NSMutableDictionary dictionaryWithDictionary:(NSDictionary*) attributes];
+
+    CFTypeRef secClass = CFDictionaryGetValue(attributes, kSecClass);
+    if ((secClass == kSecClassGenericPassword) || (secClass == kSecClassGenericPassword)) {
+        // Nothing to do for passwords
+    }
+    else if (secClass == kSecClassCertificate) {
+        if (CFDictionaryContainsKey(attributes, kSecValueRef)) {
+            [attributesPlist setObject:[PlistObjectConverter convertSecCertificateRef:(SecCertificateRef)CFDictionaryGetValue(attributes, kSecValueRef)] 
+                                forKey:(id)kSecValueRef];
+        }
+        else if (CFDictionaryContainsKey(attributes, kSecValuePersistentRef)) {
+            [attributesPlist setObject:[PlistObjectConverter convertSecCertificateRef:(SecCertificateRef)CFDictionaryGetValue(attributes, kSecValuePersistentRef)] 
+                                forKey:(id)kSecValuePersistentRef];
+        }
+    }
+    else if (secClass == kSecClassIdentity) {
+        if (CFDictionaryContainsKey(attributes, kSecValueRef)) {
+            SecIdentityRef identity;
+            identity = (SecIdentityRef)CFDictionaryGetValue(attributes, kSecValueRef);
+            [attributesPlist setObject:[PlistObjectConverter convertSecIdentityRef:(SecIdentityRef)CFDictionaryGetValue(attributes, kSecValueRef)] 
+                                forKey:(id)kSecValueRef];
+        }
+        else if (CFDictionaryContainsKey(attributes, kSecValuePersistentRef)) {
+            [attributesPlist setObject:[PlistObjectConverter convertSecIdentityRef:(SecIdentityRef)CFDictionaryGetValue(attributes, kSecValuePersistentRef)] 
+                                forKey:(id)kSecValuePersistentRef];
+        }
+    }
+    else if (secClass == kSecClassKey) {
+        if (CFDictionaryContainsKey(attributes, kSecValueRef)) {
+            [attributesPlist setObject:[PlistObjectConverter convertSecKeyRef:(SecKeyRef)CFDictionaryGetValue(attributes, kSecValueRef)] 
+                                forKey:(id)kSecValueRef];
+        }
+        else if (CFDictionaryContainsKey(attributes, kSecValuePersistentRef)) {
+            [attributesPlist setObject:[PlistObjectConverter convertSecKeyRef:(SecKeyRef)CFDictionaryGetValue(attributes, kSecValuePersistentRef)] 
+                                forKey:(id)kSecValuePersistentRef];
+        }
+    }
+
+    return attributesPlist;
+}
+
+
++ (NSDictionary *) convertSecIdentityRef: (SecIdentityRef) identity {
+	if (identity == nil)
+		return [NSDictionary dictionary];
+
+	// TODO: Dump the client cert and private key
+    SecCertificateRef certRef;
+	SecIdentityCopyCertificate(identity, &certRef);
+   	SecKeyRef privateKeyRef;
+	SecIdentityCopyPrivateKey(identity, &privateKeyRef);
+
+	NSDictionary *identityDict = [NSDictionary dictionaryWithObjects:
+						[NSArray arrayWithObjects:
+						[PlistObjectConverter convertSecCertificateRef:certRef],
+						[PlistObjectConverter convertSecKeyRef:privateKeyRef], 
+						nil]
+			      	forKeys:
+				    	[NSArray arrayWithObjects:
+						@"certificate",
+				    	@"privateKey",
+						nil]];
+
+	if (certRef)
+		CFRelease(certRef);
+	return identityDict;
+}
+
+
++ (NSDictionary *) convertSecKeyRef:(SecKeyRef) key {
+	if (key == nil)
+		return [NSDictionary dictionary];
+
+	// TODO: Dump private keys
+	NSDictionary *keyDict = [NSDictionary dictionaryWithObjects:
+						[NSArray arrayWithObjects:
+						[NSNumber numberWithUnsignedInt: (unsigned int)key], 
+						nil]
+			      	forKeys:
+				    	[NSArray arrayWithObjects:
+				    	@"key",
+						nil]];
+	return keyDict;
 }
 
 

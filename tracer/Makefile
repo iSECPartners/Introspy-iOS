@@ -1,5 +1,5 @@
-TARGET = iphone:5.1
-ARCHS = armv6
+#TARGET = iphone:6.1
+#ARCHS = armv7
 include theos/makefiles/common.mk
 
 TWEAK_NAME = introspy
