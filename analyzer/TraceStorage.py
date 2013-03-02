@@ -5,6 +5,8 @@ from sys import exit
 from TracedCall import TracedCall
 
 class TraceStorage:
+	""" Object representation of an introspy database """
+
 	def __init__(self, db):
 	    try:
 		self.conn = sqlite3.connect(db)

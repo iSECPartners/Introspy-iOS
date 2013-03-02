@@ -1,16 +1,33 @@
 <!DOCTYPE HTML>
 <html lang="en">
-<head>
+	<head>
+	<link rel="stylesheet" href="html/bootstrap/docs/assets/css/bootstrap.css">
 	<title>Introspy Results</title>
 </head>
 <body>
-	<ul id="vulns">
-	  {% for finding in findings %}
-	  {% for trace in finding %}
-	  		<li>{{trace.vuln.desc}}</li>
-			<li>{{trace.clazz}}:{{trace.method}}</li>
+  <div class="container">
+	{% for key in findings %}
+	<div id="vulns" class="row">
+	<div class="span12">{{findings[key][0].sig_match.desc}}</div><br>
+		{% for trace in findings[key] %}
+		<div class="row">
+		<div class="span2">{{trace.clazz}}:{{trace.method}}</div>
+		<div class="row">
+		<div class="span1">Attributes:<div>
+			{% for key in trace.args %}
+			<div class="row">
+			<div class="span4">{{key}}:</div>
+				{% if trace.args[key] is mapping() %}
+					{% for attr in trace.args[key] %}
+					<div class="row"><div class="span4">{{attr}}:</div><div class="span4">{{trace.args[key][attr]}}</div>
+					{% endfor %}
+				{% else %}
+					<div class="span4">{{trace.args[key]}}</div><br>
+				{% endif %}
+			{% endfor %}
 		{% endfor %}
-	  {% endfor %}
-  	</ul>
+	{% endfor %}
+	</div>
+  </div>
 </body>
 </html>
