@@ -77,6 +77,19 @@ class MultiAttrRVSignature(Signature):
 				return False
 		return True
 
+# TODO: Split the signatures in different files ?
+
+
+# Security Framework signatures
+signature_list.append({'sig_class' :'Security',
+			'key' :'Client certificate',
+			'severity' :'Informational',
+			'desc' :'The application imported a private key and a certificate from a PKCS12 file.',
+			'clazz' :'C',
+			'method' :'SecPKCS12Import',
+			'attr' : None,
+			'val' : None})
+
 # KeyChain signatures
 signature_list.append({'sig_class' :'KeyChain',
 			'key' :'kSecAttrAccessibleWhenUnlocked',
