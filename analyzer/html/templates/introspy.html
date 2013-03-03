@@ -6,26 +6,27 @@
 </head>
 <body>
   <div class="container">
-	{% for key in findings %}
-	<div id="vulns" class="row">
-	<div class="span12">{{findings[key][0].sig_match.desc}}</div><br>
-		{% for trace in findings[key] %}
-		<div class="row">
-		<div class="span2">{{trace.clazz}}:{{trace.method}}</div>
-		<div class="row">
-		<div class="span1">Attributes:<div>
-			{% for key in trace.args %}
+	{% for result in findings %}
+		{% if result.matching_calls %}
+		<div id="vulns" class="row">
+		<div class="span12"><h3>{{result.description}}</h3></div><br>
+			{% for trace in result.matching_calls %}
 			<div class="row">
-			<div class="span4">{{key}}:</div>
-				{% if trace.args[key] is mapping() %}
-					{% for attr in trace.args[key] %}
-					<div class="row"><div class="span4">{{attr}}:</div><div class="span4">{{trace.args[key][attr]}}</div>
-					{% endfor %}
-				{% else %}
-					<div class="span4">{{trace.args[key]}}</div><br>
-				{% endif %}
+			<div class="span2"><h4>{{trace.clazz}}:{{trace.method}}</h4></div>
+			<div class="row">
+				{% for key in trace.args %}
+				<div class="row">
+				<div class="span4"><b>{{key}}:</b></div>
+					{% if trace.args[key] is mapping() %}
+						{% for attr in trace.args[key] %}
+						<div class="row"><div class="span4">{{attr}}:</div><div class="span4">{{trace.args[key][attr]}}</div>
+						{% endfor %}
+					{% else %}
+						<div class="span4">{{trace.args[key]}}</div><br>
+					{% endif %}
+				{% endfor %}
 			{% endfor %}
-		{% endfor %}
+		{% endif %}
 	{% endfor %}
 	</div>
   </div>

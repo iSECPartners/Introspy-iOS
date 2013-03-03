@@ -11,7 +11,6 @@ class TracedCall:
 		self.method = unicode(method)
 		self.args = plistlib.readPlistFromString(args.encode('utf-8'))
 		self.return_value = plistlib.readPlistFromString(returnValue.encode('utf-8'))
-		self.sig_match = None
 
 	def walk_dict(self, d, level=0):
 		arg_str = ""

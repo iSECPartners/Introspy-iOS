@@ -1,5 +1,5 @@
 from TraceStorage import TraceStorage
-from Signatures import Signature, NoAttrSignature, SingleAttrSignature, MultiAttrRVSignature
+from Signatures import Signature, NoAttrSignature, SingleAttrSignature, MultiAttrRVSignature, SEVERITY_INF
 
 class Analyzer:
 	""" Manages signature loading and matching """
@@ -12,7 +12,7 @@ class Analyzer:
 	def load_signatures(self, signatures, sclass=None, info=True):
 		for sig in signatures:
 			if sclass is None or sclass == sig['sig_class']:
-				if info or sig['severity'] != "Informational":
+				if info or sig['severity'] != SEVERITY_INF:
 					self.add_signature(sig)
 
 	def add_signature(self, sig):
@@ -24,13 +24,8 @@ class Analyzer:
 			self.signatures.append(MultiAttrRVSignature(sig))
 
 	def check_signatures(self):
-		findings = {}
+		findings = []
 		for sig in self.signatures:
-			key, results = sig.check_signature(self.trace.calls)
-			if results:
-				if key not in findings.keys():
-					findings[key] = results
-				else:
-					findings[key] += results
+			findings.append(sig.check_signature(self.trace.calls))
 		return findings
 

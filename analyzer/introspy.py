@@ -31,8 +31,9 @@ def main(argv):
 	analyzer = Analyzer(args.db, signature_list, args.signature, args.no_info)
 	findings = analyzer.check_signatures()
 	if args.html:
-		try:
-			from submodules.jinja2.jinja2 import Environment, PackageLoader
+		try: # TODO: fix jinja2 import.
+		# Try to find jinja2's location (within introspy, on the system, etc.) and then import it
+			from jinja2 import Environment, PackageLoader
 		except ImportError:
 			print "Jinja2 (https://github.com/mitsuhiko/jinja2)" \
 				"is required for HTML report generation."
@@ -42,10 +43,12 @@ def main(argv):
 		outfile = open(args.outfile, 'w')
 		outfile.write(template.render(findings=findings))
 	else:
-		for key in findings:
-			print "# %s" % findings[key][0].sig_match
-			for trace in findings[key]:
-				print "  %s" % trace
+		for filter_result in findings:
+			# Hide empty results
+			if filter_result.matching_calls:
+				print "# %s" % filter_result.description
+				for traced_call in filter_result.matching_calls:
+					print "  %s" % traced_call
 
 if __name__ == "__main__":
 	main(argv[1:])
