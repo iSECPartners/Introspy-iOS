@@ -9,8 +9,17 @@ class TracedCall:
 	def __init__(self, clazz, method, args, returnValue):
 		self.clazz = unicode(clazz)
 		self.method = unicode(method)
-		self.args = plistlib.readPlistFromString(args.encode('utf-8'))
-		self.return_value = plistlib.readPlistFromString(returnValue.encode('utf-8'))
+		# Store the call's arguments and return value in the same dict
+		# This makes filters work for both args and return values
+
+		# HACK: FIx this in the tracer; first element of returnValue dict is returnValue
+		returnValue = plistlib.readPlistFromString(returnValue.encode('utf-8'))
+		if returnValue == {}:
+			returnValue = { 'returnValue': {}}
+		self.args = {
+			'arguments' : plistlib.readPlistFromString(args.encode('utf-8')),
+			'returnValue' : returnValue['returnValue'] }
+
 
 	def walk_dict(self, d, level=0):
 		arg_str = ""
@@ -25,8 +34,20 @@ class TracedCall:
 		        arg_str += "\t\t%s%s => %s\n" % ("  " * level, v[0], v[1])
 		return arg_str
 
+
+	def extract_value_for_argument(self, arg_path):
+		# Walk the dictionnary
+		nextLevel = self.args[arg_path[0]]
+		for attr in arg_path[1:]:
+			try:
+				nextLevel = nextLevel[attr]
+			except KeyError as e:
+				raise
+		return nextLevel
+
+		
+
 	def __str__(self):
 		call = "%s:%s\n" % (self.clazz, self.method)
-		call += "\tArguments:\n%s" % self.walk_dict(self.args)
-		call += "\tReturn Value:\n%s" % self.walk_dict(self.return_value)
+		call += "%s" % self.walk_dict(self.args)
 		return call

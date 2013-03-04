@@ -4,7 +4,7 @@
 
 from sys import argv, exit
 from argparse import ArgumentParser
-from Analysis import Analyzer, Signature
+from Analysis import Analyzer
 from Signatures import signature_list
 
 __author__	= "Tom Daniels & Alban Diquet"
@@ -43,11 +43,12 @@ def main(argv):
 		outfile = open(args.outfile, 'w')
 		outfile.write(template.render(findings=findings))
 	else:
-		for filter_result in findings:
+		for (signature, matching_calls) in findings:
 			# Hide empty results
-			if filter_result.matching_calls:
-				print "# %s" % filter_result.description
-				for traced_call in filter_result.matching_calls:
+			# TODO: Print other stuff ? signature name or group ?
+			if matching_calls:
+				print "# %s" % signature.description
+				for traced_call in matching_calls:
 					print "  %s" % traced_call
 
 if __name__ == "__main__":

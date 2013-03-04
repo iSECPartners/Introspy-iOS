@@ -1,251 +1,138 @@
+from Filters import MethodsFilter, ArgumentsWithMaskFilter, ArgumentsFilter
 
-from FilterResults import FilterResults
+
+class Signature(object):
+	"""
+	A Signature contains some metadata (name, description, etc.) plus a filter 
+	that defines which calls the signature is going to match.
+	"""
+
+	SEVERITY_INF = 'Informational'
+	SEVERITY_LOW = 'Low'
+	SEVERITY_MEDIUM = 'Medium'
+	SEVERITY_HIGH = 'High'
+
+
+	def __init__(self, name, group, description, severity, filter):
+		# TODO: Define the metadata we actually need 
+		self.name = name
+		self.group = group
+		self.description = description
+		self.severity = severity
+		self.filter = filter
+
+
+	def analyze_trace(self, trace):
+		matching_calls = []
+		for call in self.filter.find_matching_calls(trace):
+			matching_calls.append(call)
+		return matching_calls
+
+
 
 # Global list of signatures
 signature_list = []
 
-class Signature(object):
-	"""
-	Abstract Signature class for inheritence.
-
-	A signature takes a list of classes and methods 
-	that should be checked with check_signature().
-	"""
-
-	def __init__(self, sig_dict):
-		self.sclass = sig_dict['sig_class']
-		self.key = sig_dict['key']
-		self.severity = sig_dict['severity']
-		self.desc = sig_dict['desc']
-		self.clazz_list = sig_dict['clazz_list']
-		self.method_list = sig_dict['method_list']
-		self.attr = sig_dict['attr']
-		self.val = sig_dict['val']
-
-	def check_signature(self, trace):
-		vulnerable_calls = []
-		for call in trace:
-			if call.clazz in self.clazz_list:
-				if call.method in self.method_list:
-					if (self.signature_match(call)):
-						vulnerable_calls.append(call)
-
-		return FilterResults(self.sclass, self.severity, self.desc, vulnerable_calls)
-
-	def signature_match(self, call):
-		return NotImplemented
-
-	def __str__(self):
-		return self.desc
-
-
-class NoAttrSignature(Signature):
-	"""Signature based purely on the existence of a call"""
-
-	def __init__(self, sig_dict):
-		super(NoAttrSignature, self).__init__(sig_dict)
-
-	def signature_match(self, call):
-		return True
-
-
-class SingleAttrSignature(Signature):
-	"""Signature based on a single attribute within a given call"""
-
-	def __init__(self, sig_dict):
-		super(SingleAttrSignature, self).__init__(sig_dict)
-
-	def signature_match(self, call):
-		attribute = call.args
-		for attr in self.attr:
-			try:
-				attribute = attribute[attr]
-			except KeyError, e:
-				return False
-		if str(attribute) == str(self.val[0]):
-			return True
-		return False
-
-
-class MultiAttrRVSignature(Signature):
-	"""Signature based on multiple attributes within the call's return value"""
-
-	def __init__(self, sig_dict):
-		super(MultiAttrRVSignature, self).__init__(sig_dict)
-
-	def signature_match(self, call):
-		vals = self.val
-		for sig in self.attr:
-			attribute = call.return_value
-			val, vals = vals[0], vals[1:]
-			for attr in sig:
-				try:
-					attribute = attribute[attr]
-				except KeyError, e:
-					return False
-			if str(attribute) != str(val):
-				return False
-		return True
-
-
-# TODO: Split the signatures in different files ?
-
-SEVERITY_INF = 'Informational'
-SEVERITY_LOW = 'Low'
-SEVERITY_MEDIUM = 'Medium'
-SEVERITY_HIGH = 'High'
 
 # XML signature
-signature_list.append({'sig_class' :'XML',
-			'key' :'XML',
-			'severity' :SEVERITY_HIGH,
-			'desc' :'XML parser is configured to resolve external entities.',
-			'clazz_list' :['NSXMLParser'],
-			'method_list' :['setShouldResolveExternalEntities:'],
-			'attr' : ['shouldResolveExternalEntities'],
-			'val' : ['True']})
+signature_list.append(Signature(
+	name = 'XML', 
+	group = '',
+	description = 'XML parser is configured to resolve external entities.',
+	severity = Signature.SEVERITY_HIGH,
+	filter = ArgumentsFilter(
+		classes_to_match = ['NSXMLParser'],
+		methods_to_match = ['setShouldResolveExternalEntities:'],
+		args_to_match = [
+			(['arguments', 'shouldResolveExternalEntities'], 'True')])))
+
 
 # Security Framework signatures
-signature_list.append({'sig_class' :'Security',
-			'key' :'Client certificate',
-			'severity' :SEVERITY_INF,
-			'desc' :'The application imported a private key and a certificate from a PKCS12 file.',
-			'clazz_list' :['C'],
-			'method_list' :['SecPKCS12Import'],
-			'attr' : None,
-			'val' : None})
-
-# KeyChain signatures
+signature_list.append(Signature(
+	name = 'Client Certificate', 
+	group = 'SecurityFramework',
+	description = 'The application imported a private key and a certificate from a PKCS12 file.',
+	severity = Signature.SEVERITY_INF,
+	filter = MethodsFilter(
+		classes_to_match = ['C'],
+		methods_to_match = ['SecPKCS12Import'])))
 
 
-signature_list.append({'sig_class' :'KeyChain',
-			'key' :'kSecAttrAccessibleWhenUnlocked',
-			'severity' :SEVERITY_INF,
-			'desc' :'Item added to KeyChain with accessibility options (kSecAttrAccessibleWhenUnlocked)',
-			'clazz_list' :['C'],
-			'method_list' :['SecItemAdd'],
-			'attr' : ['attributes', 'pdmn'],
-			'val' : ['ak']})
+# Keychain signatures
+KSECATTR_VALUES = [
+	('ak', 'kSecAttrAccessibleWhenUnlocked', Signature.SEVERITY_INF),
+	('aku', 'kSecAttrAccessibleWhenUnlockedThisDeviceOnly', Signature.SEVERITY_INF),
+	('dk', 'kSecAttrAccessibleAlways', Signature.SEVERITY_HIGH),
+	('dku', 'kSecAttrAccessibleAlwaysThisDeviceOnly', Signature.SEVERITY_HIGH),
+	('ck', 'kSecAttrAccessibleAfterFirstUnlock', Signature.SEVERITY_MEDIUM),
+	('cku', 'kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly', Signature.SEVERITY_MEDIUM)
+]
 
-signature_list.append({'sig_class' :'KeyChain',
-			'key' :'kSecAttrAccessibleAlways',
-			'severity' :SEVERITY_MEDIUM,
-			'desc' :'Item added to KeyChain with weak accessibility options (kSecAttrAccessibleAlways)',
-			'clazz_list' :['C'],
-			'method_list' :['SecItemAdd'],
-			'attr' : ['attributes', 'pdmn'],
-			'val' : ['dk']})
-
-signature_list.append({'sig_class' :'KeyChain',
-			'key' :'kSecAttrAccessibleAlwaysThisDeviceOnly',
-			'severity' :SEVERITY_MEDIUM,
-			'desc' :'Item added to KeyChain with weak accessibility options (kSecAttrAccessibleAlwaysThisDeviceOnly)',
-			'clazz_list' :['C'],
-			'method_list' :['SecItemAdd'],
-			'attr' : ['attributes', 'pdmn'],
-			'val' : ['dku']})
-
-signature_list.append({'sig_class' :'KeyChain',
-			'key' :'kSecAttrAccessibleAfterFirstUnlock',
-			'severity' :SEVERITY_LOW,
-			'desc' :'Item added to KeyChain with weak accessibility options (kSecAttrAccessibleAfterFirstUnlock)',
-			'clazz_list' :['C'],
-			'method_list' :['SecItemAdd'],
-			'attr' : ['attributes', 'pdmn'],
-			'val' : ['ck']})
-
-signature_list.append({'sig_class' :'KeyChain',
-			'key' :'kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly',
-			'severity' :SEVERITY_LOW,
-			'desc' :'Item added to KeyChain with weak accessibility options (kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly)',
-			'clazz_list' :['C'],
-			'method_list' :['SecItemAdd'],
-			'attr' : ['attributes', 'pdmn'],
-			'val' : ['cku']})
-
-signature_list.append({'sig_class' :'KeyChain',
-			'key' :'kSecAttrAccessibleWhenUnlockedThisDeviceOnly',
-			'severity' :SEVERITY_INF,
-			'desc' :'Item added to KeyChain with accessibility options (kSecAttrAccessibleWhenUnlockedThisDeviceOnly)',
-			'clazz_list' :['C'],
-			'method_list' :['SecItemAdd'],
-			'attr' : ['attributes', 'pdmn'],
-			'val' : ['aku']})
-
-# FileSystem signatures
-signature_list.append({'sig_class' :'FileSystem',
-			'key' :'NSDataWritingFileProtectionNone',
-			'severity' :SEVERITY_HIGH,
-			'desc' :'File written with insufficient data protection options (NSDataWritingFileProtectionNone)',
-			'clazz_list' :['NSData'],
-			'method_list' :['writeToFile:options:error:', 'writeToURL:options:error:'],
-			'attr' : ['mask'],
-			'val' : [268435456]})
-
-signature_list.append({'sig_class' :'FileSystem',
-			'key' :'NSDataWritingFileProtectionCompleteUnlessOpen',
-			'severity' :SEVERITY_MEDIUM,
-			'desc' :'File written with insufficient data protection options (NSDataWritingFileProtectionCompleteUnlessOpen)',
-			'clazz_list' :['NSData'],
-			'method_list' :['writeToFile:options:error:', 'writeToURL:options:error:'],
-			'attr' : ['mask'],
-			'val' : [805306368]})
-
-signature_list.append({'sig_class' :'FileSystem',
-			'key' :'NSDataWritingFileProtectionCompleteUntilFirstUserAuthentication',
-			'severity' :SEVERITY_MEDIUM,
-			'desc' :'File written with insufficient data protection options (NSDataWritingFileProtectionCompleteUntilFirstUserAuthentication)',
-			'clazz_list' :['NSData'],
-			'method_list' :['writeToFile:options:error:', 'writeToURL:options:error:'],
-			'attr' : ['mask'],
-			'val' : [1073741824]})
-
-signature_list.append({'sig_class' :'FileSystem',
-			'key' :'NSDataWritingFileProtectionComplete',
-			'severity' :SEVERITY_INF,
-			'desc' :'File written with strong data protection options (NSDataWritingFileProtectionComplete)',
-			'clazz_list' :['NSData'],
-			'method_list' :['writeToFile:options:error:', 'writeToURL:options:error:'],
-			'attr' : ['mask'],
-			'val' : [536870912]})
-
-signature_list.append({'sig_class' :'FileSystem',
-			'key' :'NSDataNoWritingOptionsAtomically',
-			'severity' :SEVERITY_HIGH,
-			'desc' :'File written without any data protection options',
-			'clazz_list' :['NSData'],
-			'method_list' :['writeToFile:atomically:', 'writeToURL:atomically:'],
-			'attr' : None,
-			'val' : None})
+for (kSecAttr_value, kSecAttr_name, severity) in KSECATTR_VALUES:
+	signature_list.append(Signature(
+		name = 'KeyChain', 
+		group = 'KeyChain',
+		description = 'Item added to KeyChain with accessibility options {0}.'.format(kSecAttr_name),
+		severity = severity,
+		filter = ArgumentsFilter(
+			classes_to_match = ['C'],
+			methods_to_match = ['SecItemAdd'],
+			args_to_match = [
+				(['arguments', 'attributes', 'pdmn'], kSecAttr_value)])))
 
 
 # URL scheme signatures
-signature_list.append({'sig_class' :'Schemes',
-			'key' :'URLschemes',
-			'severity' :SEVERITY_INF,
-			'desc' :'Specific URL schemes implemented by the application',
-			'clazz_list' :'CFBundleURLTypes',
-			'method_list' :'CFBundleURLSchemes',
-			'attr' : None,
-			'val' : None})
+signature_list.append(Signature(
+	name = 'URLschemes', 
+	group = '',
+	description = 'Specific URL schemes implemented by the application.',
+	severity = Signature.SEVERITY_INF,
+	filter = MethodsFilter(
+		classes_to_match = ['CFBundleURLTypes'],
+		methods_to_match = ['CFBundleURLSchemes:'])))
 
-# HTTP signatures
-signature_list.append({'sig_class' :'HTTP',
-			'key' :'CachePolicy',
-			'severity' :SEVERITY_HIGH,
-			'desc' :'Data received over HTTPS is being cached on disk',
-			'clazz_list' :'NSURLConnectionDelegate',
-			'method_list' :'connection:willCacheResponse:',
-			'attr' : [['returnValue','response','URL','scheme'],['returnValue','storagePolicy']],
-			'val' : ['https',0]})
 
 # Pasteboard signatures
-signature_list.append({'sig_class' :'Pasteboard',
-			'key' :'generalPasteboard',
-			'severity' :SEVERITY_INF,
-			'desc' :'Application instantiates the shared generalPasteboard',
-			'clazz_list' :'UIPasteboard',
-			'method_list' :'generalPasteboard',
-			'attr' : None,
-			'val' : None})
+signature_list.append(Signature(
+	name = 'generalPasteboard', 
+	group = 'Pasteboard',
+	description = 'Application instantiates the shared generalPasteboard.',
+	severity = Signature.SEVERITY_INF,
+	filter = MethodsFilter(
+		classes_to_match = ['UIPasteboard'],
+		methods_to_match = ['generalPasteboard:'])))
 
+
+# Filesystem signatures
+FILEPROTECTION_VALUES = {
+	(0x40000000, 'NSDataWritingFileProtectionNone', Signature.SEVERITY_HIGH),
+	(0x10000000, 'NSDataWritingFileProtectionComplete', Signature.SEVERITY_INF),
+	(0x20000000, 'NSDataWritingFileProtectionCompleteUnlessOpen', Signature.SEVERITY_INF),
+	(0x30000000, 'NSDataWritingFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_MEDIUM)}
+
+
+for (fileProt_value, fileProt_name, severity) in FILEPROTECTION_VALUES:
+	signature_list.append(Signature(
+		name = 'NSDataWritingFileProtection', 
+		group = 'FileSystem',
+		description = 'File written with data protection options {0}'.format(kSecAttr_name),
+		severity = severity,
+		filter = ArgumentsWithMaskFilter(
+			classes_to_match = ['NSData'],
+			methods_to_match = ['writeToFile:atomically:', 'writeToURL:atomically:'],
+			args_to_match = [(['arguments', 'mask'], fileProt_value)],
+			value_mask = 0xf0000000)))	
+
+
+# HTTP signatures
+signature_list.append(Signature(
+	name = 'CachePolicy', 
+	group = 'HTTP',
+	description = 'Data received over HTTPS is being cached on disk',
+	severity = Signature.SEVERITY_MEDIUM,
+	filter = ArgumentsFilter(
+		classes_to_match = ['NSURLConnectionDelegate'],
+		methods_to_match = ['connection:willCacheResponse:'],
+		args_to_match = [
+			(['returnValue', 'response', 'URL', 'scheme'], 'https'),
+			(['returnValue', 'storagePolicy'], 0) ])))
