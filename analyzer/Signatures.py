@@ -34,6 +34,7 @@ class Signature(object):
 signature_list = []
 
 
+
 # XML signature
 signature_list.append(Signature(
 	name = 'XML', 
@@ -103,27 +104,6 @@ signature_list.append(Signature(
 		methods_to_match = ['generalPasteboard:'])))
 
 
-# Filesystem signatures
-FILEPROTECTION_VALUES = {
-	(0x40000000, 'NSDataWritingFileProtectionNone', Signature.SEVERITY_HIGH),
-	(0x10000000, 'NSDataWritingFileProtectionComplete', Signature.SEVERITY_INF),
-	(0x20000000, 'NSDataWritingFileProtectionCompleteUnlessOpen', Signature.SEVERITY_INF),
-	(0x30000000, 'NSDataWritingFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_MEDIUM)}
-
-
-for (fileProt_value, fileProt_name, severity) in FILEPROTECTION_VALUES:
-	signature_list.append(Signature(
-		name = 'NSDataWritingFileProtection', 
-		group = 'FileSystem',
-		description = 'File written with data protection options {0}'.format(kSecAttr_name),
-		severity = severity,
-		filter = ArgumentsWithMaskFilter(
-			classes_to_match = ['NSData'],
-			methods_to_match = ['writeToFile:atomically:', 'writeToURL:atomically:'],
-			args_to_match = [(['arguments', 'mask'], fileProt_value)],
-			value_mask = 0xf0000000)))	
-
-
 # HTTP signatures
 signature_list.append(Signature(
 	name = 'CachePolicy', 
@@ -136,3 +116,37 @@ signature_list.append(Signature(
 		args_to_match = [
 			(['returnValue', 'response', 'URL', 'scheme'], 'https'),
 			(['returnValue', 'storagePolicy'], 0) ])))
+
+
+# Filesystem signatures
+FILEPROTECTION_VALUES = {
+	(0x10000000, 'NSDataWritingFileProtectionNone', Signature.SEVERITY_HIGH),
+	(0x20000000, 'NSDataWritingFileProtectionComplete', Signature.SEVERITY_INF),
+	(0x30000000, 'NSDataWritingFileProtectionCompleteUnlessOpen', Signature.SEVERITY_INF),
+	(0x40000000, 'NSDataWritingFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_INF)}
+
+
+for (fileProt_value, fileProt_name, severity) in FILEPROTECTION_VALUES:
+	signature_list.append(Signature(
+		name = 'NSDataWritingFileProtection', 
+		group = 'FileSystem',
+		description = 'File written with data protection options {0}'.format(fileProt_name),
+		severity = severity,
+		filter = ArgumentsWithMaskFilter(
+			classes_to_match = ['NSData'],
+			methods_to_match = ['writeToFile:options:error:', 'writeToURL:options:error:'],
+			args_to_match = [
+				(['arguments', 'mask'], fileProt_value)],
+			value_mask = 0xf0000000)))
+
+
+signature_list.append(Signature(
+	name = 'NSDataWritingFileProtection', 
+	group = 'FileSystem',
+	description = 'File written without any data protection options.',
+	severity = severity,
+	filter = MethodsFilter(
+		classes_to_match = ['NSData'],
+		methods_to_match = ['writeToFile:atomically:', 'writeToURL:atomically:'])))	
+
+
