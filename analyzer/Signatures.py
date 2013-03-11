@@ -151,8 +151,26 @@ signature_list.append(Signature(
 signature_list.append(Signature(
 	name = 'CCCrypt', 
 	group = 'Crypto',
-	description = 'The application used crypto APIs.',
+	description = 'The application used crypto APIs to perform symmetric encryption.',
 	severity = Signature.SEVERITY_INF,
 	filter = MethodsFilter(
 		classes_to_match = ['C'],
 		methods_to_match = ['CCCryptorCreate', 'CCCryptorCreateFromData', 'CCCryptorUpdate', 'CCCryptorFinal', 'CCCrypt' ])))
+
+signature_list.append(Signature(
+	name = 'CCKeyDerivationPBKDF', 
+	group = 'Crypto',
+	description = 'The application used crypto APIs to perform key derivation.',
+	severity = Signature.SEVERITY_INF,
+	filter = MethodsFilter(
+		classes_to_match = ['C'],
+		methods_to_match = ['CCKeyDerivationPBKDF'])))
+
+signature_list.append(Signature(
+	name = 'CCKeyDerivationPBKDF', 
+	group = 'Crypto',
+	description = 'The application used crypto APIs to hash data.',
+	severity = Signature.SEVERITY_INF,
+	filter = MethodsFilter(
+		classes_to_match = ['C'],
+		methods_to_match = ['CCHmacInit', 'CCHmacUpdate', 'CCHmacFinal', 'CCHmac'])))
