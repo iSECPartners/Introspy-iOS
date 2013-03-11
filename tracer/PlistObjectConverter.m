@@ -467,16 +467,12 @@ static NSString *serializedNilValue = @"nil";
 
 
 // Convert a C buffer to a string of hex numbers
-+ (NSString *) convertCBuffer:(const void *) buffer withLength: (size_t) length {
++ (NSData *) convertCBuffer:(const void *) buffer withLength: (size_t) length {
 
 	if (buffer == nil)
 		return [NSDictionary dictionary];
-	// TODO: Base64 encode it for consistency with NSData ?
-	NSMutableString *hexStream = [NSMutableString stringWithCapacity: length*2];
-	for(int i=0;i<length;i++) {
-		[hexStream appendFormat:@"%02x", ((unsigned char*) buffer)[i]];
-	}
-	return hexStream;
+	NSData *bufferData = [NSData dataWithBytes:buffer length:(NSUInteger)length];
+	return bufferData;
 }
 
 @end

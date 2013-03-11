@@ -25,5 +25,5 @@
 + (NSDictionary *) convertSecIdentityRef: (SecIdentityRef) identity;
 + (NSDictionary *) convertSecKeyRef:(SecKeyRef) key;
 
-+ (NSString *) convertCBuffer:(const void *) buffer withLength: (size_t) length;
++ (NSData *) convertCBuffer:(const void *) buffer withLength: (size_t) length;
 @end
