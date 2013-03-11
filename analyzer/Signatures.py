@@ -29,11 +29,8 @@ class Signature(object):
 		return matching_calls
 
 
-
 # Global list of signatures
 signature_list = []
-
-
 
 # XML signature
 signature_list.append(Signature(

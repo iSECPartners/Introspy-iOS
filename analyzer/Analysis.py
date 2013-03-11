@@ -1,5 +1,5 @@
 from TraceStorage import TraceStorage
-
+from Signatures import Signature
 
 class Analyzer:
 	""" Manages signature loading and matching """
@@ -12,7 +12,7 @@ class Analyzer:
 	def load_signatures(self, signatures, sclass=None, info=True):
 		for sig in signatures:
 			if sclass is None or sclass == sig['sig_class']:
-				if info or sig['severity'] != SEVERITY_INF:
+				if info or sig['severity'] != Signature.SEVERITY_INF:
 					self.signatures.append(sig)
 
 	def check_signatures(self):

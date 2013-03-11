@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import plistlib
-from pprint import pformat
+
 
 class TracedCall:
 	""" Object representation of a introspy database row (a traced call) """
@@ -26,12 +26,12 @@ class TracedCall:
 		items = d.items()
 		items.sort()
 		for v in items:
-		    if isinstance(v[1], dict):
-		        arg_str += "\t\t%s%s =>\n" % ("  " * level, v[0])
-		        nextlevel = level + 1
-		        arg_str += self.walk_dict(v[1], nextlevel)
-		    else:
-		        arg_str += "\t\t%s%s => %s\n" % ("  " * level, v[0], v[1])
+			if isinstance(v[1], dict):
+				arg_str += "\t\t%s%s =>\n" % ("  " * level, v[0])
+				nextlevel = level + 1
+				arg_str += self.walk_dict(v[1], nextlevel)
+			else:
+				arg_str += "\t\t%s%s => %s\n" % ("  " * level, v[0], v[1])
 		return arg_str
 
 
@@ -41,7 +41,7 @@ class TracedCall:
 		for attr in arg_path[1:]:
 			try:
 				nextLevel = nextLevel[attr]
-			except KeyError as e:
+			except KeyError:
 				raise
 		return nextLevel
 

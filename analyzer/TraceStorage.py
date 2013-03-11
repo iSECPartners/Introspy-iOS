@@ -8,16 +8,16 @@ class TraceStorage:
 	""" Object representation of an introspy database """
 
 	def __init__(self, db):
-	    try:
+		try:
 			self.conn = sqlite3.connect(db)
 			self.db = self.conn.cursor()
 			self.db.execute("SELECT * FROM tracedCalls")
 			self.calls = []
 			for row in self.db:
 				self.calls.append(TracedCall(row[0], row[1], row[2], row[3]))
-	    except sqlite3.Error, e:
+		except sqlite3.Error as e:
 			print "Fatal error: %s" % e
 			exit(1)
-	    finally:
+		finally:
 			if self.conn:
-			    self.conn.close()
+				self.conn.close()

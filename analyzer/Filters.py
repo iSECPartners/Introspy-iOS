@@ -44,7 +44,7 @@ class ArgumentsFilter(MethodsFilter):
 					# Get the value of each argument and fail if one is missing
 					found_values.append(call.extract_value_for_argument(arg_path))
 				yield (call, found_values)
-			except KeyError as e:
+			except KeyError:
 					pass
 
 
@@ -85,7 +85,7 @@ class ArgumentsWithMaskFilter(ArgumentsFilter):
 			try: # The value has to be an int for a bit mask to be meaningful
 			# Only checl one value for now
 				int_value = int(found_values[0])
-			except ValueError as e:
+			except ValueError:
 				# Not a valid int... something is wrong with the data, crash the program
 				raise
 
