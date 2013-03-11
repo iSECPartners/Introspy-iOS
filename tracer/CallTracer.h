@@ -8,7 +8,7 @@
 @property (retain) NSDictionary *args;
 @property (retain) NSString *className;
 @property (retain) NSString *methodName;
-@property (retain) NSDictionary *returnValue;
+@property (retain) NSDictionary *argsAndReturnValue;
 
 - (CallTracer*)initWithClass:(NSString *)clazz andMethod:(NSString *)meth;
 
@@ -16,8 +16,7 @@
 - (BOOL) addArgFromPlistObject:(id) arg withKey:(NSString *)key;
 - (BOOL) addReturnValueFromPlistObject:(id) result;
 
-- (NSData *) serializeArgs;
-- (NSData *) serializeReturnValue;
+- (NSData *) serializeArgsAndReturnValue;
 
 
 @end

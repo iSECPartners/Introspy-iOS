@@ -14,7 +14,7 @@ class TraceStorage:
 			self.db.execute("SELECT * FROM tracedCalls")
 			self.calls = []
 			for row in self.db:
-				self.calls.append(TracedCall(row[0], row[1], row[2], row[3]))
+				self.calls.append(TracedCall(row[0], row[1], row[2]))
 		except sqlite3.Error as e:
 			print "Fatal error: %s" % e
 			exit(1)

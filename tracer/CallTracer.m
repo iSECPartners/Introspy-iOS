@@ -7,7 +7,7 @@
 @synthesize args;
 @synthesize className;
 @synthesize methodName;
-@synthesize returnValue;
+@synthesize argsAndReturnValue;
 
 - (CallTracer*)initWithClass:(NSString *)clazz andMethod:(NSString *)meth {
 	/* initialize the call tracer with class and method names */
@@ -15,7 +15,9 @@
 	args = [[NSMutableDictionary alloc] init];
 	className = [[NSString alloc] initWithString:clazz];
 	methodName = [[NSString alloc] initWithString:meth];
-	returnValue = [[NSMutableDictionary alloc] init];
+	argsAndReturnValue = [[NSMutableDictionary alloc] init];
+	[argsAndReturnValue setValue:args forKey:@"arguments"];
+
 	return self;
 }
 
@@ -29,37 +31,27 @@
 
 - (BOOL) addReturnValueFromPlistObject:(id) result {
 	if(result != nil) {
-		[returnValue setValue:result forKey:@"returnValue"];
+		[argsAndReturnValue setValue:result forKey:@"returnValue"];
 		return true;
 	}
 	return false;
 }
 
 
-- (NSData *) serializeArgs {
-	/* serialize the NSDictionary of arguments into a plist */
+- (NSData *) serializeArgsAndReturnValue {
 	NSError *error;
-	NSData *plist = [NSPropertyListSerialization dataWithPropertyList:(id)args
-   							     format:NSPropertyListXMLFormat_v1_0 // for testing
+	NSData *plist = [NSPropertyListSerialization dataWithPropertyList:(id)argsAndReturnValue
+   							     format:NSPropertyListXMLFormat_v1_0 
    							    options:0
    							      error:&error];
 	return plist;
 }
 
-- (NSData *) serializeReturnValue {
-	/* serialize the NSDictionary of return value into a plist */
-	NSError *error;
-	NSData *plist = [NSPropertyListSerialization dataWithPropertyList:(id)returnValue
-   							     format:NSPropertyListXMLFormat_v1_0 // for testing
-   							    options:0
-   							      error:&error];
-	return plist;
-}
 
 - (void)dealloc
 {
 	[args release];
-	[returnValue release];
+	[argsAndReturnValue release];
 	[className release];
 	[methodName release];
 	[super dealloc];

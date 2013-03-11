@@ -7,8 +7,8 @@
 // Database settings
 static BOOL logToConsole = TRUE;
 static NSString *defaultDBFileFormat = @"~/introspy-%@.db"; // Becomes ~/introspy-<appName>.db
-static const char createTableStmtStr[] = "CREATE TABLE tracedCalls (className TEXT, methodName TEXT, argumentsDict TEXT, returnValue TEXT)";
-static const char saveTracedCallStmtStr[] = "INSERT INTO tracedCalls VALUES (?1, ?2, ?3, ?4)";
+static const char createTableStmtStr[] = "CREATE TABLE tracedCalls (className TEXT, methodName TEXT, argumentsAndReturnValueDict TEXT)";
+static const char saveTracedCallStmtStr[] = "INSERT INTO tracedCalls VALUES (?1, ?2, ?3)";
 
 
 // Internal stuff
@@ -63,31 +63,27 @@ static sqlite3 *dbConnection;
     int queryResult = SQLITE_ERROR;
 
     // Serialize arguments and return value to an XML plist
-    NSData *argsData = [tracedCall serializeArgs];
-    NSData *returnData = [tracedCall serializeReturnValue];
-    if ((argsData == nil) || (returnData == nil)) {
+    NSData *argsAndReturnValueData = [tracedCall serializeArgsAndReturnValue];
+    if (argsAndReturnValueData == nil) {
         NSLog(@"IntrospySQLiteStorage::saveTraceCall: can't serialize args or return value");
         return NO;
     }
-    NSString *argsStr = [[NSString alloc] initWithData:argsData encoding:NSUTF8StringEncoding];
-    NSString *returnStr = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
+    NSString *argsAndReturnValueStr = [[NSString alloc] initWithData:argsAndReturnValueData encoding:NSUTF8StringEncoding];
 
     // Do the query; has to be atomic or we get random SQLITE_PROTOCOL errors
     @synchronized(defaultDBFileFormat) {
     	sqlite3_reset(saveTracedCallStmt);
     	sqlite3_bind_text(saveTracedCallStmt, 1, [ [tracedCall className] UTF8String], -1, nil);
     	sqlite3_bind_text(saveTracedCallStmt, 2, [ [tracedCall methodName] UTF8String], -1, nil);
-    	sqlite3_bind_text(saveTracedCallStmt, 3, [argsStr UTF8String], -1, nil);
-        sqlite3_bind_text(saveTracedCallStmt, 4, [returnStr UTF8String], -1, nil);
+    	sqlite3_bind_text(saveTracedCallStmt, 3, [argsAndReturnValueStr UTF8String], -1, nil);
         queryResult = sqlite3_step(saveTracedCallStmt);
     }
 
     if (logToConsole) {
-        NSLog(@"\n-----INTROSPY-----\nCALLED %@ %@\nWITH ARGUMENTS:\n%@\nRETURN VALUE: %@\n---------------", [tracedCall className], [tracedCall methodName], [tracedCall args], [tracedCall returnValue]);
+        NSLog(@"\n-----INTROSPY-----\nCALLED %@ %@\nWITH:\n%@\nRETURN VALUE: %@\n---------------", [tracedCall className], [tracedCall methodName], [tracedCall argsAndReturnValue]);
     }
 
-    [argsStr release];
-    [returnStr release];
+    [argsAndReturnValueStr release];
 
     if (queryResult != SQLITE_DONE) {
         NSLog(@"IntrospySQLiteStorage - Commit Failed: %x!", queryResult);
