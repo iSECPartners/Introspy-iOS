@@ -6,11 +6,11 @@
 </head>
 <body>
   <div class="container">
-	{% for result in findings %}
-		{% if result.matching_calls %}
+	{% for (signature, matching_calls) in findings %}
+		{% if matching_calls %}
 		<div id="vulns" class="row">
-		<div class="span12"><h3>{{result.description}}</h3></div><br>
-			{% for trace in result.matching_calls %}
+		<div class="span12"><h3>{{signature.description}}</h3></div><br>
+			{% for trace in matching_calls %}
 			<div class="row">
 			<div class="span2"><h4>{{trace.clazz}}:{{trace.method}}</h4></div>
 			<div class="row">
