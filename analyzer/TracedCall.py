@@ -35,7 +35,6 @@ class TracedCall:
 				raise
 		return nextLevel
 
-		
 
 	def __str__(self):
 		call = "%s:%s\n" % (self.clazz, self.method)

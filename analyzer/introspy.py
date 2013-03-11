@@ -15,11 +15,8 @@ def main(argv):
 	parser = ArgumentParser(description="introspy analysis tool")
 	parser.add_argument("db",
 			help="the introspy-generated database to analyze")
-	parser.add_argument("-r", "--html",
-			action="store_true",
-			help="generate an HTML report (specified with -o)")
 	parser.add_argument("-o", "--outfile",
-			help="destination file for HTML report")
+			help="generate an HTML report")
 	parser.add_argument("-s", "--signature",
 			help="filter by signature class [FileSystem, HTTP, \
 			UserPreferences, Pasteboard, XML, Crypto, KeyChain, \
