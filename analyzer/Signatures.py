@@ -147,3 +147,12 @@ signature_list.append(Signature(
 		methods_to_match = ['writeToFile:atomically:', 'writeToURL:atomically:'])))	
 
 
+# Crypto
+signature_list.append(Signature(
+	name = 'CCCrypt', 
+	group = 'Crypto',
+	description = 'The application used crypto APIs.',
+	severity = Signature.SEVERITY_INF,
+	filter = MethodsFilter(
+		classes_to_match = ['C'],
+		methods_to_match = ['CCCryptorCreate', 'CCCryptorCreateFromData', 'CCCryptorUpdate', 'CCCryptorFinal', 'CCCrypt' ])))
