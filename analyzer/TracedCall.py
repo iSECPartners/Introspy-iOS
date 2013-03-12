@@ -27,7 +27,7 @@ class TracedCall:
 
 	def extract_value_for_argument(self, arg_path):
 		# Walk the dictionnary
-		nextLevel = self.args[arg_path[0]]
+		nextLevel = self.argsAndReturnValue[arg_path[0]]
 		for attr in arg_path[1:]:
 			try:
 				nextLevel = nextLevel[attr]
@@ -38,5 +38,5 @@ class TracedCall:
 
 	def __str__(self):
 		call = "%s:%s\n" % (self.clazz, self.method)
-		call += "%s" % self.walk_dict(self.args)
+		call += "%s" % self.walk_dict(self.argsAndReturnValue)
 		return call

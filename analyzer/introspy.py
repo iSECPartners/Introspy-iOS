@@ -27,7 +27,7 @@ def main(argv):
 	args = parser.parse_args()
 	analyzer = Analyzer(args.db, signature_list, args.signature, args.no_info)
 	findings = analyzer.check_signatures()
-	if args.html:
+	if args.outfile:
 		try: # TODO: fix jinja2 import.
 		# Try to find jinja2's location (within introspy, on the system, etc.) and then import it
 			from jinja2 import Environment, PackageLoader

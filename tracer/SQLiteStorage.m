@@ -80,7 +80,7 @@ static sqlite3 *dbConnection;
     }
 
     if (logToConsole) {
-        NSLog(@"\n-----INTROSPY-----\nCALLED %@ %@\nWITH:\n%@\nRETURN VALUE: %@\n---------------", [tracedCall className], [tracedCall methodName], [tracedCall argsAndReturnValue]);
+        NSLog(@"\n-----INTROSPY-----\nCALLED %@ %@\nWITH:\n%@\n---------------", [tracedCall className], [tracedCall methodName], [tracedCall argsAndReturnValue]);
     }
 
     [argsAndReturnValueStr release];
