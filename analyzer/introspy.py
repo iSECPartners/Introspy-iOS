@@ -2,10 +2,11 @@
 
 """ Command-line parser for an introspy generated db. """
 
-from sys import argv, exit
+from sys import argv
 from argparse import ArgumentParser
 from Analysis import Analyzer
 from Signatures import signature_list
+from HTMLReport import HTMLReport
 
 __author__	= "Tom Daniels & Alban Diquet"
 __license__	= "?"
@@ -15,8 +16,8 @@ def main(argv):
 	parser = ArgumentParser(description="introspy analysis tool")
 	parser.add_argument("db",
 			help="the introspy-generated database to analyze")
-	parser.add_argument("-o", "--outfile",
-			help="generate an HTML report")
+	parser.add_argument("-o", "--outdir",
+			help="generate an HTML report and write it to the specified directory")
 	parser.add_argument("-s", "--signature",
 			help="filter by signature class [FileSystem, HTTP, \
 			UserPreferences, Pasteboard, XML, Crypto, KeyChain, \
@@ -27,18 +28,10 @@ def main(argv):
 	args = parser.parse_args()
 	analyzer = Analyzer(args.db, signature_list, args.signature, args.no_info)
 	findings = analyzer.check_signatures()
-	if args.outfile:
-		try: # TODO: fix jinja2 import.
-		# Try to find jinja2's location (within introspy, on the system, etc.) and then import it
-			from jinja2 import Environment, PackageLoader
-		except ImportError:
-			print "Jinja2 (https://github.com/mitsuhiko/jinja2)" \
-				"is required for HTML report generation."
-			exit(1)
-		env = Environment(loader=PackageLoader('introspy', 'html'))
-		template = env.get_template('templates/introspy.html')
-		outfile = open(args.outfile, 'w')
-		outfile.write(template.render(findings=findings))
+	
+	if args.outdir: 
+		report = HTMLReport(args.db)
+		report.write_to_directory(args.outdir)
 	else:
 		for (signature, matching_calls) in findings:
 			# Hide empty results
@@ -50,3 +43,4 @@ def main(argv):
 
 if __name__ == "__main__":
 	main(argv[1:])
+	

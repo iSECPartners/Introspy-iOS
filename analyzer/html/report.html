@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+	<title>Introspy Results</title>
+  <script src="handlebars.js"></script>
+    <script src="tracedCalls.js"></script>
+<script src="jquery.min.js"></script>
+
+<script id="tracedCall-template" type="text/x-handlebars-template">
+<ul class="call_list">
+  {{#each tracedCalls}}
+  <h3>{{this.clazz}} {{this.method}}</h3>
+  <li>Arguments: {{printArguments this.argsAndReturnValue}}</li>
+  <li>Return Value: {{printReturnValue this.argsAndReturnValue}}</li>
+  {{/each}}
+</ul>
+</script>
+
+
+</head>
+<body>
+ <div id="content"></div>
+
+<script>
+// Prepare the template
+var source   = $("#tracedCall-template").html();
+var template = Handlebars.compile(source);
+
+Handlebars.registerHelper('printArguments', function(argsAndReturnValue) {
+  return JSON.stringify(argsAndReturnValue.arguments);
+});
+
+Handlebars.registerHelper('printReturnValue', function(argsAndReturnValue) {
+  return JSON.stringify(argsAndReturnValue.returnValue);
+});
+
+// Populate the page with content
+ var content = document.getElementById("content");
+content.innerHTML = template(tracedCalls);
+</script>
+</body>
+</html>

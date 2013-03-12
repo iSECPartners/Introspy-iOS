@@ -9,11 +9,13 @@ class Analyzer:
 		self.signatures = []
 		self.load_signatures(sigs, filter, info)
 
+
 	def load_signatures(self, signatures, sclass=None, info=True):
 		for sig in signatures:
 			if sclass is None or sclass == sig['sig_class']:
 				if info or sig['severity'] != Signature.SEVERITY_INF:
 					self.signatures.append(sig)
+
 
 	def check_signatures(self):
 		findings = []

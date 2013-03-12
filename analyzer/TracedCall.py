@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import plistlib
+import plistlib, json
 
 
 class TracedCall:
@@ -10,6 +10,7 @@ class TracedCall:
 		self.clazz = unicode(clazz)
 		self.method = unicode(method)
 		self.argsAndReturnValue = plistlib.readPlistFromString(argsAndReturnValue.encode('utf-8'))
+
 
 	def walk_dict(self, d, level=0):
 		arg_str = ""
@@ -40,3 +41,21 @@ class TracedCall:
 		call = "%s:%s\n" % (self.clazz, self.method)
 		call += "%s" % self.walk_dict(self.argsAndReturnValue)
 		return call
+
+
+class TracedCallJSONEncoder(json.JSONEncoder):
+	def default(self, obj):
+		if isinstance(obj, TracedCall):
+			# Serialize a traced call as a dictionary
+			return obj.__dict__
+		if isinstance(obj, plistlib.Data):
+			# Serialize a plist <data> 
+			try: # Does it seem to be ASCII ?
+				data = obj.data.encode('ascii')
+			except UnicodeDecodeError: # No => base64 encode it
+				data = obj.asBase64()
+			return data
+		else:
+			return super(TracedCallJSONEncoder, self).default(obj)
+		
+		
