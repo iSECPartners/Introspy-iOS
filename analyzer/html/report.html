@@ -11,13 +11,15 @@
 
   <!-- Handlebar.js template to display each traced call -->
   <script id="tracedCall-template" type="text/x-handlebars-template">
-<ul class="call_list">
-  {{#each tracedCalls}}
-  <h4>{{this.clazz}} {{this.method}}</h4>
-  <li>Arguments: <pre>{{printArguments this.argsAndReturnValue}}</pre></li>
-  <li>Return Value: <pre>{{printReturnValue this.argsAndReturnValue}}</pre></li>
-  {{/each}}
-  </ul>
+  <ol class="call_list">
+    {{#each tracedCalls}}
+      <h4><li>{{this.clazz}} {{this.method}}</li></h4>
+      <div>
+      Arguments: <pre>{{printArguments this.argsAndReturnValue}}</pre>
+      Return Value: <pre>{{printReturnValue this.argsAndReturnValue}}</pre>
+      </div>
+    {{/each}}
+  </ol>
   </script>
 
   <!-- All the traced calls -->
