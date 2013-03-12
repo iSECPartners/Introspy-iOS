@@ -1,6 +1,0 @@
-[submodule "analyzer/html/bootstrap"]
-	path = analyzer/html/bootstrap
-	url = https://github.com/twitter/bootstrap
-[submodule "analyzer/submodules/jinja2"]
-	path = analyzer/submodules/jinja2
-	url = https://github.com/mitsuhiko/jinja2
