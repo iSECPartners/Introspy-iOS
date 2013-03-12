@@ -10,8 +10,8 @@
 <ul class="call_list">
   {{#each tracedCalls}}
   <h3>{{this.clazz}} {{this.method}}</h3>
-  <li>Arguments: {{printArguments this.argsAndReturnValue}}</li>
-  <li>Return Value: {{printReturnValue this.argsAndReturnValue}}</li>
+  <li>Arguments: <pre>{{printArguments this.argsAndReturnValue}}</pre></li>
+  <li>Return Value: <pre>{{printReturnValue this.argsAndReturnValue}}</pre></li>
   {{/each}}
 </ul>
 </script>
@@ -27,11 +27,11 @@ var source   = $("#tracedCall-template").html();
 var template = Handlebars.compile(source);
 
 Handlebars.registerHelper('printArguments', function(argsAndReturnValue) {
-  return JSON.stringify(argsAndReturnValue.arguments);
+  return JSON.stringify(argsAndReturnValue.arguments, undefined, 2);
 });
 
 Handlebars.registerHelper('printReturnValue', function(argsAndReturnValue) {
-  return JSON.stringify(argsAndReturnValue.returnValue);
+  return JSON.stringify(argsAndReturnValue.returnValue, undefined, 2);
 });
 
 // Populate the page with content
