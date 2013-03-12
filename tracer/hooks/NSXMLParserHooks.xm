@@ -14,33 +14,40 @@ IntrospySQLiteStorage *traceStorage;
 
 - (id)initWithContentsOfURL:(NSURL *)url {
     id origResult = %orig(url);
-    CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSXMLParser" andMethod:@"initWithContentsOfURL:"];
-    [tracer addArgFromPlistObject:[PlistObjectConverter convertURL:url] withKey:@"url"];
-    [tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
-    [traceStorage saveTracedCall: tracer];
-    [tracer release];
+    // NSXMLParser methods are called a lot by other iOS APIs (for example to parse HTML responses) and we don't want to log that so we use the CallStackInspector
+    if ([CallStackInspector wasDirectlyCalledByApp]) {
+        CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSXMLParser" andMethod:@"initWithContentsOfURL:"];
+        [tracer addArgFromPlistObject:[PlistObjectConverter convertURL:url] withKey:@"url"];
+        [tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
+        [traceStorage saveTracedCall: tracer];
+        [tracer release];
+    }
     return origResult;
 }
 
 
 - (id)initWithData:(NSData *)data {
     id origResult = %orig(data);
-    CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSXMLParser" andMethod:@"initWithData:"];
-    [tracer addArgFromPlistObject:data withKey:@"data"];
-    [tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
-    [traceStorage saveTracedCall: tracer];
-    [tracer release];
+    if ([CallStackInspector wasDirectlyCalledByApp]) {
+        CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSXMLParser" andMethod:@"initWithData:"];
+        [tracer addArgFromPlistObject:data withKey:@"data"];
+        [tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
+        [traceStorage saveTracedCall: tracer];
+        [tracer release];
+    }
     return origResult;    
 }
 
 
 - (id)initWithStream:(NSInputStream *)stream {
     id origResult = %orig(stream);
-    CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSXMLParser" andMethod:@"initWithStream:"];
-    [tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)stream] withKey:@"stream"];
-    [tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
-    [traceStorage saveTracedCall: tracer];
-    [tracer release];
+    if ([CallStackInspector wasDirectlyCalledByApp]) {
+        CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSXMLParser" andMethod:@"initWithStream:"];
+        [tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)stream] withKey:@"stream"];
+        [tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
+        [traceStorage saveTracedCall: tracer];
+        [tracer release];
+    }
     return origResult;  
 }
 
