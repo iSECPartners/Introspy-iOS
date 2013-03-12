@@ -8,3 +8,4 @@ testapp/_/*
 /testapp/obj/*
 *.swp
 .gitconfig
+*.sublime-workspace
