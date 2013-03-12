@@ -53,7 +53,7 @@ class TracedCallJSONEncoder(json.JSONEncoder):
 			try: # Does it seem to be ASCII ?
 				data = obj.data.encode('ascii')
 			except UnicodeDecodeError: # No => base64 encode it
-				data = obj.asBase64(maxlinelength=1000000)
+				data = obj.asBase64(maxlinelength=1000000).strip()
 			return data
 		else:
 			return super(TracedCallJSONEncoder, self).default(obj)
