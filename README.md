@@ -61,8 +61,7 @@ Finally, kill and restart the App you want to test.
 Introspy Analyzer
 -----------------
 
-The analyzer requires Python 2.6 or 2.7 and the Jinja2 module for HTML report
-generation.
+The analyzer requires Python 2.6 or 2.7.
 
 ### Usage
 
@@ -73,7 +72,7 @@ which will be located on the device :
 - For store/regular applications:     /User/Applications/<App ID>/
 
 Then introspy DB can then be fed to the analyzer (or any SQLite reader) to
-generate a report.
+generate an HTML report.
 
 
 Building the Tracer
