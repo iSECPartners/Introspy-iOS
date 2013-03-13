@@ -11,6 +11,7 @@ class HTMLReport:
         self.traceStorage = TraceStorage(introspy_db_path)
         self.analyzer = Analyzer(introspy_db_path, signature_list)
         
+        
     def write_to_directory(self, directory):
         
         # Copy the template

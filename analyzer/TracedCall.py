@@ -2,14 +2,25 @@
 
 import plistlib, json
 from Signatures import Signature
+from APIGroups import API_GROUPS_MAP, API_SUBGROUPS_MAP
 
 class TracedCall:
 	""" Object representation of a introspy database row (a traced call) """
+	
 
 	def __init__(self, clazz, method, argsAndReturnValue):
 		self.clazz = unicode(clazz)
 		self.method = unicode(method)
 		self.argsAndReturnValue = plistlib.readPlistFromString(argsAndReturnValue.encode('utf-8'))
+		
+		# Get the call's group and subgroup
+		try: # Try using the class name
+			self.subgroup = API_SUBGROUPS_MAP[self.clazz]
+		except KeyError:
+			# Fall back to using the method name and crash if we can't find it
+			self.subgroup = API_SUBGROUPS_MAP[self.method]
+		
+		self.group = API_GROUPS_MAP[self.subgroup]
 
 
 	def walk_dict(self, d, level=0):
