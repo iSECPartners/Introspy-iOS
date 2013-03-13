@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import plistlib, json
-
+from Signatures import Signature
 
 class TracedCall:
 	""" Object representation of a introspy database row (a traced call) """
@@ -44,17 +44,22 @@ class TracedCall:
 
 
 class TracedCallJSONEncoder(json.JSONEncoder):
+	# TODO: Move to a different file
 	def default(self, obj):
 		if isinstance(obj, TracedCall):
 			# Serialize a traced call as a dictionary
 			return obj.__dict__
-		if isinstance(obj, plistlib.Data):
+		elif isinstance(obj, plistlib.Data):
 			# Serialize a plist <data> 
 			try: # Does it seem to be ASCII ?
 				data = obj.data.encode('ascii')
 			except UnicodeDecodeError: # No => base64 encode it
 				data = obj.asBase64(maxlinelength=1000000).strip()
 			return data
+		elif isinstance(obj, Signature):
+			sig_dict = obj.__dict__
+			del sig_dict['filter']
+			return sig_dict
 		else:
 			return super(TracedCallJSONEncoder, self).default(obj)
 		

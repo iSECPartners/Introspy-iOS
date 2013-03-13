@@ -8,25 +8,31 @@ class TraceStorage:
 	""" Object representation of an introspy database """
 
 	def __init__(self, db):
+		self.calls = []
+		conn = None
+		
 		try:
-			self.conn = sqlite3.connect(db)
-			self.db = self.conn.cursor()
-			self.db.execute("SELECT * FROM tracedCalls")
-			self.calls = []
-			for row in self.db:
+			conn = sqlite3.connect(db)
+			conndb = conn.cursor()
+			conndb.execute("SELECT * FROM tracedCalls")
+			for row in conndb:
 				self.calls.append(TracedCall(row[0], row[1], row[2]))
 		except sqlite3.Error as e:
 			print "Fatal error: %s" % e
 			raise
 		finally:
-			if self.conn:
-				self.conn.close()
+			if conn:
+				conn.close()
 
 
-	def dump_to_JS(self, fileDir, fileName='tracedCalls.js'):
+	def get_traced_calls(self):
+		return self.calls
+
+
+	def write_to_JS_file(self, fileDir, fileName='tracedCalls.js'):
 		# Convert the list of traced calls to a JS var declaration
 		tracedCalls_dict = {}
-		tracedCalls_dict['tracedCalls'] =  self.calls
+		tracedCalls_dict['calls'] =  self.calls
 		try:
 			tracedCalls_json = json.dumps(tracedCalls_dict, cls=TracedCallJSONEncoder)
 		except TypeError as e:

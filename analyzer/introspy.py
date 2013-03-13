@@ -26,14 +26,13 @@ def main(argv):
 			action="store_false",
 			help="Don't run signatures that are purely informational")
 	args = parser.parse_args()
-	analyzer = Analyzer(args.db, signature_list, args.signature, args.no_info)
-	findings = analyzer.check_signatures()
+	analyzer = Analyzer(args.db, signature_list)
 	
 	if args.outdir: 
-		report = HTMLReport(args.db)
+		report = HTMLReport(args.db, signature_list)
 		report.write_to_directory(args.outdir)
 	else:
-		for (signature, matching_calls) in findings:
+		for (signature, matching_calls) in analyzer.get_findings():
 			# Hide empty results
 			# TODO: Print other stuff ? signature name or group ?
 			if matching_calls:
