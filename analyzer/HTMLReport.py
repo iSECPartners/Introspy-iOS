@@ -1,6 +1,7 @@
 import shutil
 from TraceStorage import TraceStorage
 from Analysis import Analyzer
+from APIGroups import APIGroups
 
 class HTMLReport:
     """
@@ -22,4 +23,7 @@ class HTMLReport:
         
         # Dump the findings
         self.analyzer.write_to_JS_file(directory)
+        
+        # Dump the API groups
+        APIGroups.write_to_JS_file(directory)
         
