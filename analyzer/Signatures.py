@@ -35,7 +35,7 @@ signature_list = []
 # XML signature
 signature_list.append(Signature(
 	name = 'XML', 
-	group = '',
+	group = 'TDB',
 	description = 'XML parser is configured to resolve external entities.',
 	severity = Signature.SEVERITY_HIGH,
 	filter = ArgumentsFilter(
@@ -58,8 +58,8 @@ signature_list.append(Signature(
 
 # Keychain signatures
 KSECATTR_VALUES = [
-	('ak', 'kSecAttrAccessibleWhenUnlocked', Signature.SEVERITY_INF),
-	('aku', 'kSecAttrAccessibleWhenUnlockedThisDeviceOnly', Signature.SEVERITY_INF),
+	#('ak', 'kSecAttrAccessibleWhenUnlocked', Signature.SEVERITY_INF),
+	#('aku', 'kSecAttrAccessibleWhenUnlockedThisDeviceOnly', Signature.SEVERITY_INF),
 	('dk', 'kSecAttrAccessibleAlways', Signature.SEVERITY_HIGH),
 	('dku', 'kSecAttrAccessibleAlwaysThisDeviceOnly', Signature.SEVERITY_HIGH),
 	('ck', 'kSecAttrAccessibleAfterFirstUnlock', Signature.SEVERITY_MEDIUM),
@@ -118,7 +118,7 @@ signature_list.append(Signature(
 # Filesystem signatures
 FILEPROTECTION_VALUES = {
 	(0x10000000, 'NSDataWritingFileProtectionNone', Signature.SEVERITY_HIGH),
-	(0x20000000, 'NSDataWritingFileProtectionComplete', Signature.SEVERITY_INF),
+	#(0x20000000, 'NSDataWritingFileProtectionComplete', Signature.SEVERITY_INF),
 	(0x30000000, 'NSDataWritingFileProtectionCompleteUnlessOpen', Signature.SEVERITY_INF),
 	(0x40000000, 'NSDataWritingFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_INF)}
 
@@ -147,30 +147,4 @@ signature_list.append(Signature(
 		methods_to_match = ['writeToFile:atomically:', 'writeToURL:atomically:'])))	
 
 
-# Crypto
-signature_list.append(Signature(
-	name = 'CCCrypt', 
-	group = 'Crypto',
-	description = 'The application used crypto APIs to perform symmetric encryption.',
-	severity = Signature.SEVERITY_INF,
-	filter = MethodsFilter(
-		classes_to_match = ['C'],
-		methods_to_match = ['CCCryptorCreate', 'CCCryptorCreateFromData', 'CCCryptorUpdate', 'CCCryptorFinal', 'CCCrypt' ])))
 
-signature_list.append(Signature(
-	name = 'CCKeyDerivationPBKDF', 
-	group = 'Crypto',
-	description = 'The application used crypto APIs to perform key derivation.',
-	severity = Signature.SEVERITY_INF,
-	filter = MethodsFilter(
-		classes_to_match = ['C'],
-		methods_to_match = ['CCKeyDerivationPBKDF'])))
-
-signature_list.append(Signature(
-	name = 'CCKeyDerivationPBKDF', 
-	group = 'Crypto',
-	description = 'The application used crypto APIs to hash data.',
-	severity = Signature.SEVERITY_INF,
-	filter = MethodsFilter(
-		classes_to_match = ['C'],
-		methods_to_match = ['CCHmacInit', 'CCHmacUpdate', 'CCHmacFinal', 'CCHmac'])))
