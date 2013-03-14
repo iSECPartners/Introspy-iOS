@@ -41,7 +41,7 @@
   <script id="showHide-template" type="text/x-handlebars-template">
     <div class="btn-group">
       {{#each groups}}
-        <button id="toggle-{{toHTMLClassAttr name}}" onclick="javascript:$('.{{toHTMLClassAttr name}}).toggle()">{{name}}</button>
+        <button id="toggle-{{toHTMLClassAttr name}}" onclick="javascript:$('.{{toHTMLClassAttr name}}').toggle()">{{name}}</button>
       {{/each}}
     </div>
   </script>
@@ -58,10 +58,11 @@
 
 
   <!-- Actual Page -->
+  <!-- Show/hide bar -->
+  <div id="showhidebar" style="position: fixed;"></div>
   <!-- Navigation bar -->
   <div class="tabbable">
-  <div id="showhidebar"></div>
-  <ul class="nav nav-tabs">
+  <ul class="nav nav-tabs" style="margin-top: 20px;">
   <li class="active"><a href="#tab1" data-toggle="tab">Traced Calls</a></li>
   <li><a href="#tab2" data-toggle="tab">Findings</a></li>
   </ul>
