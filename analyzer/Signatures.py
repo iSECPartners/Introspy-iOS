@@ -86,7 +86,7 @@ signature_list.append(Signature(
 	severity = Signature.SEVERITY_INF,
 	filter = MethodsFilter(
 		classes_to_match = ['CFBundleURLTypes'],
-		methods_to_match = ['CFBundleURLSchemes:'])))
+		methods_to_match = ['CFBundleURLSchemes'])))
 
 
 # Pasteboard signatures
@@ -96,7 +96,7 @@ signature_list.append(Signature(
 	severity = Signature.SEVERITY_INF,
 	filter = MethodsFilter(
 		classes_to_match = ['UIPasteboard'],
-		methods_to_match = ['generalPasteboard:'])))
+		methods_to_match = ['generalPasteboard'])))
 
 
 # HTTP signatures
