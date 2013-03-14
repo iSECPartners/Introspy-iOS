@@ -41,7 +41,7 @@
   <script id="showHide-template" type="text/x-handlebars-template">
     <div class="btn-group">
       {{#each groups}}
-        <button id="toggle-{{toHTMLClassAttr name}}" onclick="javascript:$('.{{toHTMLClassAttr name}}').toggle()">{{name}}</button>
+        <button onclick="$('.{{toHTMLClassAttr name}}').toggle();">{{name}}</button>
       {{/each}}
     </div>
   </script>
