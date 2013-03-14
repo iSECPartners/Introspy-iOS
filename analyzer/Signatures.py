@@ -103,7 +103,7 @@ signature_list.append(Signature(
 signature_list.append(Signature(
 	title = 'HTTPS Caching',
 	description = 'Data received over HTTPS is being cached on disk.',
-	severity = Signature.SEVERITY_MEDIUM,
+	severity = Signature.SEVERITY_LOW,
 	filter = ArgumentsFilter(
 		classes_to_match = ['NSURLConnectionDelegate'],
 		methods_to_match = ['connection:willCacheResponse:'],

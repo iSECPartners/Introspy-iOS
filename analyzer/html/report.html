@@ -30,9 +30,8 @@
     {{#each findings}}
       <li class="{{toHTMLClassAttr signature.group}} {{toHTMLClassAttr signature.subgroup}}">
         <h4>{{signature.title}}</h4>
-        <h5>Group: {{signature.group}}</h5>
         <h5>Severity: {{signature.severity}}</h5>
-        <h5>Description:</h5><p>{{signature.description}}</p>
+        <h5 style="display: inline-block">Description:&nbsp;</h5><p style="display: inline-block">{{signature.description}}</p>
         <h5>Relevant function calls:</h5>
         {{> tracedCalls}}
       </li>
