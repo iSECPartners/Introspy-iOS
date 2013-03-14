@@ -37,7 +37,7 @@ signature_list = []
 
 # XML signature
 signature_list.append(Signature(
-	title = 'XML',
+	title = 'Vulnerable XML Parser',
 	description = 'XML parser is configured to resolve external entities.',
 	severity = Signature.SEVERITY_HIGH,
 	filter = ArgumentsFilter(
@@ -49,7 +49,7 @@ signature_list.append(Signature(
 
 # Security Framework signatures
 signature_list.append(Signature(
-	title = 'Client Certificate',
+	title = 'Client Certificate Import',
 	description = 'The application imported a private key and a certificate from a PKCS12 file.',
 	severity = Signature.SEVERITY_INF,
 	filter = MethodsFilter(
@@ -69,8 +69,8 @@ KSECATTR_VALUES = [
 
 for (kSecAttr_value, kSecAttr_title, severity) in KSECATTR_VALUES:
 	signature_list.append(Signature(
-		title = 'KeyChain',
-		description = 'Item added to KeyChain with accessibility options {0}.'.format(kSecAttr_title),
+		title = 'Insecure Storage in the Keychain',
+		description = 'Item added to KeyChain with accessibility options "{0}".'.format(kSecAttr_title),
 		severity = severity,
 		filter = ArgumentsFilter(
 			classes_to_match = ['C'],
@@ -81,8 +81,8 @@ for (kSecAttr_value, kSecAttr_title, severity) in KSECATTR_VALUES:
 
 # URL scheme signatures
 signature_list.append(Signature(
-	title = 'URLschemes',
-	description = 'Specific URL schemes implemented by the application.',
+	title = 'URL Schemes',
+	description = 'Specific URL schemes are implemented by the application.',
 	severity = Signature.SEVERITY_INF,
 	filter = MethodsFilter(
 		classes_to_match = ['CFBundleURLTypes'],
@@ -91,7 +91,7 @@ signature_list.append(Signature(
 
 # Pasteboard signatures
 signature_list.append(Signature(
-	title = 'generalPasteboard',
+	title = 'General Pasteboard Usage',
 	description = 'Application instantiates the shared generalPasteboard.',
 	severity = Signature.SEVERITY_INF,
 	filter = MethodsFilter(
@@ -101,8 +101,8 @@ signature_list.append(Signature(
 
 # HTTP signatures
 signature_list.append(Signature(
-	title = 'CachePolicy',
-	description = 'Data received over HTTPS is being cached on disk',
+	title = 'HTTPS Caching',
+	description = 'Data received over HTTPS is being cached on disk.',
 	severity = Signature.SEVERITY_MEDIUM,
 	filter = ArgumentsFilter(
 		classes_to_match = ['NSURLConnectionDelegate'],
@@ -122,8 +122,8 @@ FILEPROTECTION_VALUES = {
 
 for (fileProt_value, fileProt_title, severity) in FILEPROTECTION_VALUES:
 	signature_list.append(Signature(
-		title = 'NSDataWritingFileProtection',
-		description = 'File written with data protection options {0}'.format(fileProt_title),
+		title = 'Data Protection APIs Usage',
+		description = 'File written with data protection option "{0}".'.format(fileProt_title),
 		severity = severity,
 		filter = ArgumentsWithMaskFilter(
 			classes_to_match = ['NSData'],
@@ -134,7 +134,7 @@ for (fileProt_value, fileProt_title, severity) in FILEPROTECTION_VALUES:
 
 
 signature_list.append(Signature(
-	title = 'NSDataWritingFileProtection',
+	title = 'Lack of Data Protection APIs Usage',
 	description = 'File written without any data protection options.',
 	severity = severity,
 	filter = MethodsFilter(
