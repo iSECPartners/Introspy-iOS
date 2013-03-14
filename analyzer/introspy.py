@@ -18,13 +18,13 @@ def main(argv):
 			help="the introspy-generated database to analyze")
 	parser.add_argument("-o", "--outdir",
 			help="generate an HTML report and write it to the specified directory")
-	parser.add_argument("-s", "--signature",
-			help="filter by signature class [FileSystem, HTTP, \
-			UserPreferences, Pasteboard, XML, Crypto, KeyChain, \
-			Schemes]")
-	parser.add_argument("-n", "--no-info",
-			action="store_false",
-			help="Don't run signatures that are purely informational")
+#	parser.add_argument("-s", "--signature",
+#			help="filter by signature class [FileSystem, HTTP, \
+#			UserPreferences, Pasteboard, XML, Crypto, KeyChain, \
+#			Schemes]")
+#	parser.add_argument("-n", "--no-info",
+#			action="store_false",
+#			help="Don't run signatures that are purely informational")
 	args = parser.parse_args()
 	analyzer = Analyzer(args.db, signature_list)
 	
