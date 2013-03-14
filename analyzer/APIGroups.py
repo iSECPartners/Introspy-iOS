@@ -99,7 +99,31 @@ class APIGroups:
         'NSXMLParser' : XML_SUBGROUP
     }
     
+      
+    @classmethod  
+    def find_subgroup(classname, clazz, method):
+        subgroup = None
+        try: # Try using the class name
+            subgroup = classname.API_SUBGROUPS_MAP[clazz]
+        except KeyError:
+            # Fall back to using the method name and crash if we can't find it
+            subgroup = classname.API_SUBGROUPS_MAP[method]
+        return subgroup
+    
+        
+    @classmethod  
+    def find_subgroup_from_filter(classname, filter):
+        # Assuming all filters have one class and one mathod to match at least
+        clazz = filter.classes_to_match[0]
+        method = filter.methods_to_match[0]
+        return classname.find_subgroup(clazz, method)
+        
 
+    @classmethod  
+    def find_group(classname, subgroup):
+        group = classname.API_GROUPS_MAP[subgroup]
+        return group
+    
     
     @classmethod
     def write_to_JS_file(classname, fileDir, fileName='apiGroups.js'):

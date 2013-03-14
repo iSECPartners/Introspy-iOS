@@ -13,16 +13,10 @@ class TracedCall:
 		self.clazz = unicode(clazz)
 		self.method = unicode(method)
 		self.argsAndReturnValue = plistlib.readPlistFromString(argsAndReturnValue.encode('utf-8'))
-		
 		# Get the call's group and subgroup
-		try: # Try using the class name
-			self.subgroup = APIGroups.API_SUBGROUPS_MAP[self.clazz]
-		except KeyError:
-			# Fall back to using the method name and crash if we can't find it
-			self.subgroup = APIGroups.API_SUBGROUPS_MAP[self.method]
+		self.subgroup = APIGroups.find_subgroup(clazz, method)
+		self.group =  APIGroups.find_group(self.subgroup)
 		
-		self.group = APIGroups.API_GROUPS_MAP[self.subgroup]
-
 
 	def walk_dict(self, d, level=0):
 		arg_str = ""

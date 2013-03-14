@@ -1,5 +1,5 @@
 from Filters import MethodsFilter, ArgumentsWithMaskFilter, ArgumentsFilter
-
+from APIGroups import APIGroups
 
 class Signature(object):
 	"""
@@ -16,10 +16,13 @@ class Signature(object):
 	def __init__(self, name, group, description, severity, filter):
 		# TODO: Define the metadata we actually need 
 		self.name = name
-		self.group = group
 		self.description = description
 		self.severity = severity
 		self.filter = filter
+		# Figure out the signature's group and subgroup based
+		# on the classes / methods it looks for
+		self.subgroup = APIGroups.find_subgroup_from_filter(filter)
+		self.group = APIGroups.find_group(self.subgroup)
 
 
 	def analyze_trace(self, trace):

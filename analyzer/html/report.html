@@ -26,16 +26,18 @@
 
   <!-- Handlebar.js template to display the findings -->
   <script id="findings-template" type="text/x-handlebars-template">
-  <ol id="findings_list">
+  <ul id="findings_list">
     {{#each findings}}
-      <li><h4>{{signature.group}} {{signature.name}} - Severity: {{signature.severity}}</h4>
-      <div>
-      <p><b>Description:</b> {{signature.description}}</p>
-      <h5>Relevant function calls:</h5>
-      {{> tracedCalls}}
+      <li class="{{toHTMLClassAttr signature.group}} {{toHTMLClassAttr signature.subgroup}}">
+        <h4>{{signature.name}}</h4>
+        <h5>Group: {{signature.group}}</h5>
+        <h5>Severity: {{signature.severity}}</h5>
+        <h5>Description:</h5><p>{{signature.description}}</p>
+        <h5>Relevant function calls:</h5>
+        {{> tracedCalls}}
       </li>
     {{/each}}
-  </ol>
+  </ul>
   </script>
 
   <!-- Handlebar.js template for the show/hide bar -->
@@ -102,9 +104,9 @@
   Handlebars.registerHelper('printReturnValue', function(argsAndReturnValue) {
     return JSON.stringify(argsAndReturnValue.returnValue, undefined, 2);
   });
-  function toHTMLClassAttr(name) {
+  function toHTMLClassAttr(attrValue) {
     // Remove spaces so it's a valid class HTML attribute
-    return name.toLowerCase().replace(/\s/g,'');
+    return attrValue.toLowerCase().replace(/\s/g,'');
   }
   Handlebars.registerHelper('toHTMLClassAttr', function(groupname) {
     return toHTMLClassAttr(groupname);
