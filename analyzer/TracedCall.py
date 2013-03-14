@@ -8,7 +8,8 @@ class TracedCall:
 	""" Object representation of a introspy database row (a traced call) """
 	
 
-	def __init__(self, clazz, method, argsAndReturnValue):
+	def __init__(self, callId, clazz, method, argsAndReturnValue):
+		self.callId = callId
 		self.clazz = unicode(clazz)
 		self.method = unicode(method)
 		self.argsAndReturnValue = plistlib.readPlistFromString(argsAndReturnValue.encode('utf-8'))

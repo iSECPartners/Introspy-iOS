@@ -11,30 +11,31 @@
 
   <!-- Handlebar.js template to display a list of tracedCalls -->
   <script id="tracedCalls-template" type="text/x-handlebars-template">
-  <ol class="call_list">
+  <ul id="calls_list">
     {{#each calls}}
-      <div class="{{toHTMLClassAttr this.group}} {{toHTMLClassAttr this.subgroup}}">
-      <h4><li>{{this.clazz}} {{this.method}}</li></h4>
+      <li class="{{toHTMLClassAttr this.group}} {{toHTMLClassAttr this.subgroup}}">
+      <h5>{{this.callId}}: {{this.clazz}} {{this.method}}</h5>
       <div>
       Arguments: <pre>{{printArguments this.argsAndReturnValue}}</pre>
       Return Value: <pre>{{printReturnValue this.argsAndReturnValue}}</pre>
       </div>
-      </div>
+      </li>
     {{/each}}
-  </ol>
+  </ul>
   </script>
 
   <!-- Handlebar.js template to display the findings -->
   <script id="findings-template" type="text/x-handlebars-template">
-  <div class="findings_list">
+  <ol id="findings_list">
     {{#each findings}}
-      <h4>{{signature.group}} {{signature.name}} - Severity: {{signature.severity}} </h4>
+      <li><h4>{{signature.group}} {{signature.name}} - Severity: {{signature.severity}}</h4>
       <div>
-      <p>{{signature.description}}</p>
+      <p><b>Description:</b> {{signature.description}}</p>
+      <h5>Relevant function calls:</h5>
       {{> tracedCalls}}
-      </div>
+      </li>
     {{/each}}
-  <div>
+  </ol>
   </script>
 
   <!-- Handlebar.js template for the show/hide bar -->
@@ -69,11 +70,13 @@
   <div class="tab-content">
   <!-- Actual content of tab1: list of traced calls -->
   <div class="tab-pane active" id="tab1">
-  <p>I'm in Section 1.</p>
+  <h3>List of traced function calls</h3>
+  <div id="tab1content"></div>
   </div>
   <!-- Actual content of tab2: list of vulnerabilities -->
   <div class="tab-pane" id="tab2">
-  <p>Howdy, I'm in Section 2.</p>
+  <h3>List of findings</h3>
+  <div id="tab2content"></div>
   </div>
   </div>
   </div>
@@ -108,10 +111,10 @@
   });
 
   // Populate tab1 with the traced calls
-  document.getElementById("tab1").innerHTML = tracedCallsTemplate(tracedCalls);
+  document.getElementById("tab1content").innerHTML = tracedCallsTemplate(tracedCalls);
 
   // Populate tab2 with the findings
-  document.getElementById("tab2").innerHTML = findingsTemplate(findings);
+  document.getElementById("tab2content").innerHTML = findingsTemplate(findings);
 
   // Populate the show hide bars with API groups
   document.getElementById("showhidebar").innerHTML = showHideTemplate(apiGroups);

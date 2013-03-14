@@ -15,8 +15,10 @@ class TraceStorage:
 			conn = sqlite3.connect(db)
 			conndb = conn.cursor()
 			conndb.execute("SELECT * FROM tracedCalls")
+			rowid = 1
 			for row in conndb:
-				self.calls.append(TracedCall(row[0], row[1], row[2]))
+				self.calls.append(TracedCall(rowid, row[0], row[1], row[2]))
+				rowid += 1
 		except sqlite3.Error as e:
 			print "Fatal error: %s" % e
 			raise
