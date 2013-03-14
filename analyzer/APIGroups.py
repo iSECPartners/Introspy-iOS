@@ -129,14 +129,18 @@ class APIGroups:
     def write_to_JS_file(classname, fileDir, fileName='apiGroups.js'):
         
         # Convert the list of API groups and subgroups to a JS var declaration
+        group_list = []
+        for group_name in classname.API_GROUPS_LIST:
+            subgroup_list = []
+            
+            for subgroup_name, group_name2 in classname.API_GROUPS_MAP.items():
+                if group_name == group_name2:
+                    subgroup_list.append({'name' : subgroup_name})
+            
+            group_list.append({'name' : group_name,
+                               'subgroups' : subgroup_list })
         
-        group_list = [{'name' : group} for  group in classname.API_GROUPS_LIST]
-        subgroup_list = [{'name' : subgroup,
-                          'group' : classname.API_GROUPS_MAP[subgroup]} 
-                         for subgroup in classname.API_SUBGROUPS_LIST]
-        
-        apigroups_dict = {'groups' : group_list,
-                          'subgroups' : subgroup_list}
+        apigroups_dict = {'groups' : group_list}
         
         try:
             apigroups_json = json.dumps(apigroups_dict)
