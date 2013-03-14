@@ -11,6 +11,7 @@ static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/
 
 // Hooks for C functions directly use MobileSubstrate
 #import "hooks/SecurityHooks.h"
+#import "hooks/KeychainHooks.h"
 #import "hooks/CCCryptorHooks.h"
 #import "hooks/CCHmacHooks.h"
 #import "hooks/CCKeyDerivationPBKDFHooks.h"
@@ -24,7 +25,6 @@ SQLiteStorage *traceStorage;
 
 // Delegate hooks => We proxy the delegate objects
 #import "hooks/NSURLConnectionDelegateProx.h"
-
 
 
 // Regular hooks
@@ -65,6 +65,25 @@ static BOOL getBoolFromPreferences(NSMutableDictionary *preferences, NSString *p
 }
 
 
+// Log all custom URL schemes registered
+// TODO: should we refactor this out of the main Tweak?
+static void traceURISchemes() {
+    NSArray *url_schemes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
+    for (id schemeBundle in url_schemes) {
+        NSString *name = [schemeBundle objectForKey:@"CFBundleURLName"];
+        NSNumber *isPrivate = [schemeBundle objectForKey:@"CFBundleURLIsPrivate"];
+        for (id scheme in [schemeBundle objectForKey:@"CFBundleURLSchemes"]) {
+        CallTracer *tracer = [[CallTracer alloc] initWithClass:@"CFBundleURLTypes" andMethod:@"CFBundleURLSchemes"];
+        [tracer addArgFromPlistObject:name withKey:@"CFBundleURLName"];
+        [tracer addArgFromPlistObject:isPrivate withKey:@"CFBundleURLIsPrivate"];
+        [tracer addArgFromPlistObject:scheme withKey:@"CFBundleURLScheme"];
+        [traceStorage saveTracedCall:tracer];
+        [tracer release];
+        }
+    }
+}
+
+
 %ctor {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     // Only hook Apps the user has selected in Introspy's settings panel
@@ -85,28 +104,39 @@ static BOOL getBoolFromPreferences(NSMutableDictionary *preferences, NSString *p
 	traceStorage = [[SQLiteStorage alloc] initWithDefaultDBFilePathAndLogToConsole: shouldLog];
 	if (traceStorage != nil) {
 	    // Initialize hooks
-        if (getBoolFromPreferences(preferences, @"UserPreferencesHooks")) {
-            %init(UserPreferencesHooks);
-        }
+        // Data Storage hooks
         if (getBoolFromPreferences(preferences, @"FileSystemHooks")) {
             %init(FileSystemHooks);
         }
-        if (getBoolFromPreferences(preferences, @"HTTPHooks")) {
-            %init(HTTPHooks);
-        }
-        if (getBoolFromPreferences(preferences, @"XMLHooks")) {
-            %init(XMLHooks);
-        }
-        if (getBoolFromPreferences(preferences, @"PasteboardHooks")) {
-            %init(PasteboardHooks);
+        if (getBoolFromPreferences(preferences, @"UserPreferencesHooks")) {
+            %init(UserPreferencesHooks);
         }
         if (getBoolFromPreferences(preferences, @"KeyChainHooks")) {
-            [SecurityHooks enableHooks];
+            [KeychainHooks enableHooks];
         }
-        if (getBoolFromPreferences(preferences, @"CryptoHooks")) {
+        // Crypto hooks
+        if (getBoolFromPreferences(preferences, @"CommonCryptoHooks")) {
             [CCCryptorHooks enableHooks];
             [CCHmacHooks enableHooks];
             [CCKeyDerivationPBKDFHooks enableHooks];
+        }
+        if (getBoolFromPreferences(preferences, @"SecurityHooks")) {
+            [SecurityHooks enableHooks];
+        }
+        // Network hooks
+        if (getBoolFromPreferences(preferences, @"HTTPHooks")) {
+            %init(HTTPHooks);
+        }
+        // IPC hooks
+        if (getBoolFromPreferences(preferences, @"PasteboardHooks")) {
+            %init(PasteboardHooks);
+        }
+        if (getBoolFromPreferences(preferences, @"URLSchemesHooks")) {
+            traceURISchemes();
+        }
+        // Misc hooks
+        if (getBoolFromPreferences(preferences, @"XMLHooks")) {
+            %init(XMLHooks);
         }
 	}
 	else {
@@ -114,23 +144,6 @@ static BOOL getBoolFromPreferences(NSMutableDictionary *preferences, NSString *p
 	}
     
     [preferences release];
-
-    // Log all custom URL schemes registered
-    // TODO: should we refactor this out of the main Tweak?
-    NSArray *url_schemes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
-    for (id schemeBundle in url_schemes) {
-	    NSString *name = [schemeBundle objectForKey:@"CFBundleURLName"];
-	    NSNumber *isPrivate = [schemeBundle objectForKey:@"CFBundleURLIsPrivate"];
-	    for (id scheme in [schemeBundle objectForKey:@"CFBundleURLSchemes"]) {
-		CallTracer *tracer = [[CallTracer alloc] initWithClass:@"CFBundleURLTypes" andMethod:@"CFBundleURLSchemes"];
-		[tracer addArgFromPlistObject:name withKey:@"CFBundleURLName"];
-		[tracer addArgFromPlistObject:isPrivate withKey:@"CFBundleURLIsPrivate"];
-		[tracer addArgFromPlistObject:scheme withKey:@"CFBundleURLScheme"];
-		[traceStorage saveTracedCall:tracer];
-		[tracer release];
-	    }
-    }
-
     [pool drain];
 }
 
