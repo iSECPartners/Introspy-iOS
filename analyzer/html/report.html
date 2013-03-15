@@ -44,14 +44,19 @@
       {{#each groups}}
       <!-- main goup button -->
       <div class="btn-group">
-        <button class="btn" onclick="$('.{{toHTMLClassAttr name}}').toggle();">{{name}}</button>
+        <button class="btn">{{name}}</button>
         <button class="btn dropdown-toggle" data-toggle="dropdown">
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
         <!-- dropdown menu links (subgroups) -->
           {{#each subgroups}}
-          <li><a onclick="$('.{{toHTMLClassAttr name}}').toggle();">{{name}}</a></li>
+          <li><a onclick="$('.{{toHTMLClassAttr name}}').toggle();">
+            <!-- OK/NOK icons to toggle when showing or hiding API subgroups -->
+            <i class="{{toHTMLClassAttr this.name}} icon-ok"></i>
+            <i style="display:none" class="{{toHTMLClassAttr this.name}} icon-remove"></i>
+            {{name}}</a>
+          </li>
           {{/each}}
         </ul>
       </div>
