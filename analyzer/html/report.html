@@ -79,24 +79,24 @@
   <div id="showhidebar" style="position: fixed;"></div>
   <!-- Navigation bar -->
   <div class="tabbable">
-  <ul class="nav nav-tabs" style="margin-top: 20px;">
-  <li class="active"><a href="#tab1" data-toggle="tab">Traced Calls</a></li>
-  <li><a href="#tab2" data-toggle="tab">Findings</a></li>
-  </ul>
-  <div class="tab-content">
-  <!-- Actual content of tab1: list of traced calls -->
-  <div class="tab-pane active" id="tab1">
-  <h3>List of traced function calls</h3>
-  <div id="tab1content"></div>
+    <ul class="nav nav-tabs" style="margin-top: 20px;">
+      <li class="active"><a href="#tab1" data-toggle="tab"><h3>Traced Calls<h3></a></li>
+      <li><a href="#tab2" data-toggle="tab"><h3>Findings</h3></a></li>
+    </ul>
+    <div class="tab-content">
+      <!-- Actual content of tab1: list of traced calls -->
+      <div class="tab-pane active" id="tab1">
+        <h3>List of traced function calls</h3>
+        <div id="tab1content"></div>
+      </div>
+      <!-- Actual content of tab2: list of vulnerabilities -->
+      <div class="tab-pane" id="tab2">
+        <h3>List of findings</h3>
+        <div id="tab2content"></div>
+      </div>
+    </div>
   </div>
-  <!-- Actual content of tab2: list of vulnerabilities -->
-  <div class="tab-pane" id="tab2">
-  <h3>List of findings</h3>
-  <div id="tab2content"></div>
-  </div>
-  </div>
-  </div>
-  <!-- Page End -->
+  <!-- Page Ends -->
 
     <!-- Populate the page with content -->
   <script type="text/javascript">
