@@ -25,9 +25,14 @@ SQLiteStorage *traceStorage;
 
 // Delegate hooks => We proxy the delegate objects
 #import "hooks/NSURLConnectionDelegateProx.h"
+#import "hooks/UIApplicationDelegateProx.h"
 
 
 // Regular hooks
+%group URLSchemes
+#include "hooks/UIApplicationHooks.xm"
+%end
+
 %group FileSystemHooks
 #include "hooks/NSDataHooks.xm"
 #include "hooks/NSFileHandleHooks.xm"
@@ -133,6 +138,7 @@ static void traceURISchemes() {
         }
         if (getBoolFromPreferences(preferences, @"URLSchemesHooks")) {
             traceURISchemes();
+            %init(URLSchemes);
         }
         // Misc hooks
         if (getBoolFromPreferences(preferences, @"XMLHooks")) {

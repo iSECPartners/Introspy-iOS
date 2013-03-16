@@ -1,3 +1,5 @@
+#import <objc/runtime.h> // For convertDelegate()
+
 #import "PlistObjectConverter.h"
 
 
@@ -425,45 +427,43 @@ static NSString *serializedNilValue = @"nil";
 }
 
 
-// We just store a list of implemented delegate methods
-+ (NSDictionary *) convertNSURLConnectionDelegate: (id) delegate {
+// We just store a list of implemented delegate methods based on the delegate protocol
++ (NSArray *) convertDelegate: (id)delegate followingProtocol: (NSString*)protocol {
 	if (delegate == nil)
-		return [NSDictionary dictionary];
+		return [NSArray array];
 
-	NSDictionary *delegateDict;
-	delegateDict = [NSDictionary dictionaryWithObjects:
-		[NSArray arrayWithObjects:
-			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:willSendRequestForAuthenticationChallenge:)]],
-			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:canAuthenticateAgainstProtectionSpace:)]],
-			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:didCancelAuthenticationChallenge:)]],
-			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:didReceiveAuthenticationChallenge:)]],
-			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connectionShouldUseCredentialStorage:)]],
-			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:didFailWithError:)]],
-			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:willCacheResponse:)]],
-			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:didReceiveResponse:)]],
-			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:needNewBodyStream:)]],
-			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:willSendRequest:redirectResponse:)]],
-			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connectionDidFinishLoading:)]],
-			[NSNumber numberWithBool: [delegate respondsToSelector:@selector(connection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite:)]],
-			nil]
-		forKeys:
-		[NSArray arrayWithObjects:
-			@"connection:willSendRequestForAuthenticationChallenge:",
-			@"connection:canAuthenticateAgainstProtectionSpace:",
-			@"connection:didCancelAuthenticationChallenge:",
-			@"connection:didReceiveAuthenticationChallenge:",
-			@"connectionShouldUseCredentialStorage:",
-			@"connection:didFailWithError:",
-			@"connection:willCacheResponse: ",
-			@"connection:didReceiveResponse:",
-			@"connection:needNewBodyStream:",
-			@"connection:willSendRequest:redirectResponse:",
-			@"connectionDidFinishLoading:",
-			@"connection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite:",
-			nil]];
+	// Check which methods of the protocol the delegate actually implements
+	NSMutableArray *delegateMethodsArray = [NSMutableArray array];
 
-	return delegateDict;
-} 
+	// Get a list of the delegate protocol's methods
+	Protocol* p = objc_getProtocol([protocol cStringUsingEncoding:NSASCIIStringEncoding]);
+
+	// Taken from http://parmanoir.com/8_ways_to_use_Blocks_in_Snow_Leopard:
+	// Custom block, used only in this method
+	void (^enumerate)(BOOL, BOOL) = ^(BOOL isRequired, BOOL isInstance) {
+		unsigned int descriptionCount;
+		struct objc_method_description* methodDescriptions = protocol_copyMethodDescriptionList(p, isRequired, isInstance, &descriptionCount);
+		// Check each methods
+		for (int i=0; i<descriptionCount; i++)
+		{
+			struct objc_method_description methodDesc = methodDescriptions[i];
+			//NSLog(@"Protocol method %@ isRequired=%d isInstance=%d", NSStringFromSelector(methodDesc.name), isRequired, isInstance);
+			if ([delegate respondsToSelector:methodDesc.name]) {
+				// This method is implemented by the delegate
+				[delegateMethodsArray addObject:NSStringFromSelector(methodDesc.name)];
+			}
+		}
+		if (methodDescriptions)	free(methodDescriptions);
+	};
+	// Call our block multiple times with different arguments 
+	// to enumerate all class, instance, required and non-required methods
+	enumerate(YES, YES);
+	enumerate(YES, NO);
+	enumerate(NO, YES);
+	enumerate(NO, NO);
+
+	return delegateMethodsArray;
+}
 
 
 // Convert a C buffer to a string of hex numbers
