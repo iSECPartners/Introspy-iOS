@@ -1,5 +1,5 @@
 
-#import "UIApplicationDelegateProx.h"
+#import "DelegateProxies.h"
 #import "../SQLiteStorage.h"
 #import "../PlistObjectConverter.h"
 
@@ -8,13 +8,13 @@
 extern SQLiteStorage *traceStorage;
 
 
-@implementation UIApplicationDelegateProx
+@implementation GenericDelegateProx
 
 
 @synthesize originalDelegate;
 
 
-- (UIApplicationDelegateProx*) initWithOriginalDelegate:(id)origDeleg {
+- (id) initWithOriginalDelegate:(id)origDeleg {
     self = [super init];
 
     if (self) { // Store original delegate
@@ -38,7 +38,10 @@ extern SQLiteStorage *traceStorage;
     [originalDelegate release];
     [super dealloc];
 }
+@end
 
+
+@implementation UIApplicationDelegateProx
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
     BOOL origResult = [originalDelegate application:application handleOpenURL:url];
@@ -60,6 +63,35 @@ extern SQLiteStorage *traceStorage;
     [tracer addArgFromPlistObject:sourceApplication withKey:@"sourceApplication"];
     [tracer addArgFromPlistObject:annotation withKey:@"annotation"];
     [tracer addReturnValueFromPlistObject: [NSNumber numberWithBool:origResult]];
+    [traceStorage saveTracedCall:tracer];
+    [tracer release];
+    return origResult;
+}
+
+@end
+
+
+@implementation NSURLConnectionDelegateProx
+
+- (NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse {
+    id origResult = [originalDelegate connection:connection willCacheResponse:cachedResponse];
+    CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnectionDelegate" andMethod:@"connection:willCacheResponse:"];
+    [tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) connection] withKey:@"connection"];
+    [tracer addArgFromPlistObject:[PlistObjectConverter convertNSCachedURLResponse: cachedResponse] withKey:@"cachedResponse"];
+    [tracer addReturnValueFromPlistObject: [PlistObjectConverter convertNSCachedURLResponse:origResult]];
+    [traceStorage saveTracedCall:tracer];
+    [tracer release];
+    return origResult;
+}
+
+
+- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse {
+    id origResult = [originalDelegate connection:connection willSendRequest:request redirectResponse:redirectResponse];
+    CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnectionDelegate" andMethod:@"connection:willSendRequest:redirectResponse:"];
+    [tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) connection] withKey:@"connection"];
+    [tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
+    [tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLResponse:redirectResponse] withKey:@"redirectResponse"];
+    [tracer addReturnValueFromPlistObject: [PlistObjectConverter convertNSURLRequest:origResult]];
     [traceStorage saveTracedCall:tracer];
     [tracer release];
     return origResult;

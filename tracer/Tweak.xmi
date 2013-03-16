@@ -24,8 +24,7 @@ SQLiteStorage *traceStorage;
 
 
 // Delegate hooks => We proxy the delegate objects
-#import "hooks/NSURLConnectionDelegateProx.h"
-#import "hooks/UIApplicationDelegateProx.h"
+#import "hooks/DelegateProxies.h"
 
 
 // Regular hooks
