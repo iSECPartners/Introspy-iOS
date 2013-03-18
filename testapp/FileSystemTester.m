@@ -73,8 +73,13 @@ static NSData *testContent;
     NSFileManager * fileManager = [NSFileManager defaultManager];
 
     // Test createFileAtPath:contents:attributes:
-    //NSDictionary attributes;
-    [fileManager createFileAtPath:testFilePath contents:testContent attributes:nil];
+    NSDictionary *testAttr = [NSDictionary 
+        dictionaryWithObjects:
+            [NSArray arrayWithObjects: NSFileProtectionCompleteUntilFirstUserAuthentication, nil]
+        forKeys:
+            [NSArray arrayWithObjects: NSFileProtectionKey, nil]];
+
+    [fileManager createFileAtPath:testFilePath contents:testContent attributes:testAttr];
     
     // Test ubiquityIdentityToken - iOS 6 only
 #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000
