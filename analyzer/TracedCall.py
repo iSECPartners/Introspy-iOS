@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import plistlib, json
+import plistlib, json, datetime
 from Signatures import Signature
 from APIGroups import APIGroups
 
@@ -64,9 +64,12 @@ class TracedCallJSONEncoder(json.JSONEncoder):
 			return data
 		elif isinstance(obj, Signature):
 			sig_dict = obj.__dict__
+			# Do not try to serialize the filter attribute
 			del sig_dict['filter']
 			return sig_dict
+		elif isinstance(obj, datetime.datetime):
+			# Keychain items can contain a date. We just store a string representation of it
+			return str(obj)
 		else:
 			return super(TracedCallJSONEncoder, self).default(obj)
-		
-		
+
