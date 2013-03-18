@@ -95,6 +95,8 @@ class APIGroups:
         'UIPasteboard' : PASTEBOARD_SUBGROUP,
         # URI Schemes
         'CFBundleURLTypes' : URISCHEME_SUBGROUP,
+        'UIApplicationDelegate' : URISCHEME_SUBGROUP,
+        'UIApplication' : URISCHEME_SUBGROUP,
         # XML
         'NSXMLParser' : XML_SUBGROUP
     }
