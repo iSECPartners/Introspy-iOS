@@ -12,6 +12,11 @@
 static NSString *serializedNilValue = @"nil";
 
 
++ (NSString *) getSerializedNilValue {
+	return serializedNilValue;
+}
+
+
 // Utility function to automatically convert nil to an empty string
 + (id) autoConvertNil:(id) pointer {
 	if (pointer == nil) {

@@ -13,8 +13,8 @@
 - (CallTracer*)initWithClass:(NSString *)clazz andMethod:(NSString *)meth;
 
 // Plist objects are string, number, boolean, date, data, dictionary and array.
-- (BOOL) addArgFromPlistObject:(id) arg withKey:(NSString *)key;
-- (BOOL) addReturnValueFromPlistObject:(id) result;
+- (void) addArgFromPlistObject:(id) arg withKey:(NSString *)key;
+- (void) addReturnValueFromPlistObject:(id) result;
 
 - (NSData *) serializeArgsAndReturnValue;
 

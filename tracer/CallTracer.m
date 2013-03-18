@@ -1,5 +1,7 @@
 #import "CallTracer.h"
 #import "SQLiteStorage.h"
+#import "PlistObjectConverter.h"
+
 
 
 @implementation CallTracer
@@ -21,20 +23,24 @@
 	return self;
 }
 
-- (BOOL) addArgFromPlistObject:(id) arg withKey:(NSString *)key {
-	if(arg != nil) {
+
+- (void) addArgFromPlistObject:(id) arg withKey:(NSString *)key {
+	if(arg == nil) {
+		[args setValue:[PlistObjectConverter getSerializedNilValue] forKey:key];
+	} 
+	else {
 		[args setValue:arg forKey:key];
-		return true;
 	}
-	return false;
 }
 
-- (BOOL) addReturnValueFromPlistObject:(id) result {
-	if(result != nil) {
-		[argsAndReturnValue setValue:result forKey:@"returnValue"];
-		return true;
+
+- (void) addReturnValueFromPlistObject:(id) result {
+	if(result == nil) {
+		[argsAndReturnValue setValue:[PlistObjectConverter getSerializedNilValue] forKey:@"returnValue"];
 	}
-	return false;
+	else {
+		[argsAndReturnValue setValue:result forKey:@"returnValue"];
+	}
 }
 
 
