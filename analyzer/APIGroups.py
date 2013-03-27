@@ -13,7 +13,7 @@ class APIGroups:
     API_SUBGROUPS_LIST = []
     
     # Data Storage
-    DATASTORAGE_GROUP = 'Data Storage'
+    DATASTORAGE_GROUP = 'DataStorage'
     FILESYSTEM_SUBGROUP = 'Filesystem'
     USRPREFERENCES_SUBGROUP = 'User Preferences'
     KEYCHAIN_SUBGROUP = 'Keychain'

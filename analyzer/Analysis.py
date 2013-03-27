@@ -5,18 +5,23 @@ from TracedCall import TracedCallJSONEncoder
 class Analyzer:
 	""" Manages signature loading and matching """
 
-	def __init__(self, introspy_db_path, signatures):
+	def __init__(self, introspy_db_path, signatures, group):
 		self.tracedCalls = TraceStorage(introspy_db_path).get_traced_calls()
-		self.signatures = signatures
+		self.signatures = self.get_group_signatures(signatures, group)
 		self.findings = []
 		# Try each signature on the list of traced calls
 		for sig in self.signatures:
 			self.findings.append((sig, sig.analyze_trace(self.tracedCalls)))
-			
-			
+
 	def get_findings(self):
 		return self.findings
 
+	def get_group_signatures(self, signatures, group):
+		filtered_sigs = []
+		for sig in signatures:
+		  if sig.group.lower() == group.lower():
+		    filtered_sigs.append(sig)
+		return filtered_sigs
 
 	def write_to_JS_file(self, fileDir, fileName='findings.js'):
 		# Convert the list of findings to a JS var declaration
