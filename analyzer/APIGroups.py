@@ -15,15 +15,15 @@ class APIGroups:
     # Data Storage
     DATASTORAGE_GROUP = 'DataStorage'
     FILESYSTEM_SUBGROUP = 'Filesystem'
-    USRPREFERENCES_SUBGROUP = 'User Preferences'
+    USRPREFERENCES_SUBGROUP = 'UserPreferences'
     KEYCHAIN_SUBGROUP = 'Keychain'
     API_GROUPS_LIST.append(DATASTORAGE_GROUP)
     API_SUBGROUPS_LIST.extend([FILESYSTEM_SUBGROUP, USRPREFERENCES_SUBGROUP, KEYCHAIN_SUBGROUP])
     
     # Crypto
     CRYPTO_GROUP = 'Crypto'
-    COMMONCRYPTO_SUBGROUP = 'Common Crypto'
-    SECURITY_SUBGROUP = 'Security Framework'
+    COMMONCRYPTO_SUBGROUP = 'CommonCrypto'
+    SECURITY_SUBGROUP = 'SecurityFramework'
     API_GROUPS_LIST.append(CRYPTO_GROUP)
     API_SUBGROUPS_LIST.extend([COMMONCRYPTO_SUBGROUP, SECURITY_SUBGROUP])
     
@@ -36,13 +36,13 @@ class APIGroups:
     # IPC
     IPC_GROUP = 'IPC'
     PASTEBOARD_SUBGROUP = 'Pasteboard'
-    URISCHEME_SUBGROUP = 'URL Schemes'
+    URISCHEME_SUBGROUP = 'Schemes'
     API_GROUPS_LIST.append(IPC_GROUP)
     API_SUBGROUPS_LIST.extend([PASTEBOARD_SUBGROUP, URISCHEME_SUBGROUP])
     
     # Misc
     MISC_GROUP = 'Misc'
-    XML_SUBGROUP = 'XML Parsing'
+    XML_SUBGROUP = 'XML'
     API_GROUPS_LIST.append(MISC_GROUP)
     API_SUBGROUPS_LIST.extend([XML_SUBGROUP])
     

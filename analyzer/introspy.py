@@ -7,6 +7,7 @@ from argparse import ArgumentParser
 from Analysis import Analyzer
 from Signatures import signature_list
 from HTMLReport import HTMLReport
+from APIGroups import APIGroups
 
 __author__	= "Tom Daniels & Alban Diquet"
 __license__	= "?"
@@ -19,17 +20,16 @@ def main(argv):
 	parser.add_argument("-o", "--outdir",
 			help="generate an HTML report and write it to the specified directory")
 	parser.add_argument("-g", "--group",
-			help="filter by signature class [DataStorage, Crypto, \
-			Network, IPC, Misc]")
-#TODO filter by subgroup
-#	parser.add_argument("-s", "--sub-group",
-#			help="filter by sub-group
-#			Network, IPC, Misc]")
+			choices=APIGroups.API_GROUPS_LIST,
+			help="Filter by signature group")
+	parser.add_argument("-s", "--sub-group",
+			choices=APIGroups.API_SUBGROUPS_LIST,
+			help="Filter by signature sub-group")
 #	parser.add_argument("-n", "--no-info",
 #			action="store_false",
 #			help="Don't run signatures that are purely informational")
 	args = parser.parse_args()
-	analyzer = Analyzer(args.db, signature_list, args.group)
+	analyzer = Analyzer(args.db, signature_list, args.group, args.sub_group)
 	
 	if args.outdir: 
 		report = HTMLReport(args.db, signature_list)
