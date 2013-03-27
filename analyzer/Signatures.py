@@ -13,10 +13,9 @@ class Signature(object):
 	SEVERITY_HIGH = 'High'
 
 
-	def __init__(self, title, sig_class, description, severity, filter):
+	def __init__(self, title, description, severity, filter):
 		# TODO: Define the metadata we actually need 
 		self.title = title
-		self.sig_class = sig_class
 		self.description = description
 		self.severity = severity
 		self.filter = filter
@@ -39,7 +38,6 @@ signature_list = []
 # XML signature
 signature_list.append(Signature(
 	title = 'Vulnerable XML Parser',
-	sig_class = 'XML',
 	description = 'XML parser is configured to resolve external entities.',
 	severity = Signature.SEVERITY_HIGH,
 	filter = ArgumentsFilter(
@@ -52,7 +50,6 @@ signature_list.append(Signature(
 # Security Framework signatures
 signature_list.append(Signature(
 	title = 'Client Certificate Import',
-	sig_class = 'Crypto',
 	description = 'The application imported a private key and a certificate from a PKCS12 file.',
 	severity = Signature.SEVERITY_INF,
 	filter = MethodsFilter(
@@ -73,7 +70,6 @@ KSECATTR_VALUES = [
 for (kSecAttr_value, kSecAttr_title, severity) in KSECATTR_VALUES:
 	signature_list.append(Signature(
 		title = 'Keychain Data Protection',
-		sig_class = 'KeyChain',
 		description = 'Item added to the KeyChain with accessibility options "{0}".'.format(kSecAttr_title),
 		severity = severity,
 		filter = ArgumentsFilter(
@@ -85,7 +81,6 @@ for (kSecAttr_value, kSecAttr_title, severity) in KSECATTR_VALUES:
 # URL scheme signatures
 signature_list.append(Signature(
 	title = 'URL Schemes',
-	sig_class = 'Schemes',
 	description = 'Specific URL schemes are implemented by the application.',
 	severity = Signature.SEVERITY_INF,
 	filter = MethodsFilter(
@@ -96,7 +91,6 @@ signature_list.append(Signature(
 # Pasteboard signatures
 signature_list.append(Signature(
 	title = 'General Pasteboard Usage',
-	sig_class = 'Pasteboard',
 	description = 'Application instantiates the shared generalPasteboard.',
 	severity = Signature.SEVERITY_INF,
 	filter = MethodsFilter(
@@ -107,7 +101,6 @@ signature_list.append(Signature(
 # HTTP signatures
 signature_list.append(Signature(
 	title = 'HTTPS Caching',
-	sig_class = 'HTTP',
 	description = 'Data received over HTTPS is being cached on disk.',
 	severity = Signature.SEVERITY_LOW,
 	filter = ArgumentsFilter(
@@ -129,7 +122,6 @@ NSDATA_DPAPI_VALUES = {
 for (fileProt_mask, fileProt_title, severity) in NSDATA_DPAPI_VALUES:
 	signature_list.append(Signature(
 		title = 'Data Protection APIs Usage',
-		sig_class = 'Filesystem',
 		description = 'File written with data protection option "{0}".'.format(fileProt_title),
 		severity = severity,
 		filter = ArgumentsFilter(
@@ -142,7 +134,6 @@ for (fileProt_mask, fileProt_title, severity) in NSDATA_DPAPI_VALUES:
 
 signature_list.append(Signature(
 	title = 'Lack of Data Protection APIs Usage',
-	sig_class = 'Filesystem',
 	description = 'File written without any data protection options.',
 	severity = severity,
 	filter = MethodsFilter(
@@ -160,7 +151,6 @@ NSFILEMANAGER_DPAPI_VALUES = {
 for (fileProt_title, severity) in NSFILEMANAGER_DPAPI_VALUES:
 	signature_list.append(Signature(
 		title = 'Data Protection APIs Usage',
-		sig_class = 'Filesystem',
 		description = 'File written with data protection option "{0}".'.format(fileProt_title),
 		severity = severity,
 		filter = ArgumentsFilter(
