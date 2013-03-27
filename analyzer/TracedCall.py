@@ -6,7 +6,7 @@ from APIGroups import APIGroups
 
 class TracedCall:
 	""" Object representation of a introspy database row (a traced call) """
-	
+
 
 	def __init__(self, callId, clazz, method, argsAndReturnValue):
 		self.callId = callId
@@ -16,7 +16,7 @@ class TracedCall:
 		# Get the call's group and subgroup
 		self.subgroup = APIGroups.find_subgroup(clazz, method)
 		self.group =  APIGroups.find_group(self.subgroup)
-		
+
 
 	def walk_dict(self, d, level=0):
 		arg_str = ""
