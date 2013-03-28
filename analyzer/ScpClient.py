@@ -12,7 +12,7 @@ class ScpClient:
 	  ip = raw_input("Enter device domain name or IP address: ")
 	  self.cnx_str = "mobile@%s" % ip
 
-	def find_all_dbs(self):
+	def select_db(self):
 	  cmd = "ssh %s find . -iname introspy-*.db" % self.cnx_str
 	  proc = subprocess.Popen(cmd.split(),
 			  stdout=subprocess.PIPE,
@@ -20,8 +20,6 @@ class ScpClient:
 	  dbs, err = proc.communicate()
 	  # something went wrong
 	  if err or len(dbs) is 0:
-	    print "err => %s" % err
-	    print "dbs => %s" % dbs
 	    print "Couldn't find any introspy databases."
 	    exit(0)
 	  # remove local and parent directory entries
@@ -32,7 +30,8 @@ class ScpClient:
 	  choice = int(raw_input("Select the database to analyze: "))
 	  return dbs[choice]
 
-	def fetch_db(self, remote_db_path):
+	def select_and_fetch_db(self):
+	  remote_db_path = self.select_db()
 	  cmd = "scp %s:%s ./" % (self.cnx_str, remote_db_path)
 	  proc = subprocess.Popen(cmd.split(),
 			  stdout=subprocess.PIPE,

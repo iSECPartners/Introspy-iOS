@@ -16,9 +16,11 @@ __copyright__	= "Copyright 2013, iSEC Partners, Inc."
 def main(argv):
 	parser = ArgumentParser(description="introspy analysis tool")
 	parser.add_argument("db",
-			help="the introspy-generated database to analyze")
+			help="Tthe introspy-generated database to analyze.\
+			specifying 'remote' initiates the analyzer to fetch a\
+			remote database from an iOS device.")
 	parser.add_argument("-o", "--outdir",
-			help="generate an HTML report and write it to the specified directory")
+			help="Generate an HTML report and write it to the specified directory")
 	parser.add_argument("-g", "--group",
 			choices=APIGroups.API_GROUPS_LIST,
 			help="Filter by signature group")
@@ -30,8 +32,8 @@ def main(argv):
 #			help="Don't run signatures that are purely informational")
 	args = parser.parse_args()
 	analyzer = Analyzer(args.db, signature_list, args.group, args.sub_group)
-	
-	if args.outdir: 
+
+	if args.outdir:
 		report = HTMLReport(args.db, signature_list)
 		report.write_to_directory(args.outdir)
 	else:
@@ -45,4 +47,4 @@ def main(argv):
 
 if __name__ == "__main__":
 	main(argv[1:])
-	
+

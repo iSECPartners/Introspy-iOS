@@ -10,7 +10,7 @@ class TraceStorage:
 	def __init__(self, db):
 		self.calls = []
 		conn = None
-		
+
 		try:
 			conn = sqlite3.connect(db)
 			conndb = conn.cursor()
