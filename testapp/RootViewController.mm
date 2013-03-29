@@ -4,6 +4,7 @@
 #import "PasteboardTester.h"
 #import "UserPreferencesTester.h"
 #import "HTTPTester.h"
+#import "SchemeTester.h"
 #import "KeyChainTester.h"
 #import "CryptoTester.h"
 #import "XMLTester.h"
@@ -45,6 +46,9 @@
 
     // HTTP
     [HTTPTester runAllTests];
+
+    // URL Schemes
+    [SchemeTester runAllTests];
 
     // Security Framework
     [KeyChainTester runAllTests];
