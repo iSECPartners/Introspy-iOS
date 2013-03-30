@@ -90,12 +90,12 @@ signature_list.append(Signature(
 
 # Pasteboard signatures
 signature_list.append(Signature(
-	title = 'General Pasteboard Usage',
-	description = 'Application instantiates the shared generalPasteboard.',
+	title = 'Pasteboard Usage',
+	description = 'Application instantiates one or multiple Pasteboards.',
 	severity = Signature.SEVERITY_INF,
 	filter = MethodsFilter(
 		classes_to_match = ['UIPasteboard'],
-		methods_to_match = ['generalPasteboard'])))
+		methods_to_match = ['generalPasteboard', 'pasteboardWithName:create:'])))
 
 
 # HTTP signatures
@@ -159,4 +159,5 @@ for (fileProt_title, severity) in NSFILEMANAGER_DPAPI_VALUES:
 			args_to_match = [
 				(['arguments', 'attributes', 'NSFileProtectionKey'], fileProt_title)])))
 
+# TODO : no DP API nsfilemanager
 
