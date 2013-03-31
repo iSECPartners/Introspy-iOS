@@ -10,7 +10,7 @@ from HTMLReport import HTMLReport
 from APIGroups import APIGroups
 
 __author__    = "Tom Daniels & Alban Diquet"
-__license__    = "?"
+__license__    = "See ../LICENSE"
 __copyright__    = "Copyright 2013, iSEC Partners, Inc."
 
 def main(argv):
