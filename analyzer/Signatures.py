@@ -1,4 +1,4 @@
-from Filters import MethodsFilter, ArgumentsFilter
+from Filters import MethodsFilter, ArgumentsWithMaskFilter, ArgumentsFilter 
 from APIGroups import APIGroups
 
 class Signature(object):
@@ -124,7 +124,7 @@ for (fileProt_mask, fileProt_title, severity) in NSDATA_DPAPI_VALUES:
 		title = 'Data Protection APIs Usage',
 		description = 'File written with data protection option "{0}".'.format(fileProt_title),
 		severity = severity,
-		filter = ArgumentsFilter(
+		filter = ArgumentsWithMaskFilter(
 			classes_to_match = ['NSData'],
 			methods_to_match = ['writeToFile:options:error:', 'writeToURL:options:error:'],
 			args_to_match = [
