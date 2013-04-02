@@ -2,12 +2,15 @@ import json, os
 from TraceStorage import TraceStorage
 from TracedCall import TracedCallJSONEncoder
 from ScpClient import ScpClient
+from Signatures import Signature
 
 class Analyzer:
 	""" Manages signature loading and matching """
 
-	def __init__(self, introspy_db_path, signatures, group=None, subgroup=None):
+	def __init__(self, introspy_db_path, signatures, group=None, subgroup=None, no_info=False):
 		self.tracedCalls = self.fetch_and_open_db(introspy_db_path)
+		if no_info:
+		  signatures = self.filter_informational_signatures(signatures)
 		self.signatures = self.get_group_signatures(signatures, group, subgroup)
 		self.findings = []
 		# Try each signature on the list of traced calls
@@ -23,6 +26,14 @@ class Analyzer:
 		  scp = ScpClient()
 		  introspy_db_path = scp.select_and_fetch_db()
 		return TraceStorage(introspy_db_path).get_traced_calls()
+
+	def filter_informational_signatures(self, signatures):
+		# filter out information signatures based on cli options
+		non_info_sigs = []
+		for sig in signatures:
+		  if sig.severity != Signature.SEVERITY_INF:
+		    non_info_sigs.append(sig)
+		return non_info_sigs
 
 	def get_group_signatures(self, signatures, group, subgroup=None):
 		if group == None:

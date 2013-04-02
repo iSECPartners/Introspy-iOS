@@ -27,11 +27,11 @@ def main(argv):
 	parser.add_argument("-s", "--sub-group",
 			choices=APIGroups.API_SUBGROUPS_LIST,
 			help="Filter by signature sub-group")
-#	parser.add_argument("-n", "--no-info",
-#			action="store_false",
-#			help="Don't run signatures that are purely informational")
+	parser.add_argument("-n", "--no-info",
+			action="store_true",
+			help="Don't run signatures that are purely informational")
 	args = parser.parse_args()
-	analyzer = Analyzer(args.db, signature_list, args.group, args.sub_group)
+	analyzer = Analyzer(args.db, signature_list, args.group, args.sub_group, args.no_info)
 
 	if args.outdir:
 		report = HTMLReport(args.db, signature_list)
