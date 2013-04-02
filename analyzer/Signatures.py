@@ -110,12 +110,12 @@ for (kSecAttr_value, kSecAttr_title, severity) in KSECATTR_VALUES:
 
 # Pasteboard signatures
 signature_list.append(Signature(
-	title = 'General Pasteboard Usage',
-	description = 'Application instantiates the shared generalPasteboard.',
-	severity = Signature.SEVERITY_INF,
-	filter = MethodsFilter(
-		classes_to_match = ['UIPasteboard'],
-		methods_to_match = ['generalPasteboard'])))
+    title = 'Pasteboard Usage',
+    description = 'Application instantiates one or multiple Pasteboards.',
+    severity = Signature.SEVERITY_INF,
+    filter = MethodsFilter(
+        classes_to_match = ['UIPasteboard'],
+        methods_to_match = ['generalPasteboard', 'pasteboardWithName:create:'])))
 
 # HTTP signatures
 signature_list.append(Signature(

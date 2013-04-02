@@ -9,9 +9,9 @@ from Signatures import signature_list
 from HTMLReport import HTMLReport
 from APIGroups import APIGroups
 
-__author__	= "Tom Daniels & Alban Diquet"
-__license__	= "?"
-__copyright__	= "Copyright 2013, iSEC Partners, Inc."
+__author__    = "Tom Daniels & Alban Diquet"
+__license__    = "See ../LICENSE"
+__copyright__    = "Copyright 2013, iSEC Partners, Inc."
 
 def main(argv):
 	parser = ArgumentParser(description="introspy analysis tool")
@@ -46,5 +46,4 @@ def main(argv):
 					print "  %s" % traced_call
 
 if __name__ == "__main__":
-	main(argv[1:])
-
+    main(argv[1:])
