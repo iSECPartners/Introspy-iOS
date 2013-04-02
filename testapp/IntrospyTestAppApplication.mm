@@ -9,12 +9,24 @@
 
 @implementation IntrospyTestAppApplication
 @synthesize window = _window;
-- (void)applicationDidFinishLaunching:(UIApplication *)application {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	_viewController = [[RootViewController alloc] init];
 	[_window addSubview:_viewController.view];
 	[_window makeKeyAndVisible];
+	return YES;
 }
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+	return YES;
+}
+
+//- (void)applicationDidFinishLaunching:(UIApplication *)application {
+//	_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+//	_viewController = [[RootViewController alloc] init];
+//	[_window addSubview:_viewController.view];
+//	[_window makeKeyAndVisible];
+//}
 
 - (void)dealloc {
 	[_viewController release];
