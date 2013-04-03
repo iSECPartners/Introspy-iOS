@@ -33,13 +33,13 @@ class TraceStorage:
 
     def filter_traced_calls(self, group, subgroup):
         filt_calls = []
-	for call in self.calls:
-	    if call.group.lower() == group.lower():
-                filt_calls.append(call)
-        if subgroup == None:
-            return filt_calls
-        filtered_calls = []
-	for call in filt_calls:
+        for call in self.calls:
+            if call.group.lower() == group.lower():
+                    filt_calls.append(call)
+            if subgroup == None:
+                return filt_calls
+            filtered_calls = []
+        for call in filt_calls:
             if call.subgroup.lower() == subgroup.lower():
                 filtered_calls.append(call)
         return filtered_calls
@@ -59,4 +59,3 @@ class TraceStorage:
         JS_filePath = os.path.join(fileDir, fileName)
         JS_file = open(JS_filePath, 'w')
         JS_file.write(JS_data)
-
