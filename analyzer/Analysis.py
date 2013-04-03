@@ -5,7 +5,7 @@ from ScpClient import ScpClient
 from Signatures import Signature
 
 class Analyzer:
-	""" Manages signature loading and matching """
+    """ Manages signature loading and matching """
 
     def __init__(self, introspy_db_path, signatures, group=None, subgroup=None, list_only=False):
         self.tracedCalls = self.fetch_and_filter_calls(introspy_db_path, group, subgroup)
