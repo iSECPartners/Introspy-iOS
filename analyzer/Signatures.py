@@ -47,35 +47,35 @@ signature_list.append(Signature(
 			(['arguments', 'shouldResolveExternalEntities'], 'True')])))
 
 # NSUserDefault signatures
-signature_list.append(Signature(
-	title = 'Data stored to user defaults',
-	description = 'Data was stored in the application\'s user defaults.',
-	severity = Signature.SEVERITY_INF,
-	filter = MethodsFilter(
-		classes_to_match = ['NSUserDefaults'],
-		methods_to_match = ['setBool:forKey:',
-			'setFloat:forKey:',
-			'setInteger:forKey:',
-			'setURL:forKey:',
-			'setDouble:forKey:'])))
+#signature_list.append(Signature(
+#	title = 'Data stored to user defaults',
+#	description = 'Data was stored in the application\'s user defaults.',
+#	severity = Signature.SEVERITY_INF,
+#	filter = MethodsFilter(
+#		classes_to_match = ['NSUserDefaults'],
+#		methods_to_match = ['setBool:forKey:',
+#			'setFloat:forKey:',
+#			'setInteger:forKey:',
+#			'setURL:forKey:',
+#			'setDouble:forKey:'])))
 
-signature_list.append(Signature(
-	title = 'Data accessed from user defaults',
-	description = 'Data was accessed from the application\'s user defaults.',
-	severity = Signature.SEVERITY_INF,
-	filter = MethodsFilter(
-		classes_to_match = ['NSUserDefaults'],
-		methods_to_match = ['arrayForKey:',
-			'boolForKey:',
-			'dataForKey:',
-			'dictionaryForKey:',
-			'floatForKey:',
-			'doubleForKey:',
-			'integerForKey:',
-			'stringArrayForKey:',
-			'stringForKey:',
-			'URLForKey:,',
-			'dictionaryRepresentation'])))
+#signature_list.append(Signature(
+#	title = 'Data accessed from user defaults',
+#	description = 'Data was accessed from the application\'s user defaults.',
+#	severity = Signature.SEVERITY_INF,
+#	filter = MethodsFilter(
+#		classes_to_match = ['NSUserDefaults'],
+#		methods_to_match = ['arrayForKey:',
+#			'boolForKey:',
+#			'dataForKey:',
+#			'dictionaryForKey:',
+#			'floatForKey:',
+#			'doubleForKey:',
+#			'integerForKey:',
+#			'stringArrayForKey:',
+#			'stringForKey:',
+#			'URLForKey:,',
+#			'dictionaryRepresentation'])))
 
 # Security Framework signatures
 signature_list.append(Signature(
@@ -129,16 +129,16 @@ signature_list.append(Signature(
 			(['returnValue', 'response', 'URL', 'scheme'], 'https'),
 			(['returnValue', 'storagePolicy'], 0) ])))
 
-signature_list.append(Signature(
-	title = 'NSURLConnection',
-	description = 'Remote connection.',
-	severity = Signature.SEVERITY_INF,
-	filter = MethodsFilter(
-		classes_to_match = ['NSURLConnection'],
-		methods_to_match = ['initWithRequest:delegate:',
-		'sendSynchronousRequest:returningResponse:error:',
-		'initWithRequest:delegate:',
-		'initWithRequest:delegate:startImmediately:'])))
+#signature_list.append(Signature(
+#	title = 'NSURLConnection',
+#	description = 'Remote connection.',
+#	severity = Signature.SEVERITY_INF,
+#	filter = MethodsFilter(
+#		classes_to_match = ['NSURLConnection'],
+#		methods_to_match = ['initWithRequest:delegate:',
+#		'sendSynchronousRequest:returningResponse:error:',
+#		'initWithRequest:delegate:',
+#		'initWithRequest:delegate:startImmediately:'])))
 
 signature_list.append(Signature(
 	title = 'Remote connection with credentials.',
@@ -149,13 +149,13 @@ signature_list.append(Signature(
 		methods_to_match = ['initWithUser:password:persistence:',
 			'initWithTrust:'])))
 
-signature_list.append(Signature(
-	title = 'Cookie usage',
-	description = 'The application instantiated the following cookies.',
-	severity = Signature.SEVERITY_INF,
-	filter = MethodsFilter(
-		classes_to_match = ['NSHTTPCookie'],
-		methods_to_match = ['initWithProperties:'])))
+#signature_list.append(Signature(
+#	title = 'Cookie usage',
+#	description = 'The application instantiated the following cookies.',
+#	severity = Signature.SEVERITY_INF,
+#	filter = MethodsFilter(
+#		classes_to_match = ['NSHTTPCookie'],
+#		methods_to_match = ['initWithProperties:'])))
 
 # Filesystem signatures
 # For NSData
@@ -186,20 +186,20 @@ signature_list.append(Signature(
 		classes_to_match = ['NSData'],
 		methods_to_match = ['writeToFile:atomically:', 'writeToURL:atomically:'])))	
 
-signature_list.append(Signature(
-	title = 'File system access.',
-	description = 'File system access',
-	severity = Signature.SEVERITY_INF,
-	filter = MethodsFilter(
-		classes_to_match = ['NSData'],
-		methods_to_match = ['dataWithContentsOfFile:',
-			'dataWithContentsOfFile:options:error:',
-			'dataWithContentsOfURL',
-			'dataWithContentsOfURL:options:error:',
-			'initWithContentsOfFile:',
-			'initWithContentsOfFile:options:error:',
-			'initWithContentsOfURL:',
-			'initWithContentsOfURL:options:error:'])))
+#signature_list.append(Signature(
+#	title = 'File system access.',
+#	description = 'File system access',
+#	severity = Signature.SEVERITY_INF,
+#	filter = MethodsFilter(
+#		classes_to_match = ['NSData'],
+#		methods_to_match = ['dataWithContentsOfFile:',
+#			'dataWithContentsOfFile:options:error:',
+#			'dataWithContentsOfURL',
+#			'dataWithContentsOfURL:options:error:',
+#			'initWithContentsOfFile:',
+#			'initWithContentsOfFile:options:error:',
+#			'initWithContentsOfURL:',
+#			'initWithContentsOfURL:options:error:'])))
 
 
 # For NSFileManager
@@ -220,13 +220,13 @@ for (fileProt_title, severity) in NSFILEMANAGER_DPAPI_VALUES:
 			args_to_match = [
 				(['arguments', 'attributes', 'NSFileProtectionKey'], fileProt_title)])))
 
-signature_list.append(Signature(
-	title = 'File system access.',
-	description = 'File system access',
-	severity = Signature.SEVERITY_INF,
-	filter = MethodsFilter(
-		classes_to_match = ['NSFileManager'],
-		methods_to_match = ['contentsAtPath:'])))
+#signature_list.append(Signature(
+#	title = 'File system access.',
+#	description = 'File system access',
+#	severity = Signature.SEVERITY_INF,
+#	filter = MethodsFilter(
+#		classes_to_match = ['NSFileManager'],
+#		methods_to_match = ['contentsAtPath:'])))
 
 # URL scheme signatures
 signature_list.append(Signature(
@@ -238,11 +238,11 @@ signature_list.append(Signature(
 		methods_to_match = ['CFBundleURLSchemes'])))
 
 # UIApplicationDelegate hooks
-signature_list.append(Signature(
-	title = 'Custom URL scheme accessed.',
-	description = 'Custom URL scheme accessed.',
-	severity = Signature.SEVERITY_INF,
-	filter = MethodsFilter(
-		classes_to_match = ['UIApplicationDelegate'],
-		methods_to_match = ['application:openURL:sourceApplication:annotation:', 'application:handleOpenURL:'])))
+#signature_list.append(Signature(
+#	title = 'Custom URL scheme accessed.',
+#	description = 'Custom URL scheme accessed.',
+#	severity = Signature.SEVERITY_INF,
+#	filter = MethodsFilter(
+#		classes_to_match = ['UIApplicationDelegate'],
+#		methods_to_match = ['application:openURL:sourceApplication:annotation:', 'application:handleOpenURL:'])))
 

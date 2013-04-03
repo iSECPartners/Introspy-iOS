@@ -26,10 +26,23 @@ class TraceStorage:
             if conn:
                 conn.close()
 
+    def get_traced_calls(self, group=None, subgroup=None):
+        if group == None:
+            return self.calls
+        return self.filter_traced_calls(group, subgroup)
 
-    def get_traced_calls(self):
-        return self.calls
-
+    def filter_traced_calls(self, group, subgroup):
+        filt_calls = []
+	for call in self.calls:
+	    if call.group.lower() == group.lower():
+                filt_calls.append(call)
+        if subgroup == None:
+            return filt_calls
+        filtered_calls = []
+	for call in filt_calls:
+            if call.subgroup.lower() == subgroup.lower():
+                filtered_calls.append(call)
+        return filtered_calls
 
     def write_to_JS_file(self, fileDir, fileName='tracedCalls.js'):
         # Convert the list of traced calls to a JS var declaration
@@ -41,9 +54,9 @@ class TraceStorage:
             print e
             raise
         JS_data = 'var tracedCalls = ' + tracedCalls_json + ';'
-        
+
         # Write the result to a file
         JS_filePath = os.path.join(fileDir, fileName)
         JS_file = open(JS_filePath, 'w')
         JS_file.write(JS_data)
-        
+
