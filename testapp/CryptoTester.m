@@ -2,6 +2,7 @@
 #include <CommonCrypto/CommonCryptor.h>
 #include <CommonCrypto/CommonHmac.h>
 #include <CommonCrypto/CommonKeyDerivation.h>
+#include <CommonCrypto/CommonDigest.h>
 
 
 @implementation CryptoTester 
@@ -15,6 +16,7 @@ static char testData[16] = "s3cret 123";
 + (void)runAllTests {
 
     [self testCCHmac];
+    [self testCC_MD5];
     [self testCCCryptor];
     [self testCCKeyDerivationPBKDF];
 }
@@ -29,6 +31,18 @@ static char testData[16] = "s3cret 123";
     CCHmacFinal(&ctx, dataOut);
 
     CCHmac(kCCHmacAlgSHA1, testKey, 16, testData, 16, dataOut);
+}
+
+
++ (void) testCC_MD5 {
+    CC_MD5_CTX ctx;
+    unsigned char dataOut[CC_MD5_DIGEST_LENGTH];
+
+    CC_MD5_Init(&ctx);
+    CC_MD5_Update(&ctx, testData, 16);
+    CC_MD5_Final(dataOut, &ctx);
+
+    CC_MD5(testData, 16, dataOut);
 }
 
 
