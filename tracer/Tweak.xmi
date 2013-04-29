@@ -15,6 +15,7 @@ static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/
 #import "hooks/CCCryptorHooks.h"
 #import "hooks/CCHmacHooks.h"
 #import "hooks/CCKeyDerivationPBKDFHooks.h"
+#import "hooks/CC_MD5Hooks.h"
 
 
 
@@ -88,8 +89,10 @@ static void traceURISchemes() {
 }
 
 
+// Tweak starts here
 %ctor {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
     // Only hook Apps the user has selected in Introspy's settings panel
     NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
     // Load Introspy preferences
@@ -98,8 +101,8 @@ static void traceURISchemes() {
     if ( (shouldHook == nil) || (! [shouldHook boolValue]) ) {
         NSLog(@"Introspy - Profiling disabled for %@", appId);
     	[preferences release];
-    	[pool drain];
-	return;
+        [pool drain];
+	    return;
     }
 
 	// Initialize DB storage
@@ -123,6 +126,7 @@ static void traceURISchemes() {
             [CCCryptorHooks enableHooks];
             [CCHmacHooks enableHooks];
             [CCKeyDerivationPBKDFHooks enableHooks];
+            [CC_MD5Hooks enableHooks];
         }
         if (getBoolFromPreferences(preferences, @"SecurityHooks")) {
             [SecurityHooks enableHooks];
