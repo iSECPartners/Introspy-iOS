@@ -16,6 +16,7 @@ static char testData[16] = "s3cret 123";
 + (void)runAllTests {
 
     [self testCommonHmac];
+    [self testRand];
     [self testCommonDigest];
     [self testCommonCryptor];
     [self testCommonKeyDerivation];
@@ -31,6 +32,12 @@ static char testData[16] = "s3cret 123";
     CCHmacFinal(&ctx, dataOut);
 
     CCHmac(kCCHmacAlgSHA1, testKey, 16, testData, 16, dataOut);
+}
+
+
++ (void) testRand {
+    rand();
+    random();
 }
 
 
