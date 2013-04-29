@@ -3,7 +3,7 @@
 include theos/makefiles/common.mk
 
 TWEAK_NAME = introspy
-introspy_FILES = Tweak.xmi CallTracer.m hooks/CC_MD5Hooks.m hooks/KeychainHooks.m hooks/DelegateProxies.m PlistObjectConverter.m hooks/CCKeyDerivationPBKDFHooks.m CallStackInspector.m SQLiteStorage.m hooks/SecurityHooks.m hooks/CCCryptorHooks.m hooks/CCHmacHooks.m
+introspy_FILES = Tweak.xmi CallTracer.m hooks/CC_MD5Hooks.m hooks/CC_SHAHooks.m hooks/KeychainHooks.m hooks/DelegateProxies.m PlistObjectConverter.m hooks/CCKeyDerivationPBKDFHooks.m CallStackInspector.m SQLiteStorage.m hooks/SecurityHooks.m hooks/CCCryptorHooks.m hooks/CCHmacHooks.m
 introspy_LIBRARIES = sqlite3 
 
 introspy_FRAMEWORKS = UIKit, Foundation, Security
