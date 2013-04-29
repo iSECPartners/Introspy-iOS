@@ -4,10 +4,10 @@
 
 + (void)runAllTests;
 
-+ (void) testCCHmac;
-+ (void) testCC_MD5;
-+ (void) testCCCryptor;
-+ (void) testCCKeyDerivationPBKDF;
++ (void) testCommonHmac;
++ (void) testCommonDigest;
++ (void) testCommonCryptor;
++ (void) testCommonKeyDerivation;
 
 @end
 

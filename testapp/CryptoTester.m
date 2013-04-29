@@ -15,14 +15,14 @@ static char testData[16] = "s3cret 123";
 
 + (void)runAllTests {
 
-    [self testCCHmac];
-    [self testCC_MD5];
-    [self testCCCryptor];
-    [self testCCKeyDerivationPBKDF];
+    [self testCommonHmac];
+    [self testCommonDigest];
+    [self testCommonCryptor];
+    [self testCommonKeyDerivation];
 }
 
 
-+ (void) testCCHmac {
++ (void) testCommonHmac {
     char dataOut[16];
     CCHmacContext ctx;
 
@@ -34,7 +34,7 @@ static char testData[16] = "s3cret 123";
 }
 
 
-+ (void) testCC_MD5 {
++ (void) testCommonDigest {
     CC_MD5_CTX ctx;
     unsigned char dataOut[CC_MD5_DIGEST_LENGTH];
 
@@ -43,10 +43,19 @@ static char testData[16] = "s3cret 123";
     CC_MD5_Final(dataOut, &ctx);
 
     CC_MD5(testData, 16, dataOut);
+
+    CC_SHA512_CTX ctx2;
+    unsigned char dataOut2[CC_SHA512_DIGEST_LENGTH];
+
+    CC_SHA512_Init(&ctx2);
+    CC_SHA512_Update(&ctx2, testData, 16);
+    CC_SHA512_Final(dataOut2, &ctx2);
+
+    CC_SHA512(testData, 16, dataOut2);
 }
 
 
-+ (void) testCCCryptor {
++ (void) testCommonCryptor {
     CCCryptorRef cryptorRef;
     char dataOut[16];
     size_t dataOutMoved;
@@ -65,7 +74,7 @@ static char testData[16] = "s3cret 123";
 }
 
 
-+ (void) testCCKeyDerivationPBKDF {
++ (void) testCommonKeyDerivation {
     CCPBKDFAlgorithm algorithm = kCCPBKDF2;
     const char password[9] = "s3cretPW";
     size_t passwordLen = 9;
