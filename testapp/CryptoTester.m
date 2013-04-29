@@ -43,15 +43,6 @@ static char testData[16] = "s3cret 123";
     CC_MD5_Final(dataOut, &ctx);
 
     CC_MD5(testData, 16, dataOut);
-
-    CC_SHA512_CTX ctx2;
-    unsigned char dataOut2[CC_SHA512_DIGEST_LENGTH];
-
-    CC_SHA512_Init(&ctx2);
-    CC_SHA512_Update(&ctx2, testData, 16);
-    CC_SHA512_Final(dataOut2, &ctx2);
-
-    CC_SHA512(testData, 16, dataOut2);
 }
 
 
