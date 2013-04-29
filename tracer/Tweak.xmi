@@ -16,6 +16,7 @@ static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/
 #import "hooks/CCHmacHooks.h"
 #import "hooks/CCKeyDerivationPBKDFHooks.h"
 #import "hooks/CommonDigestHooks.h"
+#import "hooks/LibCHooks.h"
 
 
 
@@ -123,6 +124,7 @@ static void traceURISchemes() {
         }
         // Crypto hooks
         if (getBoolFromPreferences(preferences, @"CommonCryptoHooks")) {
+            [LibCHooks enableHooks]; // Not really part of CommonCrypto
             [CCCryptorHooks enableHooks];
             [CCHmacHooks enableHooks];
             [CCKeyDerivationPBKDFHooks enableHooks];
