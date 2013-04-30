@@ -16,7 +16,7 @@ __copyright_ = "Copyright 2013, iSEC Partners, Inc."
 def main(argv):
     parser = ArgumentParser(description="introspy analysis tool")
     parser.add_argument("db",
-        help="Tthe introspy-generated database to analyze.\
+        help="The introspy-generated database to analyze.\
         specifying 'remote' initiates the analyzer to fetch a\
         remote database from an iOS device.")
     parser.add_argument("-o", "--outdir",
