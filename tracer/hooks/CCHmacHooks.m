@@ -1,6 +1,8 @@
 
 #include <substrate.h>
 #include <CommonCrypto/CommonHMAC.h>
+#include <CommonCrypto/CommonDigest.h>
+
 
 #import "CCHmacHooks.h"
 #import "../SQLiteStorage.h"
@@ -10,9 +12,13 @@
 // Nice global
 extern SQLiteStorage *traceStorage;
 
-// from CommonDigest.h
-#define HMAC_MAX_BLOCK_SIZE	CC_SHA512_BLOCK_BYTES
-#define	HMAC_MAX_DIGEST_SIZE	CC_SHA512_DIGEST_LENGTH
+// Private function
+typedef struct CCHmacContext * CCHmacContextRef;
+size_t
+CCHmacOutputSizeFromRef(CCHmacContextRef ctx)
+__OSX_AVAILABLE_STARTING(__MAC_10_7, __IPHONE_5_0);
+
+
 
 // from Apple's CommonHMAC.c implementation
 // This is what a CCHmacContext actually points to. 384 bytes to work with
@@ -105,7 +111,12 @@ static void (*original_CCHmacFinal)(CCHmacContext *ctx, void *macOut);
 static void replaced_CCHmacFinal(CCHmacContext *ctx, void *macOut) {
 
     original_CCHmacFinal(ctx, macOut);
+
     if ([CallStackInspector wasDirectlyCalledByApp]) {
+        //TODO Test this
+        CCHmacContextRef ctxRef;
+        ctxRef = (void *) ctx;
+        size_t macOutLen = CCHmacOutputSizeFromRef(ctxRef);
 
         CallTracer *tracer = [[CallTracer alloc] initWithClass:@"C" andMethod:@"CCHmacFinal"];
         [tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) ctx] withKey:@"ctx"];
@@ -119,7 +130,9 @@ static void replaced_CCHmacFinal(CCHmacContext *ctx, void *macOut) {
 	//uint32_t ui_len = hmacCtx->digestLen;
 	//NSLog(@"HMAC has digest length: %i", ui_len);
 	//[tracer addArgFromPlistObject:[PlistObjectConverter convertCBuffer:macOut withLength:ui_len] withKey:@"macOut"];
-        [tracer addArgFromPlistObject:@"Introspy - not implemented" withKey:@"macOut"];
+
+        [tracer addArgFromPlistObject:[PlistObjectConverter convertCBuffer: macOut withLength: macOutLen] withKey:@"macOut"];
+        //[tracer addArgFromPlistObject:@"Introspy - not implemented" withKey:@"macOut"];
         [traceStorage saveTracedCall: tracer];
         [tracer release];
     }
