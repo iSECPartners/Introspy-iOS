@@ -2,7 +2,7 @@
 #include <substrate.h>
 #include <CommonCrypto/CommonKeyDerivation.h>
 
-#import "CCKeyDerivationPBKDFHooks.h"
+#import "CommonKeyDerivationHooks.h"
 #import "../SQLiteStorage.h"
 #import "../PlistObjectConverter.h"
 #import "../CallStackInspector.h"
@@ -54,7 +54,7 @@ static int replaced_CCKeyDerivationPBKDF(
     return origResult;}
 
 
-@implementation CCKeyDerivationPBKDFHooks
+@implementation CommonKeyDerivationHooks
 
 + (void)enableHooks {
      MSHookFunction((void *) CCKeyDerivationPBKDF, (void *)  replaced_CCKeyDerivationPBKDF, (void **) &original_CCKeyDerivationPBKDF);

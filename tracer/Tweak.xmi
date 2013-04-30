@@ -12,9 +12,9 @@ static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/
 // Hooks for C functions directly use MobileSubstrate
 #import "hooks/SecurityHooks.h"
 #import "hooks/KeychainHooks.h"
-#import "hooks/CCCryptorHooks.h"
-#import "hooks/CCHmacHooks.h"
-#import "hooks/CCKeyDerivationPBKDFHooks.h"
+#import "hooks/CommonCryptorHooks.h"
+#import "hooks/CommonHMACHooks.h"
+#import "hooks/CommonKeyDerivationHooks.h"
 #import "hooks/CommonDigestHooks.h"
 #import "hooks/LibCHooks.h"
 
@@ -125,9 +125,9 @@ static void traceURISchemes() {
         // Crypto hooks
         if (getBoolFromPreferences(preferences, @"CommonCryptoHooks")) {
             [LibCHooks enableHooks]; // Not really part of CommonCrypto
-            [CCCryptorHooks enableHooks];
-            [CCHmacHooks enableHooks];
-            [CCKeyDerivationPBKDFHooks enableHooks];
+            [CommonCryptorHooks enableHooks];
+            [CommonHMACHooks enableHooks];
+            [CommonKeyDerivationHooks enableHooks];
             [CommonDigestHooks enableHooks];
         }
         if (getBoolFromPreferences(preferences, @"SecurityHooks")) {

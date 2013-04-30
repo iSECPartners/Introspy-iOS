@@ -2,7 +2,7 @@
 #include <substrate.h>
 #include <CommonCrypto/CommonCryptor.h>
 
-#import "CCCryptorHooks.h"
+#import "CommonCryptorHooks.h"
 #import "../SQLiteStorage.h"
 #import "../PlistObjectConverter.h"
 #import "../CallStackInspector.h"
@@ -233,7 +233,7 @@ static CCCryptorStatus replaced_CCCrypt(
 }
 
 
-@implementation CCCryptorHooks 
+@implementation CommonCryptorHooks 
 
 + (void)enableHooks {
      MSHookFunction((void *) CCCryptorCreate, (void *)  replaced_CCCryptorCreate, (void **) &original_CCCryptorCreate);

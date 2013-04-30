@@ -4,7 +4,7 @@
 #include <CommonCrypto/CommonDigest.h>
 
 
-#import "CCHmacHooks.h"
+#import "CommonHMACHooks.h"
 #import "../SQLiteStorage.h"
 #import "../PlistObjectConverter.h"
 #import "../CallStackInspector.h"
@@ -159,7 +159,7 @@ static void replaced_CCHmac(CCHmacAlgorithm algorithm, const void *key, size_t k
     return;
 }
 
-@implementation CCHmacHooks
+@implementation CommonHMACHooks
 
 + (void)enableHooks {
     MSHookFunction(CCHmacInit, replaced_CCHmacInit, (void **) &original_CCHmacInit);
