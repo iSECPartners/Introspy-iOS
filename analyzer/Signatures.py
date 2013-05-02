@@ -129,6 +129,14 @@ signature_list.append(Signature(
             (['returnValue', 'response', 'URL', 'scheme'], 'https'),
             (['returnValue', 'storagePolicy'], 0) ])))
 
+signature_list.append(Signature(
+	title = 'Lack of credential validation',
+	description = 'The application is bypassing credential validation.',
+	severity = Signature.SEVERITY_HIGH,
+	filter = MethodsFilter(
+		classes_to_match = ['NSURLConnectionDelegate'],
+		methods_to_match = ['continueWithoutCredentialForAuthenticationChallenge:'])))
+
 #signature_list.append(Signature(
 #    title = 'NSURLConnection',
 #    description = 'Remote connection.',
