@@ -37,6 +37,8 @@ class TracedCall:
         nextLevel = self.argsAndReturnValue[arg_path[0]]
         for attr in arg_path[1:]:
             try:
+                if isinstance(nextLevel, str):
+                  raise KeyError
                 nextLevel = nextLevel[attr]
             except KeyError:
                 raise
