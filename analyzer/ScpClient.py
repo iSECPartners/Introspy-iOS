@@ -13,7 +13,7 @@ class ScpClient:
         self.cnx_str = "mobile@%s" % ip
     
     def select_db(self):
-        cmd = "ssh %s find . -iname introspy-*.db" % self.cnx_str
+        cmd = "ssh %s cd Applications/; find . -iname introspy-*.db" % self.cnx_str
         proc = subprocess.Popen(cmd.split(),
             stdout=subprocess.PIPE,
     	    stderr=subprocess.PIPE)
@@ -32,7 +32,8 @@ class ScpClient:
 
     def select_and_fetch_db(self):
         remote_db_path = self.select_db()
-        cmd = "scp %s:%s ./" % (self.cnx_str, remote_db_path)
+        cmd = "scp %s:Applications/%s ./" % (self.cnx_str, remote_db_path)
+	print cmd
         proc = subprocess.Popen(cmd.split(),
      	    stdout=subprocess.PIPE,
       	    stderr=subprocess.PIPE)
