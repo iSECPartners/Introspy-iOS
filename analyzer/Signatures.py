@@ -115,7 +115,9 @@ signature_list.append(Signature(
     severity = Signature.SEVERITY_INF,
     filter = MethodsFilter(
         classes_to_match = ['UIPasteboard'],
-        methods_to_match = ['generalPasteboard', 'pasteboardWithName:create:'])))
+        methods_to_match = ['generalPasteboard', 
+                            'pasteboardWithName:create:',
+                            'pasteboardWithUniqueName'])))
 
 # HTTP signatures
 signature_list.append(Signature(
@@ -173,6 +175,8 @@ NSDATA_DPAPI_VALUES = {
     (0x30000000, 'NSDataWritingFileProtectionCompleteUnlessOpen', Signature.SEVERITY_INF),
     (0x40000000, 'NSDataWritingFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_INF)}
 
+NSDataWritingFileProtectionMask = 0xf0000000
+
 for (fileProt_mask, fileProt_title, severity) in NSDATA_DPAPI_VALUES:
     signature_list.append(Signature(
         title = 'Data Protection APIs Usage',
@@ -183,8 +187,7 @@ for (fileProt_mask, fileProt_title, severity) in NSDATA_DPAPI_VALUES:
             methods_to_match = ['writeToFile:options:error:', 'writeToURL:options:error:'],
             args_to_match = [
                 (['arguments', 'mask'], fileProt_mask)],
-            value_mask = 0xf0000000)))
-
+            value_mask = NSDataWritingFileProtectionMask )))
 
 signature_list.append(Signature(
     title = 'Lack of Data Protection APIs Usage',

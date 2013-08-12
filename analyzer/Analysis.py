@@ -1,13 +1,14 @@
-import json, os
+from json import dumps
+from os import path
 from TraceStorage import TraceStorage
 from TracedCall import TracedCallJSONEncoder
-from ScpClient import ScpClient
 
 class Analyzer:
     """ Manages signature loading and matching """
 
-    def __init__(self, introspy_db_path, signatures, group=None, subgroup=None, list_only=False):
-        self.tracedCalls = self.fetch_and_filter_calls(introspy_db_path, group, subgroup)
+    def __init__(self, db_path, signatures, group=None, subgroup=None, list_only=False):
+        self.storage = TraceStorage(db_path)
+        self.tracedCalls = self.storage.get_traced_calls(group, subgroup)
         self.signatures = signatures
         self.findings = []
         # List all calls (optionally filtered by group/subgroup) and bypass signature analysis
@@ -21,13 +22,6 @@ class Analyzer:
     def get_findings(self):
         return self.findings
 
-    def fetch_and_filter_calls(self, introspy_db_path, group=None, subgroup=None):
-        # the db is on device so we need to grab a local copy
-        if introspy_db_path == 'remote':
-            scp = ScpClient()
-            introspy_db_path = scp.select_and_fetch_db()
-        return TraceStorage(introspy_db_path).get_traced_calls(group, subgroup)
-
     def write_to_JS_file(self, fileDir, fileName='findings.js'):
         # Convert the list of findings to a JS var declaration
         findings_dict = {}
@@ -37,13 +31,13 @@ class Analyzer:
                 findings_dict['findings'].append({'signature' : sig,
                 'calls' : tracedCalls})
         try:
-            findings_json = json.dumps(findings_dict, cls=TracedCallJSONEncoder)
+            findings_json = dumps(findings_dict, cls=TracedCallJSONEncoder)
         except TypeError as e:
             print e
             raise
         JS_data = 'var findings = ' + findings_json + ';'
         
         # Write the result to a file
-        JS_filePath = os.path.join(fileDir, fileName)
+        JS_filePath = path.join(fileDir, fileName)
         JS_file = open(JS_filePath, 'w')
         JS_file.write(JS_data)
