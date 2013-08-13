@@ -105,6 +105,26 @@ option). Notice that System application call databases are stored in
 /var/mobile/ while user application dbs are maintained in that application's
 directory.
 
+### Command-line Usage
+
+While the HTML formatted report is the most digestable format, the analysis tool
+can also be used directly from the command-line. Just as the HTML report allows
+you to show/hide groups and subgroups, you can specify groups (-g) as well as
+subgroups (-s) when running the analysis to limit the output to only those calls
+that match the filtering criteria.
+
+    $ python introspy.py introspy-com.isecpartners.e-bank.db -g IPC -s Schemes
+    Specific URL schemes are implemented by the application.
+        CFBundleURLTypes:CFBundleURLSchemes
+		arguments =>
+		  CFBundleURLIsPrivate => nil
+		  CFBundleURLName => transfer-money
+		  CFBundleURLScheme => transfer-money
+
+This example shows analysis of a local database with filtering options to limit
+the output to only display registered URL schemes. We can see here that calls to
+transfer-money:// will be handled by the application.
+
 Doing It Yourself
 -----------------
 
