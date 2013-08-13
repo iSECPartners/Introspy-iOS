@@ -59,25 +59,6 @@ Finally, kill and restart the App you want to monitor.
 
     dpkg -r com.isecpartners.introspy
 
-### Groups and Subgroups
-
-The following groups and subgroups correlate to filtering via the Settings menu
-as well as during offline analysis using the command-line:
-* Data Storage
-  * File System
-  * User Preferences
-  * Keychain
-* Crypto
-  * Common Crypto
-  * Security Framework
-* Network
-  * HTTP
-* IPC
-  * Pasteboard
-  * URL Schemes
-* Misc
-  * XML
-
 Introspy Analyzer
 -----------------
 
@@ -122,8 +103,8 @@ that match the filtering criteria.
 		  CFBundleURLScheme => transfer-money
 
 This example shows analysis of a local database with filtering options to limit
-the output to only display registered URL schemes. We can see here that calls to
-transfer-money:// will be handled by the application.
+the output to only display registered URL schemes. We can see here that URL
+requests with the transfer-money:// scheme will be handled by the application.
 
 Doing It Yourself
 -----------------
@@ -154,6 +135,55 @@ Makefiles to automatically install the package and respring the device:
 
     export THEOS_DEVICE_IP=192.168.1.127
     make install
+
+Groups and Subgroups
+--------------------
+
+The following groups and subgroups correlate to filtering via the Settings menu
+as well as during offline analysis using the command-line. The list below
+details exactly which methods correspond to each group and subgroup.
+
+* Data Storage
+  * File System
+    * NSData
+
+    - (BOOL)writeToFile:(NSString *)path atomically:(BOOL)flag
+    - (BOOL)writeToFile:(NSString *)path options:(NSDataWritingOptions)mask error:(NSError **)error
+    - (BOOL)writeToURL:(NSURL *)aURL atomically:(BOOL)flag
+    - (BOOL)writeToURL:(NSURL *)aURL options:(NSDataWritingOptions)mask error:(NSError **)error
+    + (id)dataWithContentsOfFile:(NSString *)path
+    + (id)dataWithContentsOfFile:(NSString *)path options:(NSDataReadingOptions)mask error:(NSError **)error
+    + (id)dataWithContentsOfURL:(NSURL *)aURL
+    + (id)dataWithContentsOfURL:(NSURL *)aURL options:(NSDataReadingOptions)mask error:(NSError **)error
+    - (id)initWithContentsOfFile:(NSString *)path
+    - (id)initWithContentsOfFile:(NSString *)path options:(NSDataReadingOptions)mask error:(NSError **)error
+    - (id)initWithContentsOfURL:(NSURL *)aURL
+    - (id)initWithContentsOfURL:(NSURL *)aURL options:(NSDataReadingOptions)mask error:(NSError **)error
+
+    * NSFileHandle
+    * NSFileManager
+    * NSInputStream
+    * NSOutputStream
+  * User Preferences
+    * NSUserDefaults
+  * Keychain
+* Crypto
+  * Common Crypto
+  * Security Framework
+* Network
+  * HTTP
+    * NSURLConnection
+    * NSHTTPCookie
+    * NSURLCredential
+* IPC
+  * Pasteboard
+    * UIPasteboard
+
+  * URL Schemes
+    CFBundleURLScheme
+* Misc
+  * XML
+    NSXMLParser
 
 License
 -------
