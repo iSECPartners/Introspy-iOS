@@ -87,7 +87,10 @@ The analyzer requires Python 2.6 or 2.7.
 
 The Introspy tracer should be first used on the application to be tested, i.e.,
 by selecting it within the "Introspy - Apps" Settings menu. Then simply specify
-the device IP address when you run the analysis tool.
+the device IP address when you run the analysis tool and select the appropriate
+application database. This will store a local copy of the database, which you
+can analyze again by specifying the database name as opposed to the device IP
+address.
 
     $ python introspy.py -l e-bank 192.168.1.127
     mobile@192.168.1.127's password:
