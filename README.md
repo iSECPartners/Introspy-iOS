@@ -136,56 +136,13 @@ Makefiles to automatically install the package and respring the device:
     export THEOS_DEVICE_IP=192.168.1.127
     make install
 
-Groups and Subgroups
---------------------
+Group and Subgroup Filtering
+----------------------------
 
-The following groups and subgroups correlate to filtering via the Settings menu
-as well as during offline analysis using the command-line. The list below
-details exactly which methods correspond to each group and subgroup.
-
-* Data Storage
-  * File System
-
-```Objective-C
-NSData Class and Instance Methods
-- (BOOL)writeToFile:(NSString *)path atomically:(BOOL)flag
-- (BOOL)writeToFile:(NSString *)path options:(NSDataWritingOptions)mask error:(NSError **)error
-- (BOOL)writeToURL:(NSURL *)aURL atomically:(BOOL)flag
-- (BOOL)writeToURL:(NSURL *)aURL options:(NSDataWritingOptions)mask error:(NSError **)error
-+ (id)dataWithContentsOfFile:(NSString *)path
-+ (id)dataWithContentsOfFile:(NSString *)path options:(NSDataReadingOptions)mask error:(NSError **)error
-+ (id)dataWithContentsOfURL:(NSURL *)aURL
-+ (id)dataWithContentsOfURL:(NSURL *)aURL options:(NSDataReadingOptions)mask error:(NSError **)error
-- (id)initWithContentsOfFile:(NSString *)path
-- (id)initWithContentsOfFile:(NSString *)path options:(NSDataReadingOptions)mask error:(NSError **)error
-- (id)initWithContentsOfURL:(NSURL *)aURL
-- (id)initWithContentsOfURL:(NSURL *)aURL options:(NSDataReadingOptions)mask error:(NSError **)error
-```
-
-    * NSFileHandle
-    * NSFileManager
-    * NSInputStream
-    * NSOutputStream
-  * User Preferences
-    * NSUserDefaults
-  * Keychain
-* Crypto
-  * Common Crypto
-  * Security Framework
-* Network
-  * HTTP
-    * NSURLConnection
-    * NSHTTPCookie
-    * NSURLCredential
-* IPC
-  * Pasteboard
-    * UIPasteboard
-
-  * URL Schemes
-    CFBundleURLScheme
-* Misc
-  * XML
-    NSXMLParser
+The groups and subgroups correlate to filtering via the Settings menu as well as
+during offline analysis using the command-line. For details on exactly which
+methods correspond to each group and subgroup, refer to the wiki
+[documentation](https://github.com/iSECPartners/introspy/wiki).
 
 License
 -------
