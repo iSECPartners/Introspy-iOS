@@ -1,4 +1,4 @@
-from Filters import MethodsFilter, ArgumentsFilter, ArgumentsWithMaskFilter
+from Filters import MethodsFilter, ArgumentsFilter
 from APIGroups import APIGroups
 
 class Signature(object):
@@ -89,18 +89,18 @@ signature_list.append(Signature(
 
 # Keychain signatures
 KSECATTR_VALUES = [
-    ('ak', 'kSecAttrAccessibleWhenUnlocked', Signature.SEVERITY_INF),
-    ('aku', 'kSecAttrAccessibleWhenUnlockedThisDeviceOnly', Signature.SEVERITY_INF),
-    ('dk', 'kSecAttrAccessibleAlways', Signature.SEVERITY_HIGH),
-    ('dku', 'kSecAttrAccessibleAlwaysThisDeviceOnly', Signature.SEVERITY_HIGH),
-    ('ck', 'kSecAttrAccessibleAfterFirstUnlock', Signature.SEVERITY_MEDIUM),
-    ('cku', 'kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly', Signature.SEVERITY_MEDIUM)
+    ('kSecAttrAccessibleWhenUnlocked', Signature.SEVERITY_INF),
+    ('kSecAttrAccessibleWhenUnlockedThisDeviceOnly', Signature.SEVERITY_INF),
+    ('kSecAttrAccessibleAlways', Signature.SEVERITY_HIGH),
+    ('kSecAttrAccessibleAlwaysThisDeviceOnly', Signature.SEVERITY_HIGH),
+    ('kSecAttrAccessibleAfterFirstUnlock', Signature.SEVERITY_MEDIUM),
+    ('kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly', Signature.SEVERITY_MEDIUM)
 ]
 
-for (kSecAttr_value, kSecAttr_title, severity) in KSECATTR_VALUES:
+for (kSecAttr_value, severity) in KSECATTR_VALUES:
     signature_list.append(Signature(
         title = 'Keychain Data Protection',
-        description = 'Item added to the KeyChain with accessibility options "{0}".'.format(kSecAttr_title),
+        description = 'Item added to the KeyChain with accessibility options "{0}".'.format(kSecAttr_value),
         severity = severity,
         filter = ArgumentsFilter(
             classes_to_match = ['C'],
@@ -169,25 +169,23 @@ signature_list.append(Signature(
 
 # Filesystem signatures
 # For NSData
+
 NSDATA_DPAPI_VALUES = {
-    (0x10000000, 'NSDataWritingFileProtectionNone', Signature.SEVERITY_HIGH),
-    (0x20000000, 'NSDataWritingFileProtectionComplete', Signature.SEVERITY_INF),
-    (0x30000000, 'NSDataWritingFileProtectionCompleteUnlessOpen', Signature.SEVERITY_INF),
-    (0x40000000, 'NSDataWritingFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_INF)}
+    ('NSDataWritingFileProtectionNone', Signature.SEVERITY_HIGH),
+    ('NSDataWritingFileProtectionComplete', Signature.SEVERITY_INF),
+    ('NSDataWritingFileProtectionCompleteUnlessOpen', Signature.SEVERITY_INF),
+    ('NSDataWritingFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_INF)}
 
-NSDataWritingFileProtectionMask = 0xf0000000
-
-for (fileProt_mask, fileProt_title, severity) in NSDATA_DPAPI_VALUES:
+for (fileProt_mask, severity) in NSDATA_DPAPI_VALUES:
     signature_list.append(Signature(
         title = 'Data Protection APIs Usage',
-        description = 'File written with data protection option "{0}".'.format(fileProt_title),
+        description = 'File written with data protection option "{0}".'.format(fileProt_mask),
         severity = severity,
-        filter = ArgumentsWithMaskFilter(
+        filter = ArgumentsFilter(
             classes_to_match = ['NSData'],
             methods_to_match = ['writeToFile:options:error:', 'writeToURL:options:error:'],
             args_to_match = [
-                (['arguments', 'mask'], fileProt_mask)],
-            value_mask = NSDataWritingFileProtectionMask )))
+                (['arguments', 'mask'], fileProt_mask)])))
 
 signature_list.append(Signature(
     title = 'Lack of Data Protection APIs Usage',
