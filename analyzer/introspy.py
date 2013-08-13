@@ -20,14 +20,15 @@ class Introspy:
     """ Sets up and initiates analysis """
 
     def __init__(self, args):
-	if match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", args.db):
+	if match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", args['db']):
             # the db is on device so we need to grab a local copy
-            scp = ScpClient(ip=args.db)
+            scp = ScpClient(ip=args['db'])
             db_path = scp.select_and_fetch_db()
         else:
-            db_path = args.db
-        self.analyzer = Analyzer(db_path, signature_list, args.group, args.sub_group, args.list)
-	self.print_results(args.outdir)
+            db_path = args['db']
+        self.analyzer = Analyzer(db_path, signature_list, args['group'],
+			args['sub_group'], args['list'])
+	self.print_results(args['outdir'])
 
     def print_results(self, outdir=None):
         if outdir:
@@ -61,11 +62,11 @@ def main(argv):
         help="Filter by signature sub-group")
     parser.add_argument("db",
         help="The introspy-generated database to analyze.\
-        specifying an IP address initiates the analyzer to fetch a\
-        remote database from the specified iOS device.")
+        specifying an IP address causes the analyzer to fetch a\
+        remote database.")
     args = parser.parse_args()
- 
-    Introspy(args)
+
+    Introspy(vars(args))
 
 if __name__ == "__main__":
     main(argv[1:])
