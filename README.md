@@ -41,20 +41,42 @@ sure the following packages are installed:
 
 Download and copy the Debian package to the device; install it:  
 
+    scp <package.deb> root@<device_ip>:~
+    ssh root@<device_ip>
     dpkg -i <package.deb>
 
 Respring the device:
 
     killall -HUP SpringBoard
 
-There should be a new menu in the device's Settings where you can
-enable the extension.
+There should be two new menus in the device's Settings. The Apps menu allows you
+to select which applications will be profiled while the Settings menu defines
+which API groups are being hooked.
 
 Finally, kill and restart the App you want to monitor.
 
 ### How to uninstall
 
     dpkg -r com.isecpartners.introspy
+
+### Groups and Subgroups
+
+The following groups and subgroups correlate to filtering via the Settings menu
+as well as during offline analysis using the command-line:
+* Data Storage
+  * File System
+  * User Preferences
+  * Keychain
+* Crypto
+  * Common Crypto
+  * Security Framework
+* Network
+  * HTTP
+* IPC
+  * Pasteboard
+  * URL Schemes
+* Misc
+  * XML
 
 
 Introspy Analyzer
