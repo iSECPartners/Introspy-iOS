@@ -145,22 +145,23 @@ details exactly which methods correspond to each group and subgroup.
 
 * Data Storage
   * File System
-    * NSData
 
 ```Objective-C
-        - (BOOL)writeToFile:(NSString *)path atomically:(BOOL)flag
-        - (BOOL)writeToFile:(NSString *)path options:(NSDataWritingOptions)mask error:(NSError **)error
-        - (BOOL)writeToURL:(NSURL *)aURL atomically:(BOOL)flag
-        - (BOOL)writeToURL:(NSURL *)aURL options:(NSDataWritingOptions)mask error:(NSError **)error
-        + (id)dataWithContentsOfFile:(NSString *)path
-        + (id)dataWithContentsOfFile:(NSString *)path options:(NSDataReadingOptions)mask error:(NSError **)error
-        + (id)dataWithContentsOfURL:(NSURL *)aURL
-        + (id)dataWithContentsOfURL:(NSURL *)aURL options:(NSDataReadingOptions)mask error:(NSError **)error
-        - (id)initWithContentsOfFile:(NSString *)path
-        - (id)initWithContentsOfFile:(NSString *)path options:(NSDataReadingOptions)mask error:(NSError **)error
-        - (id)initWithContentsOfURL:(NSURL *)aURL
-        - (id)initWithContentsOfURL:(NSURL *)aURL options:(NSDataReadingOptions)mask error:(NSError **)error
+NSData Class and Instance Methods
+- (BOOL)writeToFile:(NSString *)path atomically:(BOOL)flag
+- (BOOL)writeToFile:(NSString *)path options:(NSDataWritingOptions)mask error:(NSError **)error
+- (BOOL)writeToURL:(NSURL *)aURL atomically:(BOOL)flag
+- (BOOL)writeToURL:(NSURL *)aURL options:(NSDataWritingOptions)mask error:(NSError **)error
++ (id)dataWithContentsOfFile:(NSString *)path
++ (id)dataWithContentsOfFile:(NSString *)path options:(NSDataReadingOptions)mask error:(NSError **)error
++ (id)dataWithContentsOfURL:(NSURL *)aURL
++ (id)dataWithContentsOfURL:(NSURL *)aURL options:(NSDataReadingOptions)mask error:(NSError **)error
+- (id)initWithContentsOfFile:(NSString *)path
+- (id)initWithContentsOfFile:(NSString *)path options:(NSDataReadingOptions)mask error:(NSError **)error
+- (id)initWithContentsOfURL:(NSURL *)aURL
+- (id)initWithContentsOfURL:(NSURL *)aURL options:(NSDataReadingOptions)mask error:(NSError **)error
 ```
+
     * NSFileHandle
     * NSFileManager
     * NSInputStream
