@@ -3,6 +3,7 @@
 import plistlib, json, datetime
 from Signatures import Signature
 from APIGroups import APIGroups
+from TypeRefToStr import TypeRefToStr
 
 class TracedCall:
     """ Object representation of a introspy database row (a traced call) """
@@ -12,7 +13,7 @@ class TracedCall:
         self.callId = callId
         self.clazz = unicode(clazz)
         self.method = unicode(method)
-        self.argsAndReturnValue = plistlib.readPlistFromString(argsAndReturnValue.encode('utf-8'))
+        self.argsAndReturnValue = TypeRefToStr(plistlib.readPlistFromString(argsAndReturnValue.encode('utf-8'))).args
         # Get the call's group and subgroup
         self.subgroup = APIGroups.find_subgroup(clazz, method)
         self.group =  APIGroups.find_group(self.subgroup)
