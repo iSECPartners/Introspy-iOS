@@ -51,16 +51,16 @@ class TypeRefToStr:
         for v in items:
             if isinstance(v[1], dict):
                 self.find_and_replace(v[1])
-            elif isinstance(v[1], list) or isinstance(v[1], Data):
+            elif isinstance(v[1], list):
                 continue
+            elif isinstance(v[1], Data):
+                d[v[0]] = v[1].data
             else:
                 if v[0] in enum_list:
                     try:
                         if 'mask' in enum_list[v[0]]:
-                            print "{0} => {1}".format(v[0], enum_list[v[0]][v[1] & enum_list[v[0]]['mask']])
 			    d[v[0]] = enum_list[v[0]][v[1] & enum_list[v[0]]['mask']]
                         else:
-                            print "{0} => {1}".format(v[0], enum_list[v[0]][v[1]])
                             d[v[0]] = enum_list[v[0]][v[1]]
                     except KeyError:
                         continue
