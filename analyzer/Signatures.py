@@ -89,6 +89,18 @@ signature_list.append(Signature(
 
 # HTTP signatures
 signature_list.append(Signature(
+    title = 'NSURLCredential Stored Permanently',
+    description = 'NSURLCredential permanently stored into the Keychain with a' \
+		    ' persistence value of NSURLCredentialPersistencePermanent',
+    severity = Signature.SEVERITY_LOW,
+    filter = ArgumentsFilter(
+        classes_to_match = ['NSURLCredential'],
+	methods_to_match = ['initWithUser:password:persistence:',
+		'initWithIdentity:certificates:persistence:'],
+	args_to_match = [ (['arguments', 'persistence'],
+		'NSURLCredentialPersistencePermanent')])))
+
+signature_list.append(Signature(
     title = 'HTTPS Caching',
     description = 'Data received over HTTPS is being cached on disk.',
     severity = Signature.SEVERITY_LOW,
@@ -106,15 +118,6 @@ signature_list.append(Signature(
 	filter = MethodsFilter(
 		classes_to_match = ['NSURLConnectionDelegate'],
 		methods_to_match = ['continueWithoutCredentialForAuthenticationChallenge:'])))
-
-signature_list.append(Signature(
-    title = 'Remote connection with credentials.',
-    description = 'The application is authenticating to remote resources.',
-    severity = Signature.SEVERITY_INF,
-    filter = MethodsFilter(
-        classes_to_match = ['NSURLCredential'],
-        methods_to_match = ['initWithUser:password:persistence:',
-            'initWithTrust:'])))
 
 # Filesystem signatures
 # For NSData
@@ -210,5 +213,4 @@ signature_list.append(Signature(
     filter = MethodsFilter(
         classes_to_match = ['C'],
         methods_to_match = ['rand', 'random'])))
-
 
