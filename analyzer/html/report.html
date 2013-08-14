@@ -8,35 +8,36 @@
   <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
   <script src="handlebars.js" type="text/javascript"></script>
   <script src="jquery.min.js" type="text/javascript"></script>
+  <script src="bootstrap/js/bootstrap.min.js"></script>
 
   <!-- Handlebar.js template to display a list of tracedCalls -->
   <script id="tracedCalls-template" type="text/x-handlebars-template">
-  <ul id="calls_list">
+  <div id="calls_list">
     {{#each calls}}
-      <li class="{{toHTMLClassAttr this.group}} {{toHTMLClassAttr this.subgroup}}">
+      <div class="{{toHTMLClassAttr this.group}} {{toHTMLClassAttr this.subgroup}}" style="margin-top: 30px;">
       <h5>{{this.callId}}: {{this.clazz}} {{this.method}}</h5>
       <div>
       Arguments: <pre>{{printArguments this.argsAndReturnValue}}</pre>
       Return Value: <pre>{{printReturnValue this.argsAndReturnValue}}</pre>
       </div>
-      </li>
+      </div>
     {{/each}}
-  </ul>
+  </div>
   </script>
 
   <!-- Handlebar.js template to display the findings -->
   <script id="findings-template" type="text/x-handlebars-template">
-  <ul id="findings_list">
+  <div id="findings_list">
     {{#each findings}}
-      <li class="{{toHTMLClassAttr signature.group}} {{toHTMLClassAttr signature.subgroup}}">
-        <h4>{{signature.title}}</h4>
-        <h5>Severity: {{signature.severity}}</h5>
-        <h5 style="display: inline-block">Description:&nbsp;</h5><p style="display: inline-block">{{signature.description}}</p>
-        <h5>Relevant function calls:</h5>
+      <div class="{{toHTMLClassAttr signature.group}} {{toHTMLClassAttr signature.subgroup}}">
+        <h3 style="border-bottom-style:solid;border-width:1px;">{{signature.title}}</h3>
+        <div><h4 style="display: inline-block">Severity:&nbsp;</h4><p style="display: inline-block">{{signature.severity}}</p><div>
+        <h4 style="display: inline-block">Description:&nbsp;</h4><p style="display: inline-block">{{signature.description}}</p>
+        <h4>Relevant function calls</h4>
         {{> tracedCalls}}
-      </li>
+      </div>
     {{/each}}
-  </ul>
+  </div>
   </script>
 
   <!-- Handlebar.js template for the show/hide bar -->
@@ -44,8 +45,8 @@
       {{#each groups}}
       <!-- main goup button -->
       <div class="btn-group">
-        <button class="btn">{{name}}</button>
-        <button class="btn dropdown-toggle" data-toggle="dropdown">
+        <button class="btn btn-small">{{name}}</button>
+        <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
@@ -71,28 +72,30 @@
 </head>
 
 <body>
-  <script src="bootstrap/js/bootstrap.min.js"></script>
-
-
   <!-- Actual Page -->
-  <!-- Show/hide bar -->
-  <div id="showhidebar" style="position: fixed;"></div>
   <!-- Navigation bar -->
-  <div class="tabbable">
-    <ul class="nav nav-tabs" style="margin-top: 20px;">
-      <li class="active"><a href="#tab1" data-toggle="tab"><h3>Traced Calls<h3></a></li>
-      <li><a href="#tab2" data-toggle="tab"><h3>Findings</h3></a></li>
+  <div class="tabbable" style="width:800px;margin:auto;">
+  <div style="position:fixed;width:800px;margin:auto;background-color:white;border-bottom-style:solid;border-width:1px;">
+    <!-- Nav bar -->
+    <ul class="nav nav-list">
+      <li class="active"><a href="#tab1" data-toggle="tab"><i class="icon-book"></i> Traced Calls</a></li>
+      <li><a href="#tab2" data-toggle="tab"><i class="icon-warning-sign"></i> Potential Findings</a></li>
+      <li><a style="float:left;margin-right:20px;margin-bottom:5px;"><i class="icon-eye-open"></i> Show / Hide  </a>
+        <!-- Show/hide bar -->
+        <div id="showhidebar"></div>
+      </li>
     </ul>
+    
+    <div></div>
+  </div>
     <div class="tab-content">
       <!-- Actual content of tab1: list of traced calls -->
       <div class="tab-pane active" id="tab1">
-        <h3>List of traced function calls</h3>
-        <div id="tab1content"></div>
+        <div id="tab1content" style="margin-top: 120px;"></div>
       </div>
       <!-- Actual content of tab2: list of vulnerabilities -->
       <div class="tab-pane" id="tab2">
-        <h3>List of findings</h3>
-        <div id="tab2content"></div>
+        <div id="tab2content" style="margin-top: 120px;"></div>
       </div>
     </div>
   </div>
