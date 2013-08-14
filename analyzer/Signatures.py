@@ -246,7 +246,7 @@ signature_list.append(Signature(
         classes_to_match = ['CFBundleURLTypes'],
         methods_to_match = ['CFBundleURLSchemes'])))
 
-# UIApplicationDelegate hooks
+# UIApplicationDelegate signatures
 #signature_list.append(Signature(
 #    title = 'Custom URL scheme accessed.',
 #    description = 'Custom URL scheme accessed.',
@@ -254,3 +254,17 @@ signature_list.append(Signature(
 #    filter = MethodsFilter(
 #        classes_to_match = ['UIApplicationDelegate'],
 #        methods_to_match = ['application:openURL:sourceApplication:annotation:', 'application:handleOpenURL:'])))
+
+# NSURLConnectionDelegate signatures
+signature_list.append(Signature(
+    title = 'HTTPS to HTTP Redirection',
+    description = 'The application transitioned from a TLS to plaintext connection.',
+    severity = Signature.SEVERITY_HIGH,
+    filter = ArgumentsFilter(
+        classes_to_match = ['NSURLConnectionDelegate'],
+	methods_to_match = ['connection:willSendRequest:redirectResponse:'],
+	args_to_match = [
+            (['arguments', 'request', 'URL', 'scheme'], "https"),
+            (['returnValue', 'URL', 'scheme'], 'http')])))
+
+

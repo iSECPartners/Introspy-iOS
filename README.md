@@ -117,8 +117,8 @@ requests with the transfer-money:// scheme will be handled by the application.
     {"class": "CFBundleURLTypes", 
      "method": "CFBundleURLSchemes"}, 
          "arguments": 
-            {"CFBundleURLName": "mytest", 
-             "CFBundleURLScheme": "mytest", 
+            {"CFBundleURLName": "transfer-money", 
+             "CFBundleURLScheme": "transfer-money", 
              "CFBundleURLIsPrivate": "nil"}
     }
 
