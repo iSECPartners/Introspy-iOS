@@ -9,6 +9,12 @@ enum_list = {
               'dku': 'kSecAttrAccessibleAlwaysThisDeviceOnly',
               'ck' : 'kSecAttrAccessibleAfterFirstUnlock',
               'cku': 'kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly'},
+    ## kSecClass values
+    'class' : {'idnt' : 'kSecClassIdentity',
+               'genp' : 'kSecClassGenericPassword',
+               'inet' : 'kSecClassInternetPassword',
+               'cert' : 'kSecClassCertificate',
+               'keys' : 'kSecClassKey'},
     # NSData
     ## NSDataWritingOptions
     'mask' : {0x10000000 : 'NSDataWritingFileProtectionNone',
