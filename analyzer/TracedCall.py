@@ -51,6 +51,10 @@ class TracedCall:
         call += "%s" % self.walk_dict(self.argsAndReturnValue)
         return call
 
+    def json_encode(self):
+	call = {'class':self.clazz, 'method':self.method}
+	call.update(self.argsAndReturnValue)
+	return call
 
 class TracedCallJSONEncoder(json.JSONEncoder):
     # TODO: Move to a different file
