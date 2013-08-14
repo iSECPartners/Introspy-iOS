@@ -108,8 +108,6 @@ requests with the transfer-money:// scheme will be handled by the application.
 
 ### Programmatic Usage
 
-The 
-
     >>> from argparse import Namespace
     >>> import introspy
     >>> spy = introspy.Introspy(Namespace(db='introspy-com.isecpartners.e-bank.db', group='IPC', sub_group='Schemes', list=None))
