@@ -36,9 +36,9 @@ class TraceStorage:
         for call in self.calls:
             if call.group.lower() == group.lower():
                     filt_calls.append(call)
-            if subgroup == None:
-                return filt_calls
-            filtered_calls = []
+        if subgroup == None:
+            return filt_calls
+        filtered_calls = []
         for call in filt_calls:
             if call.subgroup.lower() == subgroup.lower():
                 filtered_calls.append(call)
