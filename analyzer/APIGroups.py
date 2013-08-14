@@ -84,6 +84,8 @@ class APIGroups:
         'CCHmacFinal' : COMMONCRYPTO_SUBGROUP,
         'CCHmac' : COMMONCRYPTO_SUBGROUP,
         'CCKeyDerivationPBKDF' : COMMONCRYPTO_SUBGROUP,
+        'rand' : COMMONCRYPTO_SUBGROUP,
+        'random' : COMMONCRYPTO_SUBGROUP,
         # Security Framework
         'SecPKCS12Import' : SECURITY_SUBGROUP,
         # HTTP
