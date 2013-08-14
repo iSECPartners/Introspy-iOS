@@ -54,7 +54,11 @@ class TypeRefToStr:
             elif isinstance(v[1], list):
                 continue
             elif isinstance(v[1], Data):
-                d[v[0]] = v[1].data
+                # Serialize a plist <data>
+                try: # Does it seem to be ASCII ?
+                    d[v[0]] = v[1].data.encode('ascii')
+                except UnicodeDecodeError: # No => base64 encode it
+                    d[v[0]] = v[1].data.encode('base64')
             else:
                 if v[0] in enum_list:
                     try:
