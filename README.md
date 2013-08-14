@@ -106,6 +106,24 @@ This example shows analysis of a local database with filtering options to limit
 the output to only display registered URL schemes. We can see here that URL
 requests with the transfer-money:// scheme will be handled by the application.
 
+### Programmatic Usage
+
+The 
+
+    >>> from argparse import Namespace
+    >>> import introspy
+    >>> spy = introspy.Introspy(Namespace(db='introspy-com.isecpartners.e-bank.db', group='IPC', sub_group='Schemes', list=None))
+    >>> for call in spy.analyzer.tracedCalls:
+    ...   print call.json_encode()
+    ...
+    {"class": "CFBundleURLTypes", 
+     "method": "CFBundleURLSchemes"}, 
+	"arguments": 
+            {"CFBundleURLName": "mytest", 
+             "CFBundleURLScheme": "mytest", 
+             "CFBundleURLIsPrivate": "nil"}
+    }
+
 Doing It Yourself
 -----------------
 
