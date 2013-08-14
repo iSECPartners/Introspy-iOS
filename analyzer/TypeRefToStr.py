@@ -37,6 +37,10 @@ enum_list = {
     ## options
     'options' : {0x001 : 'kCCOptionPKCS7Padding',
 	         0x002 : 'kCCOptionECBMode'},
+    # NSURLCredentialPersistence
+    'persistence' : {0 : 'NSURLCredentialPersistenceNone',
+                     1 : 'NSURLCredentialPersistenceForSession',
+                     2 : 'NSURLCredentialPersistencePermanent'}
 }
 
 class TypeRefToStr:
