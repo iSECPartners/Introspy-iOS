@@ -39,7 +39,7 @@ class TracedCall:
         for attr in arg_path[1:]:
             try:
                 if isinstance(nextLevel, str):
-                  raise KeyError
+                    raise KeyError
                 nextLevel = nextLevel[attr]
             except KeyError:
                 raise
@@ -52,9 +52,10 @@ class TracedCall:
         return call
 
     def json_encode(self):
-	call = {'class':self.clazz, 'method':self.method}
-	call.update(self.argsAndReturnValue)
-	return call
+        call = {'class':self.clazz, 'method':self.method}
+        call.update(self.argsAndReturnValue)
+        return call
+
 
 class TracedCallJSONEncoder(json.JSONEncoder):
     # TODO: Move to a different file
