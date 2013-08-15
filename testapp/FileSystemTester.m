@@ -72,7 +72,7 @@ static NSData *testContent;
 
     NSFileManager * fileManager = [NSFileManager defaultManager];
 
-    // Test createFileAtPath:contents:attributes:
+    // Test createFileAtPath:contents:attributes: with NSFileProtectionCompleteUntilFirstUserAuthentication
     NSDictionary *testAttr = [NSDictionary 
         dictionaryWithObjects:
             [NSArray arrayWithObjects: NSFileProtectionCompleteUntilFirstUserAuthentication, nil]
@@ -80,6 +80,9 @@ static NSData *testContent;
             [NSArray arrayWithObjects: NSFileProtectionKey, nil]];
 
     [fileManager createFileAtPath:testFilePath contents:testContent attributes:testAttr];
+
+    // Test createFileAtPath:contents:attributes: with no protection attribute
+    [fileManager createFileAtPath:testFilePath contents:testContent attributes:nil];
     
     // Test ubiquityIdentityToken - iOS 6 only
 #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000
@@ -108,6 +111,9 @@ static NSData *testContent;
 
     // Test writeToURL:options:error:
     [testContent writeToURL:testURL options:NSDataWritingFileProtectionNone error:nil]; 
+
+    // Test writeToURL:options:error: with no options
+    [testContent writeToURL:testURL options:0 error:nil]; 
 
 
     // Test dataWithContentsOfFile:

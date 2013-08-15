@@ -1,5 +1,6 @@
-from Filters import MethodsFilter, ArgumentsFilter
+from Filters import MethodsFilter, ArgumentsFilter, ArgumentsNotSetFilter
 from APIGroups import APIGroups
+
 
 class Signature(object):
     """
@@ -145,7 +146,7 @@ for (fileProt_mask, severity, fileProt_title) in NSDATA_DPAPI_VALUES:
 signature_list.append(Signature(
     title = 'Lack of File Data Protection With NSData',
     description = 'A file was written without any data protection options.',
-    severity = severity,
+    severity = Signature.SEVERITY_MEDIUM,
     filter = MethodsFilter(
         classes_to_match = ['NSData'],
         methods_to_match = ['writeToFile:atomically:', 'writeToURL:atomically:'])))    
@@ -167,6 +168,18 @@ for (fileProt_value, severity, fileProt_title) in NSFILEMANAGER_DPAPI_VALUES:
             methods_to_match = ['createFileAtPath:contents:attributes:'],
             args_to_match = [
                 (['arguments', 'attributes', 'NSFileProtectionKey'], fileProt_value)])))
+
+
+signature_list.append(Signature(
+    title = 'Lack of File Data Protection With NSFileManager',
+    description = 'A file was written without any data protection options.',
+    severity = Signature.SEVERITY_MEDIUM,
+    filter = ArgumentsNotSetFilter(
+            classes_to_match = ['NSFileManager'],
+            methods_to_match = ['createFileAtPath:contents:attributes:'],
+            args_to_match = [
+                (['arguments', 'attributes', 'NSFileProtectionKey'], None)])))
+
 
 # URL scheme signatures
 signature_list.append(Signature(

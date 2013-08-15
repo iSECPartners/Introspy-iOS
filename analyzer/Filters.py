@@ -32,27 +32,11 @@ class ArgumentsFilter(MethodsFilter):
         self.args_to_match = args_to_match
 
 
-    def extract_matching_values(self, trace):
-        """Returns a list of matching calls and values found for the given arguments"""
-        # First find the calls matching the methods and classes
-        for call in super(ArgumentsFilter, self).find_matching_calls(trace):
-            # Find the argument we're interested in
-            # Assuming only one argument with the name we're looking for
-            found_values = []
-            try:
-                for (arg_path, value) in self.args_to_match:
-                    # Get the value of each argument and fail if one is missing
-                    found_values.append(call.extract_value_for_argument(arg_path))
-                yield (call, found_values)
-            except KeyError:
-                    pass
-
-
     def find_matching_calls(self, trace):
-        for (call, found_values) in self.extract_matching_values(trace):
+        for (call, found_values) in self._extract_matching_values(trace):
             # Check that found values match the expected values
             match = True
-            for position, (arg_path, value_to_match) in enumerate(self.args_to_match):
+            for position, (_, value_to_match) in enumerate(self.args_to_match):
                 if value_to_match: 
                     if str(value_to_match) != str(found_values[position]):
                         match = False
@@ -63,6 +47,37 @@ class ArgumentsFilter(MethodsFilter):
                 yield call
 
 
+    def _extract_matching_values(self, trace):
+        """Returns a list of matching calls and values found for the given arguments"""
+        # First find the calls matching the methods and classes
+        for call in super(ArgumentsFilter, self).find_matching_calls(trace):
+            # Find the argument we're interested in
+            # Assuming only one argument with the name we're looking for
+            found_values = []
+            try:
+                for (arg_path, _) in self.args_to_match:
+                    # Get the value of each argument and fail if one is missing
+                    found_values.append(call.extract_value_for_argument(arg_path))
+                yield (call, found_values)
+            except KeyError:
+                # Argument wasn't found
+                pass
+
+
+class ArgumentsNotSetFilter(ArgumentsFilter):
+
+    def _extract_matching_values(self, trace):
+        # First find the calls matching the methods and classes
+        for call in super(ArgumentsFilter, self).find_matching_calls(trace):
+            # Look for the argument we're interested and return the call if the
+            # argument isn't there
+            try:
+                for (arg_path, _) in self.args_to_match:
+                    call.extract_value_for_argument(arg_path)
+            except KeyError:
+                # Argument wasn't found
+                yield (call, [None])
+            
 
 class ArgumentsWithMaskFilter(ArgumentsFilter):
     """
@@ -78,10 +93,10 @@ class ArgumentsWithMaskFilter(ArgumentsFilter):
         self.value_mask = value_mask
 
 
-    def extract_matching_values(self, trace):
+    def _extract_matching_values(self, trace):
         """Returns a list of values found for the arg_to_match"""
         # First find the calls matching the classes, methods and args
-        for (call, found_values) in super(ArgumentsWithMaskFilter, self).extract_matching_values(trace):
+        for (call, found_values) in super(ArgumentsWithMaskFilter, self)._extract_matching_values(trace):
             try: # The value has to be an int for a bit mask to be meaningful
             # Only checl one value for now
                 int_value = int(found_values[0])
