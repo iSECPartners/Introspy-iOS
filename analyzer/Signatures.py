@@ -35,10 +35,13 @@ class Signature(object):
 # Global list of signatures
 signature_list = []
 
+# Signature titles have to be unique or HTML reports will break
+# TODO: Fix it
+
 # XML signature
 signature_list.append(Signature(
     title = 'Vulnerable XML Parser',
-    description = 'XML parser is configured to resolve external entities.',
+    description = 'An XML parser is configured to resolve external entities.',
     severity = Signature.SEVERITY_HIGH,
     filter = ArgumentsFilter(
         classes_to_match = ['NSXMLParser'],
@@ -57,18 +60,18 @@ signature_list.append(Signature(
 
 # Keychain signatures
 KSECATTR_VALUES = [
-    ('kSecAttrAccessibleWhenUnlocked', Signature.SEVERITY_INF),
-    ('kSecAttrAccessibleWhenUnlockedThisDeviceOnly', Signature.SEVERITY_INF),
-    ('kSecAttrAccessibleAlways', Signature.SEVERITY_HIGH),
-    ('kSecAttrAccessibleAlwaysThisDeviceOnly', Signature.SEVERITY_HIGH),
-    ('kSecAttrAccessibleAfterFirstUnlock', Signature.SEVERITY_MEDIUM),
-    ('kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly', Signature.SEVERITY_MEDIUM)
+    ('kSecAttrAccessibleWhenUnlocked', Signature.SEVERITY_INF, 'WhenUnlocked'),
+    ('kSecAttrAccessibleWhenUnlockedThisDeviceOnly', Signature.SEVERITY_INF, 'WhenUnlockedThisDeviceOnly'),
+    ('kSecAttrAccessibleAlways', Signature.SEVERITY_HIGH, 'Always'),
+    ('kSecAttrAccessibleAlwaysThisDeviceOnly', Signature.SEVERITY_HIGH, 'AlwaysThisDeviceOnly'),
+    ('kSecAttrAccessibleAfterFirstUnlock', Signature.SEVERITY_MEDIUM, 'AfterFirstUnlock'),
+    ('kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly', Signature.SEVERITY_MEDIUM, 'AfterFirstUnlockThisDeviceOnly')
 ]
 
-for (kSecAttr_value, severity) in KSECATTR_VALUES:
+for (kSecAttr_value, severity, kSecAttr_title) in KSECATTR_VALUES:
     signature_list.append(Signature(
-        title = 'Keychain Data Protection',
-        description = 'Item added to the KeyChain with accessibility options "{0}".'.format(kSecAttr_value),
+        title = 'Keychain Data Protection - ' + kSecAttr_title,
+        description = 'An item was added to the KeyChain with the accessibility options "{0}".'.format(kSecAttr_value),
         severity = severity,
         filter = ArgumentsFilter(
             classes_to_match = ['C'],
@@ -79,7 +82,7 @@ for (kSecAttr_value, severity) in KSECATTR_VALUES:
 # Pasteboard signatures
 signature_list.append(Signature(
     title = 'Pasteboard Usage',
-    description = 'Application instantiates one or multiple Pasteboards.',
+    description = 'The application instantiates one or multiple Pasteboards.',
     severity = Signature.SEVERITY_INF,
     filter = MethodsFilter(
         classes_to_match = ['UIPasteboard'],
@@ -90,7 +93,7 @@ signature_list.append(Signature(
 # HTTP signatures
 signature_list.append(Signature(
     title = 'NSURLCredential Stored Permanently',
-    description = 'NSURLCredential permanently stored into the Keychain with a' \
+    description = 'An NSURLCredential object is permanently stored into the Keychain with a' \
 		    ' persistence value of NSURLCredentialPersistencePermanent',
     severity = Signature.SEVERITY_LOW,
     filter = ArgumentsFilter(
@@ -123,15 +126,15 @@ signature_list.append(Signature(
 # For NSData
 
 NSDATA_DPAPI_VALUES = {
-    ('NSDataWritingFileProtectionNone', Signature.SEVERITY_HIGH),
-    ('NSDataWritingFileProtectionComplete', Signature.SEVERITY_INF),
-    ('NSDataWritingFileProtectionCompleteUnlessOpen', Signature.SEVERITY_INF),
-    ('NSDataWritingFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_INF)}
+    ('NSDataWritingFileProtectionNone', Signature.SEVERITY_HIGH, 'None'),
+    ('NSDataWritingFileProtectionComplete', Signature.SEVERITY_INF, 'Complete'),
+    ('NSDataWritingFileProtectionCompleteUnlessOpen', Signature.SEVERITY_INF, 'CompleteUnlessOpen'),
+    ('NSDataWritingFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_INF, 'CompleteUntilFirstUserAuthentication')}
 
-for (fileProt_mask, severity) in NSDATA_DPAPI_VALUES:
+for (fileProt_mask, severity, fileProt_title) in NSDATA_DPAPI_VALUES:
     signature_list.append(Signature(
-        title = 'Data Protection APIs Usage',
-        description = 'File written with data protection option "{0}".'.format(fileProt_mask),
+        title = 'File Data Protection With NSData - ' + fileProt_title,
+        description = 'A file was written with the data protection option "{0}".'.format(fileProt_mask),
         severity = severity,
         filter = ArgumentsFilter(
             classes_to_match = ['NSData'],
@@ -140,8 +143,8 @@ for (fileProt_mask, severity) in NSDATA_DPAPI_VALUES:
                 (['arguments', 'mask'], fileProt_mask)])))
 
 signature_list.append(Signature(
-    title = 'Lack of Data Protection APIs Usage',
-    description = 'File written without any data protection options.',
+    title = 'Lack of File Data Protection With NSData',
+    description = 'A file was written without any data protection options.',
     severity = severity,
     filter = MethodsFilter(
         classes_to_match = ['NSData'],
@@ -149,26 +152,26 @@ signature_list.append(Signature(
 
 # For NSFileManager
 NSFILEMANAGER_DPAPI_VALUES = {
-    ('NSFileProtectionNone', Signature.SEVERITY_HIGH),
-    ('NSFileProtectionComplete', Signature.SEVERITY_INF),
-    ('NSFileProtectionCompleteUnlessOpen', Signature.SEVERITY_INF),
-    ('NSFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_INF)}
+    ('NSFileProtectionNone', Signature.SEVERITY_HIGH, 'None'),
+    ('NSFileProtectionComplete', Signature.SEVERITY_INF, 'Complete'),
+    ('NSFileProtectionCompleteUnlessOpen', Signature.SEVERITY_INF, 'CompleteUnlessOpen'),
+    ('NSFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_INF, 'CompleteUntilFirstUserAuthentication')}
 
-for (fileProt_title, severity) in NSFILEMANAGER_DPAPI_VALUES:
+for (fileProt_value, severity, fileProt_title) in NSFILEMANAGER_DPAPI_VALUES:
     signature_list.append(Signature(
-        title = 'Data Protection APIs Usage',
-        description = 'File written with data protection option "{0}".'.format(fileProt_title),
+        title = 'File Data Protection With NSFileManager - ' + fileProt_title,
+        description = 'A file written with the data protection option "{0}".'.format(fileProt_value),
         severity = severity,
         filter = ArgumentsFilter(
             classes_to_match = ['NSFileManager'],
             methods_to_match = ['createFileAtPath:contents:attributes:'],
             args_to_match = [
-                (['arguments', 'attributes', 'NSFileProtectionKey'], fileProt_title)])))
+                (['arguments', 'attributes', 'NSFileProtectionKey'], fileProt_value)])))
 
 # URL scheme signatures
 signature_list.append(Signature(
     title = 'URL Schemes',
-    description = 'Specific URL schemes are implemented by the application.',
+    description = 'The following URL schemes are exposed by the application.',
     severity = Signature.SEVERITY_INF,
     filter = MethodsFilter(
         classes_to_match = ['CFBundleURLTypes'],
@@ -198,7 +201,7 @@ signature_list.append(Signature(
 # CCCrypt signatures
 signature_list.append(Signature(
     title = 'Null Initialization Vector',
-    description = 'Encryption routine used a null initialization vector',
+    description = 'An encryption routine used a null initialization vector',
     severity = Signature.SEVERITY_MEDIUM,
     filter = ArgumentsFilter(
         classes_to_match = ['C'],

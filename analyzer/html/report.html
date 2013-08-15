@@ -33,15 +33,22 @@
 
   <!-- Handlebar.js template to display the findings -->
   <script id="findings-template" type="text/x-handlebars-template">
-  <div>
+  <div class="accordion">
     {{#each this.findings.findings}}
-      <div class="{{toHTMLClassAttr signature.group}} {{toHTMLClassAttr signature.subgroup}}">
-      <div>
-        <h3 style="border-bottom-style:solid;border-width:1px;">{{signature.title}}</h3>
-        <div><h4 style="display: inline-block">Severity:&nbsp;</h4><p style="display: inline-block">{{signature.severity}}</p><div>
-        <h4 style="display: inline-block">Description:&nbsp;</h4><p style="display: inline-block">{{signature.description}}</p>
-        <h4>Relevant function calls</h4>
-        {{> tracedCalls}}
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" href="#{{toHTMLClassAttr signature.title}}">
+            <h3>{{signature.title}}</h3>
+          </a>
+        </div>
+        <div id="{{toHTMLClassAttr signature.title}}" class="accordion-body collapse">
+          <div class="accordion-inner">
+            <h4>Severity</h4><p>{{signature.severity}}</p>
+            <h4>Description</h4><p>{{signature.description}}</p>
+            <h4>Relevant function calls</h4>
+            {{> tracedCalls}}
+          </div>
+        </div>
       </div>
     {{/each}}
   </div>
