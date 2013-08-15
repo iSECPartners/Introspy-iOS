@@ -1,7 +1,7 @@
 class Enumerate:
     def __init__(self, storage, info):
         self.traced_calls = storage
-	self.infoz = self.enumerateInfo(info)
+        self.infoz = self.enumerateInfo(info)
 
     def enumerateInfo(self, info):
 	objects = []
@@ -15,13 +15,13 @@ class Enumerate:
                     objects.append(call.argsAndReturnValue['arguments']['url']['absoluteString'])
                 if 'path' in call.argsAndReturnValue['arguments']:
                     objects.append(call.argsAndReturnValue['arguments']['path'])
-	elif info == "keys":
+        elif info == "keys":
             for call in self.traced_calls:
                 if call.method == "SecItemAdd":
                     objects.append("{0} = {1}".format(call.argsAndReturnValue['arguments']['attributes']['acct'],
-					    call.argsAndReturnValue['arguments']['attributes']['v_Data']))
+                        call.argsAndReturnValue['arguments']['attributes']['v_Data']))
 
         list = dict(map(None,objects,[])).keys()
-	list.sort()
-	for item in list:
+        list.sort()
+        for item in list:
             print item 
