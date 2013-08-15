@@ -15,6 +15,7 @@ from Signatures import signature_list
 from ScpClient import ScpClient
 from HTMLReport import HTMLReport
 from APIGroups import APIGroups
+from Enumerate import Enumerate
 
 class Introspy:
     """ Sets up and initiates analysis """
@@ -48,7 +49,7 @@ def main(argv):
         help="Generate an HTML report and write it to the\
         specified directory (ignores all other command line\
         optons).")
-    cli_group = parser.add_argument_group('command-line options')
+    cli_group = parser.add_argument_group('command-line reporting options')
     cli_group.add_argument("-l", "--list",
         action="store_true",
         help="List traced calls (no signature analysis\
@@ -59,6 +60,10 @@ def main(argv):
     cli_group.add_argument("-s", "--sub-group",
         choices=APIGroups.API_SUBGROUPS_LIST,
         help="Filter by signature sub-group")
+    stats_group = parser.add_argument_group('additional command-line options')
+    stats_group.add_argument("-i", "--info",
+        choices=['http', 'ipc', 'fileio', 'keys'],
+	help="Enumerate URLs, files accessed, keychain items, etc.")
     parser.add_argument("db",
         help="The introspy-generated database to analyze.\
         specifying an IP address causes the analyzer to fetch a\
@@ -66,7 +71,12 @@ def main(argv):
     args = parser.parse_args()
 
     spy = Introspy(args)
-    spy.print_results(args.outdir)
+    if args.info:
+        # enumerate stuff
+        Enumerate(spy.analyzer.tracedCalls, args.info)
+    else:
+        # print trace results
+        spy.print_results(args.outdir)
 
 if __name__ == "__main__":
     main(argv[1:])
