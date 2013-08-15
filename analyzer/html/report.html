@@ -12,14 +12,20 @@
 
   <!-- Handlebar.js template to display a list of tracedCalls -->
   <script id="tracedCalls-template" type="text/x-handlebars-template">
-  <div id="calls_list">
+  <div class="accordion">
     {{#each calls}}
-      <div class="{{toHTMLClassAttr this.group}} {{toHTMLClassAttr this.subgroup}}" style="margin-top: 30px;">
-      <h5>{{this.callId}}: {{this.clazz}} {{this.method}}</h5>
-      <div>
-      Arguments: <pre>{{printArguments this.argsAndReturnValue}}</pre>
-      Return Value: <pre>{{printReturnValue this.argsAndReturnValue}}</pre>
-      </div>
+      <div class="{{toHTMLClassAttr this.group}} {{toHTMLClassAttr this.subgroup}} accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" href=".call{{this.callId}}">
+            {{this.callId}}: {{this.clazz}} {{this.method}}
+          </a>
+        </div>
+        <div class="call{{this.callId}} accordion-body collapse in">
+          <div class="accordion-inner">
+            Arguments: <pre>{{printArguments this.argsAndReturnValue}}</pre>
+            Return Value: <pre>{{printReturnValue this.argsAndReturnValue}}</pre>
+          </div>
+        </div>
       </div>
     {{/each}}
   </div>
@@ -27,7 +33,7 @@
 
   <!-- Handlebar.js template to display the findings -->
   <script id="findings-template" type="text/x-handlebars-template">
-  <div id="findings_list">
+  <div>
     {{#each findings}}
       <div class="{{toHTMLClassAttr signature.group}} {{toHTMLClassAttr signature.subgroup}}">
         <h3 style="border-bottom-style:solid;border-width:1px;">{{signature.title}}</h3>
@@ -52,11 +58,12 @@
         <ul class="dropdown-menu">
         <!-- dropdown menu links (subgroups) -->
           {{#each subgroups}}
-          <li><a onclick="$('.{{toHTMLClassAttr name}}').toggle();">
+          <li><a onclick="$('.{{toHTMLClassAttr name}}').collapse('toggle');$('.icon{{toHTMLClassAttr name}}').toggle();">
             <!-- OK/NOK icons to toggle when showing or hiding API subgroups -->
-            <i class="{{toHTMLClassAttr this.name}} icon-ok"></i>
-            <i style="display:none" class="{{toHTMLClassAttr this.name}} icon-remove"></i>
-            {{name}}</a>
+            <i class="icon{{toHTMLClassAttr this.name}} icon-ok"></i>
+            <i style="display:none" class="icon{{toHTMLClassAttr this.name}} icon-remove"></i>
+            {{name}} - {{countClassElements this.name}}
+            </a>
           </li>
           {{/each}}
         </ul>
@@ -75,7 +82,7 @@
   <!-- Actual Page -->
   <!-- Navigation bar -->
   <div class="tabbable" style="width:800px;margin:auto;">
-  <div style="position:fixed;width:800px;margin:auto;background-color:white;border-bottom-style:solid;border-width:1px;">
+  <div style="position:fixed;width:800px;margin:auto;background-color:white;border-bottom-style:solid;border-width:1px;z-index:10;">
     <!-- Nav bar -->
     <ul class="nav nav-list">
       <li class="active"><a href="#tab1" data-toggle="tab"><i class="icon-book"></i> Traced Calls</a></li>
@@ -118,15 +125,25 @@
     // Pretty print JSON
     return JSON.stringify(argsAndReturnValue.arguments, undefined, 2);
   });
+
   Handlebars.registerHelper('printReturnValue', function(argsAndReturnValue) {
     return JSON.stringify(argsAndReturnValue.returnValue, undefined, 2);
   });
+
   function toHTMLClassAttr(attrValue) {
     // Remove spaces so it's a valid class HTML attribute
     return attrValue.toLowerCase().replace(/\s/g,'');
   }
   Handlebars.registerHelper('toHTMLClassAttr', function(groupname) {
     return toHTMLClassAttr(groupname);
+  });
+
+  function countClassElements(className) {
+    // Count the number of elements with the given class name
+    return $(toHTMLClassAttr(className)).length;
+  }
+  Handlebars.registerHelper('countClassElements', function(className) {
+    return countClassElements(className);
   });
 
   // Populate tab1 with the traced calls
