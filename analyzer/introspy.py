@@ -62,7 +62,7 @@ def main(argv):
         help="Filter by signature sub-group")
     stats_group = parser.add_argument_group('additional command-line options')
     stats_group.add_argument("-i", "--info",
-        choices=['http', 'ipc', 'fileio', 'keys'],
+        choices=['http', 'fileio', 'keys'],
 	help="Enumerate URLs, files accessed, keychain items, etc.")
     parser.add_argument("db",
         help="The introspy-generated database to analyze.\

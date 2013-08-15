@@ -20,8 +20,12 @@ class Enumerate:
                 if call.method == "SecItemAdd":
                     objects.append("{0} = {1}".format(call.argsAndReturnValue['arguments']['attributes']['acct'],
                         call.argsAndReturnValue['arguments']['attributes']['v_Data']))
+                elif call.method == "SecItemUpdate":
+                    objects.append("{0} = {1}".format(call.argsAndReturnValue['arguments']['query']['acct'],
+                        call.argsAndReturnValue['arguments']['attributesToUpdate']['v_Data']))
 
         list = dict(map(None,objects,[])).keys()
         list.sort()
         for item in list:
             print item 
+        return list
