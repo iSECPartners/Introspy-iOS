@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Introspy by iSECPartners</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Introspy</h1>
+        <p></p>
+
+        <p class="view"><a href="https://github.com/iSECPartners/introspy">View the Project on GitHub <small>iSECPartners/introspy</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/iSECPartners/introspy/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/iSECPartners/introspy/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/iSECPartners/introspy">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h3>
+<a name="the-problem" class="anchor" href="#the-problem"><span class="octicon octicon-link"></span></a>The Problem</h3>
+
+<p>In 2013, assessing the security of iOS applications still involves a lot of manual, time-consuming tasks - especially when performing a black-box assessment. Without access to source code, a comprehensive review of these application currently requires in-depth knowledge of various APIs and the ability to use relatively complex, generic tools such as Cycript, or Mobile Substrate - or just jump straight into the debugger.</p>
+
+<p>To simplify this process, we are releasing Introspy - an open-source security profiler for iOS. Introspy is designed to help penetration testers understand what an application does at runtime. </p>
+
+<h3>
+<a name="how-introspy-works" class="anchor" href="#how-introspy-works"><span class="octicon octicon-link"></span></a>How Introspy works</h3>
+
+<p>The tool comprises two separate components: an iOS tracer and an analyzer. </p>
+
+<p>The iOS tracer can be installed on a jailbroken iOS device. It will hook and record security-sensitive APIs called by a given application at run-time: function calls related to cryptography, IPCs, data storage / protection, networking, and user privacy are all recorded and persisted in a SQLite database on the device. </p>
+
+<p>This database can then be fed to the Introspy analyzer, which generates an HTML report displaying all recorded calls, plus a list of potential vulnerabilities affecting the application.</p>
+
+<h3>
+<a name="tracer" class="anchor" href="#tracer"><span class="octicon octicon-link"></span></a>Tracer</h3>
+
+<h3>
+<a name="analyzer" class="anchor" href="#analyzer"><span class="octicon octicon-link"></span></a>Analyzer</h3>
+
+<h4>
+<a name="list-of-traced-calls" class="anchor" href="#list-of-traced-calls"><span class="octicon octicon-link"></span></a>List of traced calls</h4>
+
+<h4>
+<a name="potential-findings" class="anchor" href="#potential-findings"><span class="octicon octicon-link"></span></a>Potential findings</h4>
+
+<h3>
+<a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting started</h3>
+
+<p>Look at the README XXX</p>
+
+<h3>
+<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+
+<p>Tom Daniels - <a href="https://github.com/thirstscolr" class="user-mention">@thirstscolr</a>
+Alban Diquet - <a href="https://github.com/nabla-c0d3" class="user-mention">@nabla-c0d3</a></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/iSECPartners">iSECPartners</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
