@@ -69,7 +69,7 @@
         <ul class="dropdown-menu">
         <!-- dropdown menu links (subgroups) -->
           {{#each subgroups}}
-          <li><a onclick="$('.{{toHTMLClassAttr name}}').collapse('toggle');$('.icon{{toHTMLClassAttr name}}').toggle();">
+          <li><a onclick="$('.{{toHTMLClassAttr name}}.tab1').collapse('toggle');$('.icon{{toHTMLClassAttr name}}').toggle();">
             <!-- OK/NOK icons to toggle when showing or hiding API subgroups -->
             <i class="icon{{toHTMLClassAttr this.name}} icon-ok"></i>
             <i style="display:none" class="icon{{toHTMLClassAttr this.name}} icon-remove"></i>
