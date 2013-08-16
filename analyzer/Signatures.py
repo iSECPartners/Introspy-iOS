@@ -146,7 +146,7 @@ NSDATA_DPAPI_VALUES = {
 
 for (fileProt_mask, severity, fileProt_title) in NSDATA_DPAPI_VALUES:
     signature_list.append(Signature(
-        title = 'File Data Protection With NSData - ' + fileProt_title,
+        title = 'Data Protection With NSData - ' + fileProt_title,
         description = 'A file was written with the data protection option "{0}".'.format(fileProt_mask),
         severity = severity,
         filter = ArgumentsFilter(
@@ -156,7 +156,7 @@ for (fileProt_mask, severity, fileProt_title) in NSDATA_DPAPI_VALUES:
                 (['arguments', 'mask'], fileProt_mask)])))
 
 signature_list.append(Signature(
-    title = 'Lack of File Data Protection With NSData',
+    title = 'Lack of Data Protection With NSData',
     description = 'A file was written without any data protection options.',
     severity = Signature.SEVERITY_MEDIUM,
     filter = MethodsFilter(
@@ -172,7 +172,7 @@ NSFILEMANAGER_DPAPI_VALUES = {
 
 for (fileProt_value, severity, fileProt_title) in NSFILEMANAGER_DPAPI_VALUES:
     signature_list.append(Signature(
-        title = 'File Data Protection With NSFileManager - ' + fileProt_title,
+        title = 'Data Protection With NSFileManager - ' + fileProt_title,
         description = 'A file written with the data protection option "{0}".'.format(fileProt_value),
         severity = severity,
         filter = ArgumentsFilter(
@@ -183,7 +183,7 @@ for (fileProt_value, severity, fileProt_title) in NSFILEMANAGER_DPAPI_VALUES:
 
 
 signature_list.append(Signature(
-    title = 'Lack of File Data Protection With NSFileManager',
+    title = 'Lack of Data Protection With NSFileManager',
     description = 'A file was written without any data protection options.',
     severity = Signature.SEVERITY_MEDIUM,
     filter = ArgumentsNotSetFilter(
