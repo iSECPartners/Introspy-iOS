@@ -26,7 +26,7 @@ Introspy Tracer
 ---------------
 
 Users should first download the right pre-compiled Debian package:
--  https://www.dropbox.com/s/otag5l99b0slbbn/com.isecpartners.introspy_0.2.0-14_iphoneos-arm.deb?dl=1
+- https://www.dropbox.com/s/z5cwqk5wti3zsvd/com.isecpartners.introspy-v0.3-iOS_6.1.deb?dl=1
 
 ### Dependencies
 
@@ -39,10 +39,7 @@ sure the following packages are installed:
 
 ### How to install
 
-Download and copy the following Debian package to the device:
-https://www.dropbox.com/s/z5cwqk5wti3zsvd/com.isecpartners.introspy-v0.3-iOS_6.1.deb?dl=1
-
-Install it:  
+Download and copy the Debian package to the device; install it:  
 
     scp <package.deb> root@<device_ip>:~
     ssh root@<device_ip>
