@@ -231,12 +231,13 @@ signature_list.append(Signature(
     filter = ArgumentsFilter(
         classes_to_match = ['C'],
         methods_to_match = ['CCCryptorCreate', 'CCCrypt', 'CCCryptorCreateFromData'],
-        args_to_match = [(['arguments', 'iv'], None)])))
+        args_to_match = [(['arguments', 'iv'], '\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')])))
+
 
 # LibC signatures
 signature_list.append(Signature(
     title = 'Weak PRNG',
-    description = 'The application uses a weak random number generator',
+    description = 'The application uses a weak random number generator.',
     severity = Signature.SEVERITY_MEDIUM,
     filter = MethodsFilter(
         classes_to_match = ['C'],
