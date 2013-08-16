@@ -73,7 +73,7 @@ application database. This will store a local copy of the database, which you
 can analyze again by specifying the database name as opposed to the device IP
 address.
 
-    $ python introspy.py -l e-bank 192.168.1.127
+    $ python introspy.py e-bank 192.168.1.127 --outdir e-bank
     mobile@192.168.1.127's password:
     0. ./Applications/94656731-0259-4AE9-9EEE-BADC9244AD82/introspy-com.isecpartners.e-bank.db
     1. ./introspy-com.apple.mobilemail.db
@@ -81,10 +81,32 @@ address.
     Select the database to analyze: 0
 
 The example above will generate an HTML report for the com.isecpartners.e-bank
-application within the newly created "e-bank" directory (specified by the -l
-option). Notice that System application call databases are stored in
-/var/mobile/ while user application dbs are maintained in that application's
-directory.
+application within the newly created "e-bank" directory (specified by the
+`--outdir` option). The HTML report is intended to be the most common interface to
+the call database and allows users to browse the full call list or filter the
+list to view only those calls flagged by specific signatures.
+
+#### Signatures
+
+Beyond simply listing the calls recorded by the Introspy tracer, the analysis
+tool allows you to apply predefined signatures to the call list and flag
+potential vulnerabilities or insecure configurations. Users can browse the list
+of flagged calls simply by browsing to the "Potential Findings" view within the
+generated HTML report and expanding the desired signature group.
+
+The signatures themselves are defined in `analyzer/Signatures.py` and can be
+easily extended. The following example adds a signature to identify NSData file
+writes that don't include data protection values. Beyond simply identifying
+method calls, argument matching and argument existence filters can also be
+applied.
+
+    signature_list.append(Signature(
+    title = 'Lack of File Data Protection With NSData',
+    description = 'A file was written without any data protection options.',
+    severity = Signature.SEVERITY_MEDIUM,
+    filter = MethodsFilter(
+        classes_to_match = ['NSData'],
+        methods_to_match = ['writeToFile:atomically:', 'writeToURL:atomically:'])))
 
 ### Command-line Usage
 
@@ -92,9 +114,9 @@ directory.
 
 While the HTML formatted report is the most digestable format, the analysis tool
 can also be used directly from the command-line. Just as the HTML report allows
-you to show/hide groups and subgroups, you can specify groups (-g) as well as
-subgroups (-s) when running the analysis to limit the output to only those calls
-that match the filtering criteria.
+you to show/hide signature groups and subgroups, you can specify groups (-g) as
+well as subgroups (-s) when running the analysis to limit the output to only
+those calls that match the filtering criteria.
 
     $ python introspy.py introspy-com.isecpartners.e-bank.db -g IPC -s Schemes
     Specific URL schemes are implemented by the application.
@@ -108,10 +130,15 @@ This example shows analysis of a local database with filtering options to limit
 the output to only display registered URL schemes. We can see here that URL
 requests with the transfer-money:// scheme will be handled by the application.
 
+The analysis tool also allows users to print the entire call list similarly to
+the HTML report's "Traced Calls" view by specifiying the `--list` option,
+although this will print an undigestable amount of data to stdout and as such is
+not recommended.
+
 #### Enumerations
 
 The command-line tool also allows users to enumerate various data from the list
-of traced calls (via --info), inlcuding a list of all of the unique URLs
+of traced calls (via `--info`), inlcuding a list of all of the unique URLs
 accessed by the application (http), all files accessed (fileio), as well as
 Keychain items that were added or modified (keys).
 
