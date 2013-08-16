@@ -20,7 +20,7 @@
 }
 
 + (BOOL) wasDirectlyCalledByApp {
-	return [self wasCalledByAppAtIndex:2];
+	return [self wasCalledByAppAtIndex:3];
 }
 
 

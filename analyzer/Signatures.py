@@ -80,6 +80,18 @@ for (kSecAttr_value, severity, kSecAttr_title) in KSECATTR_VALUES:
             args_to_match = [
                 (['arguments', 'attributes', 'pdmn'], kSecAttr_value)])))
 
+signature_list.append(Signature(
+    title = 'Keychain Data Protection Not Specified',
+    description = 'An item was added to the KeyChain without any accessibility '
+        'options. Prior to iOS 6, the default option is kSecAttrAccessibleAlways.',
+    severity = Signature.SEVERITY_LOW,
+    filter = ArgumentsNotSetFilter(
+        classes_to_match = ['C'],
+        methods_to_match = ['SecItemAdd'],
+        args_to_match = [
+            (['arguments', 'attributes', 'pdmn'], None)])))
+
+
 # Pasteboard signatures
 signature_list.append(Signature(
     title = 'Pasteboard Usage',
@@ -116,7 +128,7 @@ signature_list.append(Signature(
             (['returnValue', 'storagePolicy'], 0) ])))
 
 signature_list.append(Signature(
-	title = 'Lack of credential validation',
+	title = 'Lack of Credential Validation',
 	description = 'The application is bypassing credential validation.',
 	severity = Signature.SEVERITY_HIGH,
 	filter = MethodsFilter(
