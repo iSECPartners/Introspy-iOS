@@ -61,12 +61,12 @@ signature_list.append(Signature(
 
 # Keychain signatures
 KSECATTR_VALUES = [
-    ('kSecAttrAccessibleWhenUnlocked', Signature.SEVERITY_INF, 'WhenUnlocked'),
-    ('kSecAttrAccessibleWhenUnlockedThisDeviceOnly', Signature.SEVERITY_INF, 'WhenUnlockedThisDeviceOnly'),
-    ('kSecAttrAccessibleAlways', Signature.SEVERITY_HIGH, 'Always'),
-    ('kSecAttrAccessibleAlwaysThisDeviceOnly', Signature.SEVERITY_HIGH, 'AlwaysThisDeviceOnly'),
-    ('kSecAttrAccessibleAfterFirstUnlock', Signature.SEVERITY_MEDIUM, 'AfterFirstUnlock'),
-    ('kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly', Signature.SEVERITY_MEDIUM, 'AfterFirstUnlockThisDeviceOnly')
+    #('kSecAttrAccessibleWhenUnlocked', Signature.SEVERITY_INF, 'AccessibleWhenUnlocked'),
+    #('kSecAttrAccessibleWhenUnlockedThisDeviceOnly', Signature.SEVERITY_INF, 'AccessibleWhenUnlockedThisDeviceOnly'),
+    ('kSecAttrAccessibleAlways', Signature.SEVERITY_HIGH, 'AccessibleAlways'),
+    ('kSecAttrAccessibleAlwaysThisDeviceOnly', Signature.SEVERITY_HIGH, 'AccessibleAlwaysThisDeviceOnly'),
+    ('kSecAttrAccessibleAfterFirstUnlock', Signature.SEVERITY_MEDIUM, 'AccessibleAfterFirstUnlock'),
+    ('kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly', Signature.SEVERITY_MEDIUM, 'AccessibleAfterFirstUnlockThisDeviceOnly')
 ]
 
 for (kSecAttr_value, severity, kSecAttr_title) in KSECATTR_VALUES:
@@ -83,7 +83,7 @@ for (kSecAttr_value, severity, kSecAttr_title) in KSECATTR_VALUES:
 signature_list.append(Signature(
     title = 'Keychain Data Protection Not Specified',
     description = 'An item was added to the KeyChain without any accessibility '
-        'options. Prior to iOS 6, the default option is kSecAttrAccessibleAlways.',
+        'options. Prior to iOS 6, the default setting is kSecAttrAccessibleAlways.',
     severity = Signature.SEVERITY_LOW,
     filter = ArgumentsNotSetFilter(
         classes_to_match = ['C'],
@@ -139,10 +139,10 @@ signature_list.append(Signature(
 # For NSData
 
 NSDATA_DPAPI_VALUES = {
-    ('NSDataWritingFileProtectionNone', Signature.SEVERITY_HIGH, 'None'),
-    ('NSDataWritingFileProtectionComplete', Signature.SEVERITY_INF, 'Complete'),
-    ('NSDataWritingFileProtectionCompleteUnlessOpen', Signature.SEVERITY_INF, 'CompleteUnlessOpen'),
-    ('NSDataWritingFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_INF, 'CompleteUntilFirstUserAuthentication')}
+    ('NSDataWritingFileProtectionNone', Signature.SEVERITY_HIGH, 'ProtectionNone'),
+    #('NSDataWritingFileProtectionComplete', Signature.SEVERITY_INF, 'Complete'),
+    #('NSDataWritingFileProtectionCompleteUnlessOpen', Signature.SEVERITY_INF, 'CompleteUnlessOpen'),
+    ('NSDataWritingFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_INF, 'ProtectionCompleteUntilFirstUserAuthentication')}
 
 for (fileProt_mask, severity, fileProt_title) in NSDATA_DPAPI_VALUES:
     signature_list.append(Signature(
@@ -165,10 +165,10 @@ signature_list.append(Signature(
 
 # For NSFileManager
 NSFILEMANAGER_DPAPI_VALUES = {
-    ('NSFileProtectionNone', Signature.SEVERITY_HIGH, 'None'),
-    ('NSFileProtectionComplete', Signature.SEVERITY_INF, 'Complete'),
-    ('NSFileProtectionCompleteUnlessOpen', Signature.SEVERITY_INF, 'CompleteUnlessOpen'),
-    ('NSFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_INF, 'CompleteUntilFirstUserAuthentication')}
+    ('NSFileProtectionNone', Signature.SEVERITY_HIGH, 'ProtectionNone'),
+    #('NSFileProtectionComplete', Signature.SEVERITY_INF, 'Complete'),
+    #('NSFileProtectionCompleteUnlessOpen', Signature.SEVERITY_INF, 'CompleteUnlessOpen'),
+    ('NSFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_INF, 'ProtectionCompleteUntilFirstUserAuthentication')}
 
 for (fileProt_value, severity, fileProt_title) in NSFILEMANAGER_DPAPI_VALUES:
     signature_list.append(Signature(
