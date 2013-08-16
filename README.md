@@ -88,6 +88,8 @@ directory.
 
 ### Command-line Usage
 
+#### Reporting
+
 While the HTML formatted report is the most digestable format, the analysis tool
 can also be used directly from the command-line. Just as the HTML report allows
 you to show/hide groups and subgroups, you can specify groups (-g) as well as
@@ -105,6 +107,18 @@ that match the filtering criteria.
 This example shows analysis of a local database with filtering options to limit
 the output to only display registered URL schemes. We can see here that URL
 requests with the transfer-money:// scheme will be handled by the application.
+
+#### Enumerations
+
+The command-line tool also allows users to enumerate various data from the list
+of traced calls (via --info), inlcuding a list of all of the unique URLs
+accessed by the application (http), all files accessed (fileio), as well as
+Keychain items that were added or modified (keys).
+
+    $ python introspy.py introspy-com.isecpartners.e-bank.db --info keys
+	token = MGJiNzg1NGRkNzBkNGMyZTExNzc4NTA3OTdjNjNkNjFiY2Q1
+	consumerKey = YzAwNzE4ZDZlYjYzOTM4NGM2NTc56j
+	consumerSecret = NmUzYmNjNmQ2YjJjNWU1MDE0Zjk3NGI4MzU4ZWRl
 
 ### Programmatic Usage
 
