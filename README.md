@@ -73,7 +73,7 @@ application database. This will store a local copy of the database, which you
 can analyze again by specifying the database name as opposed to the device IP
 address.
 
-    $ python introspy.py e-bank 192.168.1.127 --outdir e-bank
+    $ python introspy.py 192.168.1.127 --outdir e-bank
     mobile@192.168.1.127's password:
     0. ./Applications/94656731-0259-4AE9-9EEE-BADC9244AD82/introspy-com.isecpartners.e-bank.db
     1. ./introspy-com.apple.mobilemail.db
