@@ -40,7 +40,7 @@
 
 <p>The tool comprises two separate components: an iOS tracer and an analyzer. </p>
 
-<p>The iOS tracer can be installed on a jailbroken iOS device. It will hook and record security-sensitive APIs called by a given application at run-time: function calls related to cryptography, IPCs, data storage / protection, networking, and user privacy are all recorded and persisted in a SQLite database on the device. </p>
+<p>The iOS tracer can be installed on a jailbroken iOS device. It will hook security-sensitive APIs called by a given application, including functions related to cryptography, IPCs, data storage / protection, networking, and user privacy. The call details are all recorded and persisted in a SQLite database on the device</p>
 
 <p>This database can then be fed to the Introspy analyzer, which generates an HTML report displaying all recorded calls, plus a list of potential vulnerabilities affecting the application.</p>
 
