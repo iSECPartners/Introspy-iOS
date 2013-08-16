@@ -178,7 +178,7 @@ The build requires the Theos suite to be installed;
 see http://www.iphonedevwiki.net/index.php/Theos/Getting\_Started .
 You first have to create a symlink to your theos installation:
 
-    cd introspy/
+    cd introspy/tracer/
     ln -s /opt/theos/ ./theos
 
 Then, the package can be built using:
@@ -209,5 +209,5 @@ See ./LICENSE.
 Authors
 -------
 
-Tom Daniels
-Alban Diquet
+* Tom Daniels
+* Alban Diquet
