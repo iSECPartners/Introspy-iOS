@@ -14,7 +14,7 @@
   <script id="tracedCalls-template" type="text/x-handlebars-template">
   <div class="accordion">
     {{#each this.calls}}
-      <div class="{{toHTMLClassAttr this.group}} {{toHTMLClassAttr this.subgroup}} accordion-group tracedCall {{../tabId}}">
+      <div class="{{toHTMLClassAttr this.group}} {{toHTMLClassAttr this.subgroup}} accordion-group tracedCall">
         <div class="accordion-heading">
           <a class="accordion-toggle" data-toggle="collapse" href="#call{{this.callId}}{{../tabId}}">
             {{this.callId}}: {{this.clazz}} {{this.method}}
@@ -57,8 +57,8 @@
   <!-- Handlebar.js template for the show/hide bar -->
   <script id="showHide-template" type="text/x-handlebars-template">
       <!-- Show all & hide all buttons -->
-      <button class="btn btn-small" onclick="$('.tracedCall.tab1').collapse('show');$('.icon-remove').hide();$('.icon-ok').show();">Show All</button>
-      <button class="btn btn-small" onclick="$('.tracedCall.tab1').collapse('hide');$('.icon-ok').hide();$('.icon-remove').show();">Hide All</button>
+      <button class="btn btn-small" onclick="$('#tab1').find('div.tracedCall').show();$('#showhidebar').find('.icon-remove').hide();$('#showhidebar').find('.icon-ok').show();">Show All</button>
+      <button class="btn btn-small" onclick="$('#tab1').find('div.tracedCall').hide();$('#showhidebar').find('.icon-ok').hide();$('#showhidebar').find('.icon-remove').show();">Hide All</button>
       {{#each groups}}
       <!-- main goup button -->
       <div class="btn-group">
@@ -69,7 +69,7 @@
         <ul class="dropdown-menu">
         <!-- dropdown menu links (subgroups) -->
           {{#each subgroups}}
-          <li><a onclick="$('.{{toHTMLClassAttr name}}.tab1').collapse('toggle');$('.icon{{toHTMLClassAttr name}}').toggle();">
+          <li><a onclick="$('#tab1').find('.{{toHTMLClassAttr name}}').toggle();$('#showhidebar').find('.icon{{toHTMLClassAttr name}}').toggle();">
             <!-- OK/NOK icons to toggle when showing or hiding API subgroups -->
             <i class="icon{{toHTMLClassAttr this.name}} icon-ok"></i>
             <i style="display:none" class="icon{{toHTMLClassAttr this.name}} icon-remove"></i>
@@ -103,7 +103,7 @@
         <div id="showhidebarcontent"></div>
       </li>
     </ul>
-    
+
     <div></div>
   </div>
     <div class="tab-content">
@@ -151,7 +151,7 @@
 
   function countClassElements(className) {
     // Count the number of elements with the given class name within tab1
-    return $('.' + toHTMLClassAttr(className) + '.tab1').length;
+    return $('#tab1').find('.' + toHTMLClassAttr(className)).length;
   }
   Handlebars.registerHelper('countClassElements', function(className) {
     return countClassElements(className);
