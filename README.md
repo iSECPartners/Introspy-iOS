@@ -8,7 +8,7 @@ and assist in the identification of potential security issues.
 Description
 -----------
 
-Introspy comprises two separate modules: a tracer and an analyzer. 
+Introspy comprises two separate modules: a tracer and an analyzer.
 
 The tracer component can be installed on a jailbroken device and dynamically
 configured to hook security-sensitive iOS APIs at run-time. The tool records
@@ -39,7 +39,7 @@ sure the following packages are installed:
 
 ### How to install
 
-Download and copy the Debian package to the device; install it:  
+Download and copy the Debian package to the device; install it:
 
     scp <package.deb> root@<device_ip>:~
     ssh root@<device_ip>
@@ -155,18 +155,18 @@ Keychain items that were added or modified (keys).
     >>> for call in spy.analyzer.tracedCalls:
     ...   print call.json_encode()
     ...
-    {"class": "CFBundleURLTypes", 
-     "method": "CFBundleURLSchemes"}, 
-         "arguments": 
-            {"CFBundleURLName": "transfer-money", 
-             "CFBundleURLScheme": "transfer-money", 
+    {"class": "CFBundleURLTypes",
+     "method": "CFBundleURLSchemes"},
+         "arguments":
+            {"CFBundleURLName": "transfer-money",
+             "CFBundleURLScheme": "transfer-money",
              "CFBundleURLIsPrivate": "nil"}
     }
 
 Doing It Yourself
 -----------------
 
-### Building the Tracer From Source
+### Building the iOS Tracer From Source
 
 Most users should just download and install the pre-compiled Debian package.
 However, if you want to modify the library's functionality you will have to
@@ -174,18 +174,18 @@ clone the source repository and build the debian package yourself.
 
     git clone https://github.com/iSECPartners/introspy.git
 
-The build requires the Theos suite to be installed; 
+The build requires the Theos suite to be installed;
 see http://www.iphonedevwiki.net/index.php/Theos/Getting\_Started .
 You first have to create a symlink to your theos installation:
 
-    cd introspy/tracer/
+    cd introspy/ios-tracer/
     ln -s /opt/theos/ ./theos
 
 Then, the package can be built using:
 
     make package
 
-### Installing the Tracer From Source
+### Installing the iOS Tracer From Source
 
 Once you've successfully created the debian package, you can use the Theos
 Makefiles to automatically install the package and respring the device:
