@@ -1,0 +1,9 @@
+.DS_Store
+.theos
+theos
+*.deb
+obj/*
+_/*
+*.swp
+.gitconfig
+*.sublime-workspace

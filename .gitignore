@@ -1,11 +1,4 @@
 .DS_Store
-.theos
-theos
-*.deb
-/tracer/obj/*
-/tracer/_/*
-testapp/_/*
-/testapp/obj/*
 *.swp
 .gitconfig
 *.sublime-workspace
