@@ -7,10 +7,10 @@ class ScpClient:
     Identifies and securely copies an introspy database from a device to
     the localhost for analysis.
     """
-    
+
     def __init__(self, ip=None):
         self.cnx_str = "mobile@%s" % ip
-    
+
     def select_db(self):
         cmd = "ssh %s find . -iname 'introspy-*.db'" % self.cnx_str
         proc = subprocess.Popen(cmd.split(),
@@ -42,4 +42,16 @@ class ScpClient:
             print "Error copying file from remote device."
             exit(0)
         return basename(remote_db_path)
+
+    def delete_remote_dbs(self):
+        cmd = "ssh %s find . -iname 'introspy-*.db' -print | xargs rm" % self.cnx_str
+        proc = subprocess.Popen(cmd.split(),
+            stdout=subprocess.PIPE,
+    	    stderr=subprocess.PIPE)
+        dbs, err = proc.communicate()
+        # something went wrong
+        if err:
+            print "Error removing introspy dbs."
+            exit(0)
+        print "Removed all introspy dbs."
 

@@ -7,7 +7,7 @@ __author__    = "Tom Daniels & Alban Diquet"
 __license__   = "See ../LICENSE"
 __copyright__ = "Copyright 2013, iSEC Partners, Inc."
 
-from sys import argv
+from sys import argv, exit
 from argparse import ArgumentParser
 from re import match
 from Analysis import Analyzer
@@ -24,10 +24,16 @@ class Introspy:
 	if match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", args.db):
             # the db is on device so we need to grab a local copy
             scp = ScpClient(ip=args.db)
-            db_path = scp.select_and_fetch_db()
+	    if args.delete:
+                scp.delete_remote_dbs()
+		exit(0)
+            else:
+                db_path = scp.select_and_fetch_db()
+                self.analyzer = Analyzer(db_path, signature_list, args.group,
+			args.sub_group, args.list)
         else:
             db_path = args.db
-        self.analyzer = Analyzer(db_path, signature_list, args.group,
+            self.analyzer = Analyzer(db_path, signature_list, args.group,
 			args.sub_group, args.list)
 
     def print_results(self, outdir=None):
@@ -64,6 +70,9 @@ def main(argv):
     stats_group.add_argument("-i", "--info",
         choices=['http', 'fileio', 'keys'],
 	help="Enumerate URLs, files accessed, keychain items, etc.")
+    stats_group.add_argument("-d", "--delete",
+        action="store_true",
+        help="Remove all introspy databases on a given remote device")
     parser.add_argument("db",
         help="The introspy-generated database to analyze.\
         specifying an IP address causes the analyzer to fetch a\
