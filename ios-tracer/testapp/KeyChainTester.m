@@ -55,7 +55,7 @@ static NSString *keyChainTestValue2 = @"p@ssw0rd";
 
     // Test SecItemCopyMatching()
     NSMutableDictionary *itemMatchDict = [self newKeyChainSearchDict];
-    CFTypeRef *result;
+    CFTypeRef *result=NULL;
     [itemMatchDict setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
     [itemMatchDict setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
     SecItemCopyMatching((CFDictionaryRef)itemMatchDict, result);
