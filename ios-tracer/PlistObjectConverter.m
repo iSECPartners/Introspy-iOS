@@ -475,7 +475,7 @@ static NSString *serializedNilValue = @"nil";
 + (NSData *) convertCBuffer:(const void *) buffer withLength: (size_t) length {
 
 	if (buffer == nil)
-		return [NSDictionary dictionary];
+		return [NSData data];
 	NSData *bufferData = [NSData dataWithBytes:buffer length:(NSUInteger)length];
 	return bufferData;
 }

@@ -13,7 +13,7 @@
     // Not ideal: Check if the app's process name is close enough in the call stack
     NSRange callerAtIndex = [[callStack objectAtIndex:index] rangeOfString: appProcessName];
    
-    if ((callerAtIndex.location == NSNotFound)) {
+    if (callerAtIndex.location == NSNotFound) {
         return false;
     }
     return true;
