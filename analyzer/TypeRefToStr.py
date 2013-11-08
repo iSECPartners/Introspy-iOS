@@ -62,7 +62,7 @@ class TypeRefToStr:
                 try: # Does it seem to be ASCII ?
                     d[v[0]] = v[1].data.encode('ascii')
                 except UnicodeDecodeError: # No => base64 encode it
-                    d[v[0]] = v[1].data.encode('base64')
+                    d[v[0]] = v[1].asBase64(maxlinelength=1000000).strip()
             else:
                 if v[0] in enum_list:
                     try:
