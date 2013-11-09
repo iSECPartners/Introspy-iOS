@@ -2,52 +2,26 @@
 
 """ Command-line parser for an introspy generated db. """
 
-__version__   = '0.1.0'
+__version__   = '0.2.0'
 __author__    = "Tom Daniels & Alban Diquet"
 __license__   = "See ../LICENSE"
 __copyright__ = "Copyright 2013, iSEC Partners, Inc."
 
-from sys import argv, exit
+from sys import argv
 from argparse import ArgumentParser
 from re import match
-from Analysis import Analyzer
-from Signatures import signature_list
+from DBAnalyzer import DBAnalyzer
 from ScpClient import ScpClient
-from HTMLReport import HTMLReport
+from DBParser import DBParser
+from DBReportGenerator import DBReportGenerator
 from APIGroups import APIGroups
 from Enumerate import Enumerate
 
-class Introspy:
-    """ Sets up and initiates analysis """
 
-    def __init__(self, args):
-	if match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", args.db):
-            # the db is on device so we need to grab a local copy
-            scp = ScpClient(ip=args.db)
-	    if args.delete:
-                scp.delete_remote_dbs()
-		exit(0)
-            else:
-                db_path = scp.select_and_fetch_db()
-                self.analyzer = Analyzer(db_path, signature_list, args.group,
-			args.sub_group, args.list)
-        else:
-            db_path = args.db
-            self.analyzer = Analyzer(db_path, signature_list, args.group,
-			args.sub_group, args.list)
-
-    def print_results(self, outdir=None):
-        if outdir:
-            report = HTMLReport(self.analyzer)
-            report.write_to_directory(outdir)
-        else:
-            for (signature, matching_calls) in self.analyzer.get_findings():
-                if matching_calls:
-                    print "# %s" % signature if isinstance(signature, str) else signature.description
-                    for traced_call in matching_calls:
-                        print "  %s" % traced_call
 
 def main(argv):
+
+    # Parse command line
     parser = ArgumentParser(description="introspy analysis and report\
         generation tool", version=__version__)
     html_group = parser.add_argument_group('html report format options')
@@ -79,13 +53,40 @@ def main(argv):
         remote database.")
     args = parser.parse_args()
 
-    spy = Introspy(args)
-    if args.info:
-        # enumerate stuff
-        Enumerate(spy.analyzer.tracedCalls, args.info)
+
+    # Get the introspy DB
+    if match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", args.db):
+        # The DB is on device so we need to grab a local copy
+        # TODO: Add an explicit option to specify a remote db instead of inferring this using a regexp
+        scp = ScpClient(ip=args.db)
+        if args.delete: # Just delete DBs on the device and quit
+            scp.delete_remote_dbs()
+            return
+        else:
+            db_path = scp.select_and_fetch_db()
     else:
-        # print trace results
-        spy.print_results(args.outdir)
+        db_path = args.db
+
+
+    # Process the DB
+    if args.outdir: # Generate an html report
+        DBReportGenerator.write_report_to_directory(db_path, args.outdir)
+
+    else: # Print DB info to the console
+        tracedCallsDB = DBParser(db_path)
+
+        if args.info: # Enumerate urls/files
+            # TODO: refactor this
+            Enumerate(tracedCallsDB.tracedCalls, args.info)
+
+        elif args.list: # Just print all calls
+            # TODO: Call print() here instead of inside the method
+            tracedCallsDB.get_traced_calls_as_text(args.group, args.sub_group)
+
+        else: # Analyze and print findings   
+            analyzer = DBAnalyzer(tracedCallsDB)
+            analyzer.get_findings_as_text(args.group, args.sub_group)
+
 
 if __name__ == "__main__":
     main(argv[1:])

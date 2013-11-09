@@ -123,39 +123,39 @@ class APIGroups:
     
       
     @classmethod  
-    def find_subgroup(classname, clazz, method):
+    def find_subgroup(cls, clazz, method):
+        """Returns the API subgroup a given class and method belong to."""
         subgroup = None
         try: # Try using the class name
-            subgroup = classname.API_SUBGROUPS_MAP[clazz]
+            subgroup = cls.API_SUBGROUPS_MAP[clazz]
         except KeyError:
             # Fall back to using the method name and crash if we can't find it
-            subgroup = classname.API_SUBGROUPS_MAP[method]
+            subgroup = cls.API_SUBGROUPS_MAP[method]
         return subgroup
     
         
     @classmethod  
-    def find_subgroup_from_filter(classname, filter):
+    def find_subgroup_from_filter(cls, filter):
         # Assuming all filters have one class and one mathod to match at least
         clazz = filter.classes_to_match[0]
         method = filter.methods_to_match[0]
-        return classname.find_subgroup(clazz, method)
+        return cls.find_subgroup(clazz, method)
         
 
     @classmethod  
-    def find_group(classname, subgroup):
-        group = classname.API_GROUPS_MAP[subgroup]
+    def find_group(cls, subgroup):
+        group = cls.API_GROUPS_MAP[subgroup]
         return group
     
-    
+
     @classmethod
-    def write_to_JS_file(classname, fileDir, fileName='apiGroups.js'):
-        
-        # Convert the list of API groups and subgroups to a JS var declaration
+    def get_groups_as_JSON(cls):
+        """Converts the list of API groups and subgroups to a JS var declaration."""
         group_list = []
-        for group_name in classname.API_GROUPS_LIST:
+        for group_name in cls.API_GROUPS_LIST:
             subgroup_list = []
             
-            for subgroup_name, group_name2 in classname.API_GROUPS_MAP.items():
+            for subgroup_name, group_name2 in cls.API_GROUPS_MAP.items():
                 if group_name == group_name2:
                     subgroup_list.append({'name' : subgroup_name})
             
@@ -163,17 +163,5 @@ class APIGroups:
                                'subgroups' : subgroup_list })
         
         apigroups_dict = {'groups' : group_list}
-        
-        try:
-            apigroups_json = json.dumps(apigroups_dict)
-        except TypeError as e:
-            print e
-            raise
-        JS_data = 'var apiGroups = ' + apigroups_json + ';'
-        
-        # Write the result to a file
-        JS_filePath = os.path.join(fileDir, fileName)
-        JS_file = open(JS_filePath, 'w')
-        JS_file.write(JS_data)
-        
+        return json.dumps(apigroups_dict)
         

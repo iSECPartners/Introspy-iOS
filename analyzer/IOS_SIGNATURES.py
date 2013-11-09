@@ -1,46 +1,15 @@
 from Filters import MethodsFilter, ArgumentsFilter, ArgumentsNotSetFilter
-from APIGroups import APIGroups
+from Signature import Signature
 
 
-class Signature(object):
-    """
-    A Signature contains some metadata (title, description, etc.) plus a filter 
-    that defines which calls the signature is going to match.
-    """
-
-    SEVERITY_INF = 'Informational'
-    SEVERITY_LOW = 'Low'
-    SEVERITY_MEDIUM = 'Medium'
-    SEVERITY_HIGH = 'High'
-
-
-    def __init__(self, title, description, severity, filter):
-        # TODO: Define the metadata we actually need 
-        self.title = title
-        self.description = description
-        self.severity = severity
-        self.filter = filter
-        # Figure out the signature's group and subgroup based
-        # on the classes / methods it looks for
-        self.subgroup = APIGroups.find_subgroup_from_filter(filter)
-        self.group = APIGroups.find_group(self.subgroup)
-
-
-    def analyze_trace(self, trace):
-        matching_calls = []
-        for call in self.filter.find_matching_calls(trace):
-            matching_calls.append(call)
-        return matching_calls
-
-
-# Global list of signatures
-signature_list = []
+# Global list of signatures for iOS apps
+IOS_SIGNATURES = []
 
 # Signature titles have to be unique or HTML reports will break
 # TODO: Fix it
 
 # XML signature
-signature_list.append(Signature(
+IOS_SIGNATURES.append(Signature(
     title = 'Vulnerable XML Parser',
     description = 'An XML parser is configured to resolve external entities.',
     severity = Signature.SEVERITY_HIGH,
@@ -51,7 +20,7 @@ signature_list.append(Signature(
             (['arguments', 'shouldResolveExternalEntities'], 'True')])))
 
 # Security Framework signatures
-signature_list.append(Signature(
+IOS_SIGNATURES.append(Signature(
     title = 'Client Certificate Import',
     description = 'The application imported a private key and a certificate from a PKCS12 file.',
     severity = Signature.SEVERITY_INF,
@@ -70,7 +39,7 @@ KSECATTR_VALUES = [
 ]
 
 for (kSecAttr_value, severity, kSecAttr_title) in KSECATTR_VALUES:
-    signature_list.append(Signature(
+    IOS_SIGNATURES.append(Signature(
         title = 'Keychain Data Protection - ' + kSecAttr_title,
         description = 'An item was added to the KeyChain with the accessibility options "{0}".'.format(kSecAttr_value),
         severity = severity,
@@ -80,7 +49,7 @@ for (kSecAttr_value, severity, kSecAttr_title) in KSECATTR_VALUES:
             args_to_match = [
                 (['arguments', 'attributes', 'pdmn'], kSecAttr_value)])))
 
-signature_list.append(Signature(
+IOS_SIGNATURES.append(Signature(
     title = 'Keychain Data Protection Not Specified',
     description = 'An item was added to the KeyChain without any accessibility '
         'options. Prior to iOS 6, the default setting is kSecAttrAccessibleAlways.',
@@ -93,7 +62,7 @@ signature_list.append(Signature(
 
 
 # Pasteboard signatures
-signature_list.append(Signature(
+IOS_SIGNATURES.append(Signature(
     title = 'Pasteboard Usage',
     description = 'The application instantiates one or multiple Pasteboards.',
     severity = Signature.SEVERITY_INF,
@@ -104,7 +73,7 @@ signature_list.append(Signature(
                             'pasteboardWithUniqueName'])))
 
 # HTTP signatures
-signature_list.append(Signature(
+IOS_SIGNATURES.append(Signature(
     title = 'NSURLCredential Stored Permanently',
     description = 'An NSURLCredential object is permanently stored into the Keychain with a' \
 		    ' persistence value of NSURLCredentialPersistencePermanent',
@@ -116,7 +85,7 @@ signature_list.append(Signature(
 	args_to_match = [ (['arguments', 'persistence'],
 		'NSURLCredentialPersistencePermanent')])))
 
-signature_list.append(Signature(
+IOS_SIGNATURES.append(Signature(
     title = 'HTTPS Caching',
     description = 'Data received over HTTPS is being cached on disk.',
     severity = Signature.SEVERITY_LOW,
@@ -127,7 +96,7 @@ signature_list.append(Signature(
             (['returnValue', 'response', 'URL', 'scheme'], 'https'),
             (['returnValue', 'storagePolicy'], 0) ])))
 
-signature_list.append(Signature(
+IOS_SIGNATURES.append(Signature(
 	title = 'Lack of Credential Validation',
 	description = 'The application is bypassing credential validation.',
 	severity = Signature.SEVERITY_HIGH,
@@ -145,7 +114,7 @@ NSDATA_DPAPI_VALUES = {
     ('NSDataWritingFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_INF, 'ProtectionCompleteUntilFirstUserAuthentication')}
 
 for (fileProt_mask, severity, fileProt_title) in NSDATA_DPAPI_VALUES:
-    signature_list.append(Signature(
+    IOS_SIGNATURES.append(Signature(
         title = 'Data Protection With NSData - ' + fileProt_title,
         description = 'A file was written with the data protection option "{0}".'.format(fileProt_mask),
         severity = severity,
@@ -155,7 +124,7 @@ for (fileProt_mask, severity, fileProt_title) in NSDATA_DPAPI_VALUES:
             args_to_match = [
                 (['arguments', 'mask'], fileProt_mask)])))
 
-signature_list.append(Signature(
+IOS_SIGNATURES.append(Signature(
     title = 'Lack of Data Protection With NSData',
     description = 'A file was written without any data protection options.',
     severity = Signature.SEVERITY_MEDIUM,
@@ -171,7 +140,7 @@ NSFILEMANAGER_DPAPI_VALUES = {
     ('NSFileProtectionCompleteUntilFirstUserAuthentication', Signature.SEVERITY_INF, 'ProtectionCompleteUntilFirstUserAuthentication')}
 
 for (fileProt_value, severity, fileProt_title) in NSFILEMANAGER_DPAPI_VALUES:
-    signature_list.append(Signature(
+    IOS_SIGNATURES.append(Signature(
         title = 'Data Protection With NSFileManager - ' + fileProt_title,
         description = 'A file written with the data protection option "{0}".'.format(fileProt_value),
         severity = severity,
@@ -182,7 +151,7 @@ for (fileProt_value, severity, fileProt_title) in NSFILEMANAGER_DPAPI_VALUES:
                 (['arguments', 'attributes', 'NSFileProtectionKey'], fileProt_value)])))
 
 
-signature_list.append(Signature(
+IOS_SIGNATURES.append(Signature(
     title = 'Lack of Data Protection With NSFileManager',
     description = 'A file was written without any data protection options.',
     severity = Signature.SEVERITY_MEDIUM,
@@ -194,7 +163,7 @@ signature_list.append(Signature(
 
 
 # URL scheme signatures
-signature_list.append(Signature(
+IOS_SIGNATURES.append(Signature(
     title = 'URL Schemes',
     description = 'The following URL schemes are exposed by the application.',
     severity = Signature.SEVERITY_INF,
@@ -203,7 +172,7 @@ signature_list.append(Signature(
         methods_to_match = ['CFBundleURLSchemes'])))
 
 # UIApplicationDelegate signatures
-#signature_list.append(Signature(
+#IOS_SIGNATURES.append(Signature(
 #    title = 'Custom URL scheme accessed.',
 #    description = 'Custom URL scheme accessed.',
 #    severity = Signature.SEVERITY_INF,
@@ -212,7 +181,7 @@ signature_list.append(Signature(
 #        methods_to_match = ['application:openURL:sourceApplication:annotation:', 'application:handleOpenURL:'])))
 
 # NSURLConnectionDelegate signatures
-signature_list.append(Signature(
+IOS_SIGNATURES.append(Signature(
     title = 'HTTPS to HTTP Redirection',
     description = 'The application transitioned from a TLS to plaintext connection.',
     severity = Signature.SEVERITY_HIGH,
@@ -224,7 +193,7 @@ signature_list.append(Signature(
             (['returnValue', 'URL', 'scheme'], 'http')])))
 
 # CCCrypt signatures
-signature_list.append(Signature(
+IOS_SIGNATURES.append(Signature(
     title = 'Null Initialization Vector',
     description = 'An encryption routine used a null initialization vector',
     severity = Signature.SEVERITY_MEDIUM,
@@ -235,7 +204,7 @@ signature_list.append(Signature(
 
 
 # LibC signatures
-signature_list.append(Signature(
+IOS_SIGNATURES.append(Signature(
     title = 'Weak PRNG',
     description = 'The application uses a weak random number generator.',
     severity = Signature.SEVERITY_MEDIUM,
