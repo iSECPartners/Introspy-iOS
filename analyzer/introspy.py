@@ -8,6 +8,7 @@ __license__   = "See ../LICENSE"
 __copyright__ = "Copyright 2013, iSEC Partners, Inc."
 
 from sys import argv
+import os
 from argparse import ArgumentParser
 from re import match
 from DBAnalyzer import DBAnalyzer
@@ -68,6 +69,10 @@ def main(argv):
 
 
     # Process the DB
+    # Make sure it's there
+    if not os.path.exists(db_path): # Nice race condition
+        print 'Error: Could not find the DB file.'
+        return
     analyzedDB = DBAnalyzer(db_path)
 
 

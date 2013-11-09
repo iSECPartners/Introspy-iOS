@@ -32,7 +32,7 @@ class DBParser(object):
                     argsAndReturnValue = self._sanitize_args_dict(plistlib.readPlistFromString(row[2].encode('utf-8')))))
                 rowid += 1
         except sqlite3.Error as e:
-            print "Fatal error: %s" % e
+            #print "Fatal error: %s" % e
             raise
         finally:
             if SqlConn:
