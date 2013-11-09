@@ -1,5 +1,4 @@
 from json import dumps
-from os import path
 from IOS_SIGNATURES import IOS_SIGNATURES
 from DBParser import DBParser
 
