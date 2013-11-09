@@ -15,7 +15,6 @@ from ScpClient import ScpClient
 from DBParser import DBParser
 from HTMLReportGenerator import HTMLReportGenerator
 from APIGroups import APIGroups
-from Enumerate import Enumerate
 
 
 
@@ -42,8 +41,8 @@ def main(argv):
         help="Filter by signature sub-group")
     stats_group = parser.add_argument_group('additional command-line options')
     stats_group.add_argument("-i", "--info",
-        choices=['http', 'fileio', 'keys'],
-	help="Enumerate URLs, files accessed, keychain items, etc.")
+        choices=['urls', 'files'],#, 'keys'],
+	help="Enumerate URLs or files accessed within the traced calls")#' and keychain items, etc.")
     stats_group.add_argument("-d", "--delete",
         action="store_true",
         help="Remove all introspy databases on a given remote device")
@@ -79,9 +78,15 @@ def main(argv):
 
     else: # Print DB info to the console
 
-        if args.info: # Enumerate urls/files
-            # TODO: refactor this and Enumerate
-            Enumerate(analyzedDB.tracedCalls, args.info)
+        if args.info: # Enumerate URLs/files
+            if args.info == "urls":
+                for url in analyzedDB.get_all_URLs():
+                    print url
+            elif args.info == "files":
+                for path in analyzedDB.get_all_files():
+                    print path
+            #elif args.info == "keys":
+            # TODO
 
         elif args.list: # Print all traced calls
             # TODO: Call print() here instead of inside the method

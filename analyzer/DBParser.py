@@ -57,6 +57,45 @@ class DBParser(object):
         return json.dumps(tracedCalls_dict, default=self._json_serialize)
 
 
+    def get_all_URLs(self):
+        """Returns the list of all URLs accessed within the traced calls."""
+        urlsList = []
+        for call in self.tracedCalls:
+            if 'request' in call.argsAndReturnValue['arguments']:
+                urlsList.append(call.argsAndReturnValue['arguments']['request']['URL']['absoluteString'])
+        # Sort and remove duplicates
+        urlsList = dict(map(None,urlsList,[])).keys()
+        urlsList.sort()
+        return urlsList
+
+
+    def get_all_files(self):
+        """Returns the list of all files accessed within the traced calls."""
+        filesList = []
+        for call in self.tracedCalls:
+            if 'url' in call.argsAndReturnValue['arguments']:
+                filesList.append(call.argsAndReturnValue['arguments']['url']['absoluteString'])
+            if 'path' in call.argsAndReturnValue['arguments']:
+                filesList.append(call.argsAndReturnValue['arguments']['path'])
+        # Sort and remove duplicates
+        filesList = dict(map(None,filesList,[])).keys()
+        filesList.sort()
+        return filesList
+
+
+# TODO: This code crashes with my DB
+#    def get_all_keys(self):
+#        keysList = []
+#        for call in self.traced_calls:
+#            if call.method == "SecItemAdd":
+#                keysList.append("{0} = {1}".format(call.argsAndReturnValue['arguments']['attributes']['acct'],
+#                    call.argsAndReturnValue['arguments']['attributes']['v_Data']))
+#            elif call.method == "SecItemUpdate":
+#                keysList.append("{0} = {1}".format(call.argsAndReturnValue['arguments']['query']['acct'],
+#                    call.argsAndReturnValue['arguments']['attributesToUpdate']['v_Data']))
+#        return keysList
+
+
     def _sanitize_args_dict(self, argsDict):
         """Goes through a dict of arguments or return values and replaces specific values to make them easier to read."""
         for (arg, value) in argsDict.items():
