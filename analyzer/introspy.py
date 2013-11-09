@@ -13,7 +13,7 @@ from re import match
 from DBAnalyzer import DBAnalyzer
 from ScpClient import ScpClient
 from DBParser import DBParser
-from DBReportGenerator import DBReportGenerator
+from HTMLReportGenerator import HTMLReportGenerator
 from APIGroups import APIGroups
 from Enumerate import Enumerate
 
@@ -69,23 +69,26 @@ def main(argv):
 
 
     # Process the DB
-    if args.outdir: # Generate an html report
-        DBReportGenerator.write_report_to_directory(db_path, args.outdir)
+    analyzedDB = DBAnalyzer(db_path)
+
+
+    # Generate output
+    if args.outdir: # Generate an HTML report
+        reportGen = HTMLReportGenerator(analyzedDB)
+        reportGen.write_report_to_directory(args.outdir)
 
     else: # Print DB info to the console
-        tracedCallsDB = DBParser(db_path)
 
         if args.info: # Enumerate urls/files
-            # TODO: refactor this
-            Enumerate(tracedCallsDB.tracedCalls, args.info)
+            # TODO: refactor this and Enumerate
+            Enumerate(analyzedDB.tracedCalls, args.info)
 
-        elif args.list: # Just print all calls
+        elif args.list: # Print all traced calls
             # TODO: Call print() here instead of inside the method
-            tracedCallsDB.get_traced_calls_as_text(args.group, args.sub_group)
+            analyzedDB.get_traced_calls_as_text(args.group, args.sub_group)
 
-        else: # Analyze and print findings   
-            analyzer = DBAnalyzer(tracedCallsDB)
-            analyzer.get_findings_as_text(args.group, args.sub_group)
+        else: # Print all findings 
+            analyzedDB.get_findings_as_text(args.group, args.sub_group)
 
 
 if __name__ == "__main__":

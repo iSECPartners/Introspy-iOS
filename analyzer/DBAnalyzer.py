@@ -1,24 +1,28 @@
 from json import dumps
 from os import path
 from IOS_SIGNATURES import IOS_SIGNATURES
-from DBParser import IntrospyJSONEncoder
+from DBParser import DBParser
 
-class DBAnalyzer:
-    
-    def __init__(self, tracedCallsDB, signatures=IOS_SIGNATURES):
-        """
-        Analyzes the introspy database within tracedCallsDB using the supplied set of signatures.
-        """
-        self.tracedCalls = tracedCallsDB.get_traced_calls()
-        self.findings = []
 
+class DBAnalyzer(DBParser):
+    """
+    Parses and analyzes an introspy DB using a supplied set of signatures.
+    """
+
+    def __init__(self, dbPath, signatures=IOS_SIGNATURES):
+        # Parse the DB
+        super(DBAnalyzer, self).__init__(dbPath)
+        
         # Try each signature on the list of traced calls
+        self.findings = []
         for sig in signatures:
             self.findings.append((sig, sig.find_matching_calls(self.tracedCalls)))
 
     
     def get_findings_as_text(self, group=None, subgroup=None):
-        """Returns the list of findings as printable text."""
+        """
+        Returns the list of findings belonging to the supplied API group and/or subgroup as printable text.
+        """
         for (signature, matching_calls) in self.findings:
             if matching_calls:
 
@@ -41,6 +45,6 @@ class DBAnalyzer:
                 findings_dict['findings'].append({'signature' : sig,
                 'calls' : tracedCalls})
         
-        return dumps(findings_dict, cls=IntrospyJSONEncoder)
+        return dumps(findings_dict, default=self._json_serialize)
 
 

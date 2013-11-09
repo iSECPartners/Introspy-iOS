@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 
-import plistlib, json, datetime
-from Signatures import Signature
 from APIGroups import APIGroups
 
 
 class TracedCall:
-    """Object representation of a introspy database row (a traced call)."""
+    """One traced function call extracted from an Introspy DB."""
 
 
     def __init__(self, callId, clazz, method, argsAndReturnValue):
