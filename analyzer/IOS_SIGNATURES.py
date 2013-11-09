@@ -1,4 +1,4 @@
-from Filters import MethodsFilter, ArgumentsFilter, ArgumentsNotSetFilter
+from SignatureFilters import MethodsFilter, ArgumentsFilter, ArgumentsNotSetFilter
 from Signature import Signature
 
 
