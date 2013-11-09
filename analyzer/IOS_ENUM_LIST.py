@@ -1,6 +1,8 @@
-from plistlib import Data
 
-enum_list = {
+# Mapping of values as seen by the tracer when hooking functions, and the corresponding names as described in the Apple documentation
+# We use this to make put human-readable values in the report/output
+
+IOS_ENUM_LIST = {
     # Keychain
     ## kSecAttrAccessible values
     'pdmn' : {'ak' : 'kSecAttrAccessibleWhenUnlocked',
@@ -43,33 +45,3 @@ enum_list = {
                      2 : 'NSURLCredentialPersistencePermanent'}
 }
 
-class TypeRefToStr:
-    """ Converts enum values to human-readable strings. """
-
-    def __init__(self, argsAndReturnValue):
-        self.args = self.find_and_replace(argsAndReturnValue)
-
-    def find_and_replace(self, d):
-        items = d.items()
-        items.sort()
-        for v in items:
-            if isinstance(v[1], dict):
-                self.find_and_replace(v[1])
-            elif isinstance(v[1], list):
-                continue
-            elif isinstance(v[1], Data):
-                # Serialize a plist <data>
-                try: # Does it seem to be ASCII ?
-                    d[v[0]] = v[1].data.encode('ascii')
-                except UnicodeDecodeError: # No => base64 encode it
-                    d[v[0]] = v[1].asBase64(maxlinelength=1000000).strip()
-            else:
-                if v[0] in enum_list:
-                    try:
-                        if 'mask' in enum_list[v[0]]:
-			    d[v[0]] = enum_list[v[0]][v[1] & enum_list[v[0]]['mask']]
-                        else:
-                            d[v[0]] = enum_list[v[0]][v[1]]
-                    except KeyError:
-                        continue
-        return d

@@ -3,25 +3,24 @@
 import plistlib, json, datetime
 from Signatures import Signature
 from APIGroups import APIGroups
-from TypeRefToStr import TypeRefToStr
 
 
 class TracedCall:
-    """ Object representation of a introspy database row (a traced call) """
+    """Object representation of a introspy database row (a traced call)."""
 
 
     def __init__(self, callId, clazz, method, argsAndReturnValue):
         self.callId = callId
-        self.clazz = unicode(clazz)
-        self.method = unicode(method)
-        self.argsAndReturnValue = TypeRefToStr(plistlib.readPlistFromString(argsAndReturnValue.encode('utf-8'))).args
+        self.clazz = clazz
+        self.method = method
+        self.argsAndReturnValue = argsAndReturnValue
         # Get the call's group and subgroup
         self.subgroup = APIGroups.find_subgroup(clazz, method)
         self.group =  APIGroups.find_group(self.subgroup)
 
 
     def extract_value_for_argument(self, arg_path):
-        """Returns the value of the specific argument."""
+        """Returns the value for the supplied argument path."""
         nextLevel = self.argsAndReturnValue[arg_path[0]]
         for attr in arg_path[1:]:
             try:
@@ -39,6 +38,7 @@ class TracedCall:
 
 
     def _walk_dict(self, d, level=0):
+        """Goes through a dictionnary of arguments and prints the content of each node."""
         arg_str = ""
         items = d.items()
         items.sort()
