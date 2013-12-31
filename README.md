@@ -71,6 +71,8 @@ The tracer will store data about API calls made by applications in a database
 stored on the device (actually one in each application's folder). This database
 can be fed to a Python script call Introspy-Analyzer in order to generate HTML
 reports that make it a lot easier to review the data collected by the tracer.
+The script will also analyze and flag dangerous API calls in order to facilitate
+the process of identifying vulnerabilities within iOS applications.
 
 Introspy-Analyzer is hosted on a separate repository:
 https://github.com/iSECPartners/Introspy-Analyzer
