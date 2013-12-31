@@ -78,6 +78,32 @@ Introspy-Analyzer is hosted on a separate repository:
 https://github.com/iSECPartners/Introspy-Analyzer
 
 
+Building Introspy-iOS
+---------------------
+
+Most users should just download and install the pre-compiled Debian package.
+However, if you want to modify the library's functionality you will have to
+build the Debian package yourself.
+
+The build requires the Theos suite to be installed;
+see http://www.iphonedevwiki.net/index.php/Theos/Getting\_Started .
+You first have to create a symlink to your theos installation:
+
+    cd Introspy-iOS/src/
+    ln -s /opt/theos/ ./theos
+
+Then, the package can be built using:
+
+    make package
+
+Once you've successfully created the debian package, you can use Theos to
+automatically install the package and re-spring the device by specifying the
+device's IP address in the THEOS_DEVICE_IP environment variable:
+
+    export THEOS_DEVICE_IP=192.168.1.127
+    make install
+
+
 License
 -------
 
