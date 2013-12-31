@@ -28,8 +28,9 @@ https://github.com/iSECPartners/Introspy-Analyzer
 Installation
 ------------
 
-Users should first download the right pre-compiled Debian package:
-- https://www.dropbox.com/s/z5cwqk5wti3zsvd/com.isecpartners.introspy-v0.3-iOS_6.1.deb?dl=1
+Users should first download the latest pre-compiled Debian package available
+in the release section of the project page at:
+https://github.com/iSECPartners/Introspy-iOS/releases
 
 ### Dependencies
 
