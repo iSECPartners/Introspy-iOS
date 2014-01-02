@@ -1,12 +1,12 @@
 #import "SQLiteStorage.h"
 #include <sqlite3.h>
 
-@implementation SQLiteStorage 
+@implementation SQLiteStorage
 
 
 // Database settings
 static BOOL logToConsole = TRUE;
-static NSString *defaultDBFileFormat = @"~/introspy-%@.db"; // Becomes ~/introspy-<appName>.db
+static NSString *defaultDBFileFormat = @"~/Library/introspy-%@.db"; // Becomes ~/Library/introspy-<appName>.db
 static const char createTableStmtStr[] = "CREATE TABLE tracedCalls (className TEXT, methodName TEXT, argumentsAndReturnValueDict TEXT)";
 static const char saveTracedCallStmtStr[] = "INSERT INTO tracedCalls VALUES (?1, ?2, ?3)";
 
