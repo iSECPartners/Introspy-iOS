@@ -6,7 +6,8 @@
 
 // Database settings
 static BOOL logToConsole = TRUE;
-static NSString *defaultDBFileFormat = @"~/Library/introspy-%@.db"; // Becomes ~/Library/introspy-<appName>.db
+static NSString *appstoreDBFileFormat = @"~/Library/introspy-%@.db"; // Becomes ~/Library/introspy-<appName>.db
+static NSString *systemDBFileFormat = @"~/Library/Preferences/introspy-%@.db";
 static const char createTableStmtStr[] = "CREATE TABLE tracedCalls (className TEXT, methodName TEXT, argumentsAndReturnValueDict TEXT)";
 static const char saveTracedCallStmtStr[] = "INSERT INTO tracedCalls VALUES (?1, ?2, ?3)";
 
@@ -17,9 +18,20 @@ static sqlite3 *dbConnection;
 
 
 - (SQLiteStorage *)initWithDefaultDBFilePathAndLogToConsole: (BOOL) shouldLog {
+    NSString *DBFilePath = nil;
     // Put application name in the DB's filename to avoid confusion
     NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
-    NSString *DBFilePath = [NSString stringWithFormat:defaultDBFileFormat, appId];
+
+    // Are we monitoring a System app or an App Store app ?
+    NSString *appRoot = [@"~/" stringByExpandingTildeInPath];
+    NSLog(@" LOLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO %@ ", appRoot);
+    if ([appRoot isEqualToString: @"/var/mobile"]) {
+        DBFilePath = [NSString stringWithFormat:systemDBFileFormat, appId];
+    }
+    else {
+        DBFilePath = [NSString stringWithFormat:appstoreDBFileFormat, appId];
+    }
+
     return [self initWithDBFilePath: [DBFilePath stringByExpandingTildeInPath] andLogToConsole: shouldLog];
 }
 
@@ -71,7 +83,8 @@ static sqlite3 *dbConnection;
     NSString *argsAndReturnValueStr = [[NSString alloc] initWithData:argsAndReturnValueData encoding:NSUTF8StringEncoding];
 
     // Do the query; has to be atomic or we get random SQLITE_PROTOCOL errors
-    @synchronized(defaultDBFileFormat) {
+    // TODO: this is probably super slow
+    @synchronized(appstoreDBFileFormat) {
     	sqlite3_reset(saveTracedCallStmt);
     	sqlite3_bind_text(saveTracedCallStmt, 1, [ [tracedCall className] UTF8String], -1, nil);
     	sqlite3_bind_text(saveTracedCallStmt, 2, [ [tracedCall methodName] UTF8String], -1, nil);
