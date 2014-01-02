@@ -10,13 +10,13 @@
 
 // Nice global
 extern SQLiteStorage *traceStorage;
-
+extern NSString *objectTypeNotSupported;
 
 // Hook SecItemAdd()
 static OSStatus (*original_SecItemAdd)(CFDictionaryRef attributes, CFTypeRef *result);
 
 static OSStatus replaced_SecItemAdd(CFDictionaryRef attributes, CFTypeRef *result){
-    
+
     OSStatus origResult = original_SecItemAdd(attributes, result);
 
     // Need the call stack inspector or we get into a weird infinite loop of SecItemAdd() calls
@@ -24,7 +24,7 @@ static OSStatus replaced_SecItemAdd(CFDictionaryRef attributes, CFTypeRef *resul
     if ([CallStackInspector wasDirectlyCalledByApp]) {
         CallTracer *tracer = [[CallTracer alloc] initWithClass:@"C" andMethod:@"SecItemAdd"];
         [tracer addArgFromPlistObject:[PlistObjectConverter convertSecItemAttributesDict:attributes] withKey:@"attributes"];
-        [tracer addArgFromPlistObject: [NSNumber numberWithUnsignedInt: (unsigned int)result] withKey:@"result"];
+        [tracer addArgFromPlistObject:objectTypeNotSupported withKey:@"result"];
         [tracer addReturnValueFromPlistObject: [NSNumber numberWithInt:origResult]];
         [traceStorage saveTracedCall: tracer];
         [tracer release];
@@ -41,7 +41,7 @@ static OSStatus replaced_SecItemCopyMatching(CFDictionaryRef query, CFTypeRef *r
     OSStatus origResult = original_SecItemCopyMatching(query, result);
     CallTracer *tracer = [[CallTracer alloc] initWithClass:@"C" andMethod:@"SecItemCopyMatching"];
     [tracer addArgFromPlistObject:(NSDictionary*)query withKey:@"query"];
-    [tracer addArgFromPlistObject: [NSNumber numberWithUnsignedInt: (unsigned int)result] withKey:@"result"];
+    [tracer addArgFromPlistObject:objectTypeNotSupported withKey:@"result"];
     [tracer addReturnValueFromPlistObject: [NSNumber numberWithInt:origResult]];
     [traceStorage saveTracedCall: tracer];
     [tracer release];
@@ -68,7 +68,7 @@ static OSStatus (*original_SecItemUpdate)(CFDictionaryRef query, CFDictionaryRef
 
 static OSStatus replaced_SecItemUpdate(CFDictionaryRef query, CFDictionaryRef attributesToUpdate){
     OSStatus origResult = original_SecItemUpdate(query, attributesToUpdate);
-    
+
     if ([CallStackInspector wasDirectlyCalledByApp]) {
         CallTracer *tracer = [[CallTracer alloc] initWithClass:@"C" andMethod:@"SecItemUpdate"];
         [tracer addArgFromPlistObject:(NSDictionary*)query withKey:@"query"];
@@ -81,7 +81,7 @@ static OSStatus replaced_SecItemUpdate(CFDictionaryRef query, CFDictionaryRef at
 }
 
 
-@implementation KeychainHooks 
+@implementation KeychainHooks
 
 + (void)enableHooks {
     MSHookFunction(SecItemAdd, replaced_SecItemAdd, (void **) &original_SecItemAdd);

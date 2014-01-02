@@ -23,7 +23,7 @@ static NSString *preferenceFilePath = @"/private/var/mobile/Library/Preferences/
 // Hooks for ObjC methods rely on the Logos pre-processor
 // H4ck to split Logos hooking code into separate files: we're including actual code, not headers
 SQLiteStorage *traceStorage;
-static NSString *objectTypeNotSupported = @"Introspy - Not supported";
+NSString *objectTypeNotSupported = @"Introspy - Not supported";
 
 // Delegate hooks => We proxy the delegate objects
 #import "hooks/DelegateProxies.h"
