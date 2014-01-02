@@ -1,5 +1,5 @@
 /*
-We're directly including this file into Tweak.xmi at build time. 
+We're directly including this file into Tweak.xmi at build time.
 Tweak.xmi includes/defines the following things:
 
 #import "CallTracer.h"
@@ -32,7 +32,7 @@ IntrospySQLiteStorage *traceStorage;
 		[tracer addArgFromPlistObject:path withKey:@"path"];
 		[tracer addArgFromPlistObject:[NSNumber numberWithInteger: mask] withKey:@"mask"];
 		// For now let's just store the pointer value of the errorPtr parameter
-		[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) errorPtr] withKey:@"errorPtr"];
+		[tracer addArgFromPlistObject:objectTypeNotSupported withKey:@"errorPtr"];
 		[tracer addReturnValueFromPlistObject:[NSNumber numberWithBool: origResult]];
 		[traceStorage saveTracedCall: tracer];
 		[tracer release];
@@ -59,7 +59,7 @@ IntrospySQLiteStorage *traceStorage;
 		CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"writeToURL:options:error:"];
 		[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: aURL] withKey:@"aURL"];
 		[tracer addArgFromPlistObject:[NSNumber numberWithInteger:mask] withKey:@"mask"];
-		[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) errorPtr] withKey:@"errorPtr"];
+		[tracer addArgFromPlistObject:objectTypeNotSupported withKey:@"errorPtr"];
 		[tracer addReturnValueFromPlistObject:[NSNumber numberWithBool: origResult]];
 		[traceStorage saveTracedCall: tracer];
 		[tracer release];
@@ -86,7 +86,7 @@ IntrospySQLiteStorage *traceStorage;
 		CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"dataWithContentsOfFile:options:error:"];
 		[tracer addArgFromPlistObject:path withKey:@"path"];
 		[tracer addArgFromPlistObject:[NSNumber numberWithInteger:mask] withKey:@"mask"];
-		[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) errorPtr] withKey:@"errorPtr"];
+		[tracer addArgFromPlistObject:objectTypeNotSupported withKey:@"errorPtr"];
 		[tracer addReturnValueFromPlistObject: origResult];
 		[traceStorage saveTracedCall: tracer];
 		[tracer release];
@@ -112,7 +112,7 @@ IntrospySQLiteStorage *traceStorage;
 		CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"dataWithContentsOfURL:options:error:"];
 		[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: aURL] withKey:@"aURL"];
 		[tracer addArgFromPlistObject:[NSNumber numberWithInteger:mask] withKey:@"mask"];
-		[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) errorPtr] withKey:@"errorPtr"];
+		[tracer addArgFromPlistObject:objectTypeNotSupported withKey:@"errorPtr"];
 		[tracer addReturnValueFromPlistObject: origResult];
 		[traceStorage saveTracedCall: tracer];
 		[tracer release];
@@ -138,7 +138,7 @@ IntrospySQLiteStorage *traceStorage;
 		CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"initWithContentsOfFile:options:error:"];
 		[tracer addArgFromPlistObject:path withKey:@"path"];
 		[tracer addArgFromPlistObject:[NSNumber numberWithInteger:mask] withKey:@"mask"];
-		[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) errorPtr] withKey:@"errorPtr"];
+		[tracer addArgFromPlistObject:objectTypeNotSupported withKey:@"errorPtr"];
 		[tracer addReturnValueFromPlistObject: origResult];
 		[traceStorage saveTracedCall: tracer];
 		[tracer release];
@@ -164,7 +164,7 @@ IntrospySQLiteStorage *traceStorage;
 		CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSData" andMethod:@"initWithContentsOfURL:options:error:"];
 		[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: aURL] withKey:@"aURL"];
 		[tracer addArgFromPlistObject:[NSNumber numberWithInteger:mask] withKey:@"mask"];
-		[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) errorPtr] withKey:@"errorPtr"];
+		[tracer addArgFromPlistObject:objectTypeNotSupported withKey:@"errorPtr"];
 		[tracer addReturnValueFromPlistObject: origResult];
 		[traceStorage saveTracedCall: tracer];
 		[tracer release];

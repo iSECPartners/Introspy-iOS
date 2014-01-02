@@ -1,5 +1,5 @@
 /*
-We're directly including this file into Tweak.xmi at build time. 
+We're directly including this file into Tweak.xmi at build time.
 Tweak.xmi includes/defines the following things:
 
 #import "CallTracer.h"
@@ -20,7 +20,7 @@ IntrospySQLiteStorage *traceStorage;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSInputStream" andMethod:@"inputStreamWithFileAtPath:"];
 	[tracer addArgFromPlistObject:path withKey:@"path"];
 	// Just store the pointer value for the return value
-	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
+	[tracer addReturnValueFromPlistObject: objectTypeNotSupported];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return origResult;
@@ -30,7 +30,7 @@ IntrospySQLiteStorage *traceStorage;
 	id origResult = %orig(url);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSInputStream" andMethod:@"inputStreamWithURL:"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: url] withKey:@"url"];
-	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
+	[tracer addReturnValueFromPlistObject: objectTypeNotSupported];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return origResult;
@@ -40,7 +40,7 @@ IntrospySQLiteStorage *traceStorage;
 	id origResult = %orig(path);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSInputStream" andMethod:@"initWithFileAtPath:"];
 	[tracer addArgFromPlistObject:path withKey:@"path"];
-	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
+	[tracer addReturnValueFromPlistObject: objectTypeNotSupported];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return origResult;
@@ -50,7 +50,7 @@ IntrospySQLiteStorage *traceStorage;
 	id origResult = %orig(url);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSInputStream" andMethod:@"initWithURL:"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertURL: url] withKey:@"url"];
-	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
+	[tracer addReturnValueFromPlistObject: objectTypeNotSupported];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return origResult;

@@ -1,5 +1,5 @@
 /*
-We're directly including this file into Tweak.xmi at build time. 
+We're directly including this file into Tweak.xmi at build time.
 Tweak.xmi includes/defines the following things:
 
 #import "CallTracer.h"
@@ -17,8 +17,8 @@ IntrospySQLiteStorage *traceStorage;
 	NSData *origResult = %orig(request, response, error);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"sendSynchronousRequest:returningResponse:error:"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
-	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)response] withKey:@"response"];
-	[tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)error] withKey:@"error"];
+	[tracer addArgFromPlistObject:objectTypeNotSupported withKey:@"response"];
+	[tracer addArgFromPlistObject:objectTypeNotSupported withKey:@"error"];
 	[tracer addReturnValueFromPlistObject:origResult];
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
@@ -34,7 +34,7 @@ IntrospySQLiteStorage *traceStorage;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSURLConnection" andMethod:@"initWithRequest:delegate:"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertDelegate:delegate followingProtocol:@"NSURLConnectionDelegate"] withKey:@"delegate"];
-	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
+	[tracer addReturnValueFromPlistObject: objectTypeNotSupported];
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
 	return origResult;
@@ -50,7 +50,7 @@ IntrospySQLiteStorage *traceStorage;
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertNSURLRequest:request] withKey:@"request"];
 	[tracer addArgFromPlistObject:[PlistObjectConverter convertDelegate:delegate followingProtocol:@"NSURLConnectionDelegate"] withKey:@"delegate"];
 	[tracer addArgFromPlistObject:[NSNumber numberWithBool:startImmediately] withKey:@"startImmediately"];
-	[tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
+	[tracer addReturnValueFromPlistObject: objectTypeNotSupported];
 	[traceStorage saveTracedCall:tracer];
 	[tracer release];
 	return origResult;

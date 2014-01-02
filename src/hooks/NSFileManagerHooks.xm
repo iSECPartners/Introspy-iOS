@@ -1,5 +1,5 @@
 /*
-We're directly including this file into Tweak.xmi at build time. 
+We're directly including this file into Tweak.xmi at build time.
 Tweak.xmi includes/defines the following things:
 
 #import "CallTracer.h"
@@ -26,7 +26,7 @@ IntrospySQLiteStorage *traceStorage;
 }
 
 - (NSData *)contentsAtPath:(NSString *)path {
-	id origResult = %orig(path); 
+	id origResult = %orig(path);
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileManager" andMethod:@"contentsAtPath:"];
 	[tracer addArgFromPlistObject:path withKey:@"path"];
 	[tracer addReturnValueFromPlistObject: origResult];
@@ -39,7 +39,7 @@ IntrospySQLiteStorage *traceStorage;
 	id origResult = %orig;
 	CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSFileManager" andMethod:@"ubiquityIdentityToken"];
 	// Not sure about the return value, let's just store the pointer for now
-	[tracer addReturnValueFromPlistObject:[NSNumber numberWithUnsignedInt: (unsigned int) origResult]];
+	[tracer addReturnValueFromPlistObject:objectTypeNotSupported];
 	[traceStorage saveTracedCall: tracer];
 	[tracer release];
 	return origResult;

@@ -1,5 +1,5 @@
 /*
-We're directly including this file into Tweak.xmi at build time. 
+We're directly including this file into Tweak.xmi at build time.
 Tweak.xmi includes/defines the following things:
 
 #import "CallTracer.h"
@@ -18,7 +18,7 @@ IntrospySQLiteStorage *traceStorage;
     if ([CallStackInspector wasDirectlyCalledByApp]) {
         CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSXMLParser" andMethod:@"initWithContentsOfURL:"];
         [tracer addArgFromPlistObject:[PlistObjectConverter convertURL:url] withKey:@"url"];
-        [tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
+        [tracer addReturnValueFromPlistObject: objectTypeNotSupported];
         [traceStorage saveTracedCall: tracer];
         [tracer release];
     }
@@ -31,11 +31,11 @@ IntrospySQLiteStorage *traceStorage;
     if ([CallStackInspector wasDirectlyCalledByApp]) {
         CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSXMLParser" andMethod:@"initWithData:"];
         [tracer addArgFromPlistObject:data withKey:@"data"];
-        [tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
+        [tracer addReturnValueFromPlistObject: objectTypeNotSupported];
         [traceStorage saveTracedCall: tracer];
         [tracer release];
     }
-    return origResult;    
+    return origResult;
 }
 
 
@@ -43,12 +43,12 @@ IntrospySQLiteStorage *traceStorage;
     id origResult = %orig(stream);
     if ([CallStackInspector wasDirectlyCalledByApp]) {
         CallTracer *tracer = [[CallTracer alloc] initWithClass:@"NSXMLParser" andMethod:@"initWithStream:"];
-        [tracer addArgFromPlistObject:[NSNumber numberWithUnsignedInt:(unsigned int)stream] withKey:@"stream"];
-        [tracer addReturnValueFromPlistObject: [NSNumber numberWithUnsignedInt:(unsigned int)origResult]];
+        [tracer addArgFromPlistObject:objectTypeNotSupported withKey:@"stream"];
+        [tracer addReturnValueFromPlistObject: objectTypeNotSupported];
         [traceStorage saveTracedCall: tracer];
         [tracer release];
     }
-    return origResult;  
+    return origResult;
 }
 
 
