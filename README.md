@@ -85,10 +85,11 @@ Most users should just download and install the pre-compiled Debian package.
 However, if you want to modify the library's functionality you will have to
 build the Debian package yourself.
 
-The build requires rpetrich's fork of the Theos suite available, at
-https://github.com/rpetrich/theos, to be installed.
+The build requires rpetrich's fork of the Theos suite, available at
+https://github.com/rpetrich/theos.
 For general instructions on how to install Theos, see
-http://www.iphonedevwiki.net/index.php/Theos/Getting\_Started .
+http://www.iphonedevwiki.net/index.php/Theos/Getting\_Started but make sure
+you're using rpetrich's fork, not the official Theos.
 
 You first have to create a symlink to your theos installation:
 
