@@ -1,7 +1,7 @@
 Package: com.isecpartners.introspy
 Name: introspy
 Depends: mobilesubstrate, preferenceloader, applist
-Version: 0.3.0
+Version: 0.4.0
 Architecture: iphoneos-arm
 Description: Open-source security profiler designed to help penetration testers understand what an application does at runtime.
 Maintainer: Tom Daniels & Alban Diquet
