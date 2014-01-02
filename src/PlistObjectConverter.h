@@ -22,6 +22,7 @@
 
 // Security framework objects
 // TODO : Split PlistObjectConverter in multiple files
+//+ (id) convertSecItemResult: (CFTypeRef*) result withQuery: (CFDictionaryRef) query;
 + (NSDictionary *) convertSecItemAttributesDict: (CFDictionaryRef) attributes;
 + (NSDictionary *) convertSecCertificateRef: (SecCertificateRef) certificate;
 + (NSDictionary *) convertSecTrustRef:(SecTrustRef) trust;

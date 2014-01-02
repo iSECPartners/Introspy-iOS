@@ -3,7 +3,7 @@
 
 #import "PlistObjectConverter.h"
 
-
+extern NSString *objectTypeNotSupported;
 
 
 @implementation PlistObjectConverter
@@ -216,6 +216,86 @@ static NSString *serializedNilValue = @"nil";
 	return credentialDict;
 }
 
+#if 0
++ (id) convertSecItemResult: (CFTypeRef*) result withQuery: (CFDictionaryRef) query {
+	if (result == NULL) {
+		return [PlistObjectConverter getSerializedNilValue];
+	}
+	int resultNb = 0;
+
+
+    // What an awful API
+    if ((CFDictionaryContainsKey(query, kSecReturnData)) && (CFDictionaryGetValue(query, kSecReturnData) == kCFBooleanTrue)) {
+    	resultNb++;
+    }
+    else if ((CFDictionaryContainsKey(query, kSecReturnAttributes)) && (CFDictionaryGetValue(query, kSecReturnAttributes) == kCFBooleanTrue)) {
+    	resultNb++;
+    }
+    else if ((CFDictionaryContainsKey(query, kSecReturnRef)) && (CFDictionaryGetValue(query, kSecReturnRef) == kCFBooleanTrue)) {
+    	resultNb++;
+    }
+    else if ((CFDictionaryContainsKey(query, kSecReturnPersistentRef)) && (CFDictionaryGetValue(query, kSecReturnPersistentRef) == kCFBooleanTrue)) {
+    	resultNb++;
+    }
+    NSLog(@"========================================RESULT NB %d", resultNb);
+    if (resultNb == 1) {
+	    if ((CFDictionaryContainsKey(query, kSecReturnData)) && (CFDictionaryGetValue(query, kSecReturnData) == kCFBooleanTrue)) {
+
+    		NSLog(@"========================================PASSWORD ");
+    		NSLog(@"========================================LENGTH %ld", CFDataGetLength((CFDataRef)result));
+    		//NSData *theData = (NSData *)result;
+    		//NSLog(@"========================================LOL %@ ", [theData base64EncodedStringWithOptions:0]);
+	    	//return (NSData *)result;
+	    	return [NSData data];
+	    }
+	    else if ((CFDictionaryContainsKey(query, kSecReturnAttributes)) && (CFDictionaryGetValue(query, kSecReturnAttributes) == kCFBooleanTrue)) {
+	    	NSLog(@"======================================== DICT ");
+	    	return (NSDictionary*) result;
+	    }
+	    else if ( ((CFDictionaryContainsKey(query, kSecReturnRef)) && (CFDictionaryGetValue(query, kSecReturnRef) == kCFBooleanTrue)) || ((CFDictionaryContainsKey(query, kSecReturnPersistentRef)) && (CFDictionaryGetValue(query, kSecReturnPersistentRef) == kCFBooleanTrue)) ) {
+	    	NSLog(@"======================================== SECITEM ");
+
+    		CFTypeRef secClass = CFDictionaryGetValue(query, kSecClass);
+		    if ((secClass == kSecClassGenericPassword) || (secClass == kSecClassGenericPassword)) {
+		        return (NSData *)result;
+		    }
+		    else if (secClass == kSecClassCertificate) {
+		        if (CFDictionaryContainsKey(query, kSecValueRef)) {
+		        	return [PlistObjectConverter convertSecCertificateRef:(SecCertificateRef)result];
+		        }
+		        else if (CFDictionaryContainsKey(query, kSecValuePersistentRef)) {
+		        	return [PlistObjectConverter convertSecCertificateRef:(SecCertificateRef)result];
+		        }
+		    }
+		    else if (secClass == kSecClassIdentity) {
+		        if (CFDictionaryContainsKey(query, kSecValueRef)) {
+		            return [PlistObjectConverter convertSecIdentityRef:(SecIdentityRef) result];
+		        }
+		        else if (CFDictionaryContainsKey(query, kSecValuePersistentRef)) {
+		            return [PlistObjectConverter convertSecIdentityRef:(SecIdentityRef) result];
+		        }
+		    }
+		    else if (secClass == kSecClassKey) {
+		        if (CFDictionaryContainsKey(query, kSecValueRef)) {
+		            return [PlistObjectConverter convertSecKeyRef:(SecKeyRef) result];
+		        }
+		        else if (CFDictionaryContainsKey(query, kSecValuePersistentRef)) {
+		            return [PlistObjectConverter convertSecKeyRef:(SecKeyRef) result];
+		    	}
+
+		    }
+
+	    }
+    }
+
+    else if (resultNb > 1) {
+    	//Give up for now
+    	// TODO: support queries for multiple items
+    }
+
+    return objectTypeNotSupported;
+}
+#endif
 
 // attributes dictionnary when calling SecItemAdd() and SecItemUpdate()
 + (NSDictionary *) convertSecItemAttributesDict: (CFDictionaryRef) attributes {
@@ -224,39 +304,51 @@ static NSString *serializedNilValue = @"nil";
     NSMutableDictionary *attributesPlist = [NSMutableDictionary dictionaryWithDictionary:(NSDictionary*) attributes];
 
     CFTypeRef secClass = CFDictionaryGetValue(attributes, kSecClass);
+
+    if (CFDictionaryContainsKey(attributes, kSecValueData)) {
+    	NSData *theData = (NSData *)CFDictionaryGetValue(attributes, kSecValueData);
+        [attributesPlist setObject:theData forKey:@"kSecValueData"];
+        [attributesPlist removeObjectForKey:(id)kSecValueData];
+    }
+
+
     if ((secClass == kSecClassGenericPassword) || (secClass == kSecClassGenericPassword)) {
         // Nothing to do for passwords
     }
     else if (secClass == kSecClassCertificate) {
         if (CFDictionaryContainsKey(attributes, kSecValueRef)) {
             [attributesPlist setObject:[PlistObjectConverter convertSecCertificateRef:(SecCertificateRef)CFDictionaryGetValue(attributes, kSecValueRef)]
-                                forKey:(id)kSecValueRef];
+                                forKey:@"kSecValueRef"];
+        [attributesPlist removeObjectForKey:(id)kSecValueRef];
         }
         else if (CFDictionaryContainsKey(attributes, kSecValuePersistentRef)) {
             [attributesPlist setObject:[PlistObjectConverter convertSecCertificateRef:(SecCertificateRef)CFDictionaryGetValue(attributes, kSecValuePersistentRef)]
-                                forKey:(id)kSecValuePersistentRef];
+                                forKey:@"kSecValuePersistentRef"];
+        [attributesPlist removeObjectForKey:(id)kSecValuePersistentRef];
         }
     }
     else if (secClass == kSecClassIdentity) {
         if (CFDictionaryContainsKey(attributes, kSecValueRef)) {
-            SecIdentityRef identity;
-            identity = (SecIdentityRef)CFDictionaryGetValue(attributes, kSecValueRef);
             [attributesPlist setObject:[PlistObjectConverter convertSecIdentityRef:(SecIdentityRef)CFDictionaryGetValue(attributes, kSecValueRef)]
-                                forKey:(id)kSecValueRef];
+                                forKey:@"kSecValueRef"];
+        [attributesPlist removeObjectForKey:(id)kSecValueRef];
         }
         else if (CFDictionaryContainsKey(attributes, kSecValuePersistentRef)) {
             [attributesPlist setObject:[PlistObjectConverter convertSecIdentityRef:(SecIdentityRef)CFDictionaryGetValue(attributes, kSecValuePersistentRef)]
-                                forKey:(id)kSecValuePersistentRef];
+                                forKey:@"kSecValuePersistentRef"];
+        [attributesPlist removeObjectForKey:(id)kSecValuePersistentRef];
         }
     }
     else if (secClass == kSecClassKey) {
         if (CFDictionaryContainsKey(attributes, kSecValueRef)) {
             [attributesPlist setObject:[PlistObjectConverter convertSecKeyRef:(SecKeyRef)CFDictionaryGetValue(attributes, kSecValueRef)]
-                                forKey:(id)kSecValueRef];
+                                forKey:@"kSecValueRef"];
+        [attributesPlist removeObjectForKey:(id)kSecValueRef];
         }
         else if (CFDictionaryContainsKey(attributes, kSecValuePersistentRef)) {
             [attributesPlist setObject:[PlistObjectConverter convertSecKeyRef:(SecKeyRef)CFDictionaryGetValue(attributes, kSecValuePersistentRef)]
-                                forKey:(id)kSecValuePersistentRef];
+                                forKey:@"kSecValuePersistentRef"];
+        [attributesPlist removeObjectForKey:(id)kSecValuePersistentRef];
         }
     }
 
@@ -298,7 +390,7 @@ static NSString *serializedNilValue = @"nil";
 	// TODO: Dump private keys
 	NSDictionary *keyDict = [NSDictionary dictionaryWithObjects:
 						[NSArray arrayWithObjects:
-						[NSNumber numberWithUnsignedInt: (unsigned int)key],
+						objectTypeNotSupported,
 						nil]
 			      	forKeys:
 				    	[NSArray arrayWithObjects:
