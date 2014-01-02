@@ -1,3 +1,4 @@
+#import <UIKit/UIApplication.h>
 
 @interface GenericDelegateProx : NSObject {
     id originalDelegate;        // The delegate object we're going to proxy
@@ -16,7 +17,7 @@
 @end
 
 
-@interface UIApplicationDelegateProx : GenericDelegateProx <UIApplicationDelegate> 
+@interface UIApplicationDelegateProx : GenericDelegateProx <UIApplicationDelegate>
 
 // What we actually hook within UIApplicationDelegate
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url;
@@ -25,7 +26,7 @@
 @end
 
 
-@interface NSURLConnectionDelegateProx : GenericDelegateProx <NSURLConnectionDelegate> 
+@interface NSURLConnectionDelegateProx : GenericDelegateProx <NSURLConnectionDelegate>
 
 // What we actually hook within NSURLConnectionDelegate
 - (NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse;

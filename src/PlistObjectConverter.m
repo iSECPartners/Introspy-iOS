@@ -1,4 +1,5 @@
 #import <objc/runtime.h> // For convertDelegate()
+#import <UIKit/UIKit.h>
 
 #import "PlistObjectConverter.h"
 
@@ -58,11 +59,11 @@ static NSString *serializedNilValue = @"nil";
 		// otherwise just store the whole string for now.
 		} else {
 		  url_dict = [NSDictionary dictionaryWithObjects:
-					      [NSArray arrayWithObjects: 
+					      [NSArray arrayWithObjects:
 					      		[aURL absoluteString], nil]
 					   forKeys:
 					      [NSArray arrayWithObjects:
-					      		@"absoluteString", nil]]; 
+					      		@"absoluteString", nil]];
 		}
 	}
 	return url_dict;
@@ -73,13 +74,13 @@ static NSString *serializedNilValue = @"nil";
 + (NSDictionary *) convertNSURLRequest:(NSURLRequest *)request {
 	if (request == nil)
 		return [NSDictionary dictionary];
-	
+
 	NSDictionary *url_req = [NSDictionary dictionaryWithObjects:
 				[NSArray arrayWithObjects:
 					 		[PlistObjectConverter convertURL:[request URL]],
 							[request HTTPMethod],
 							[PlistObjectConverter autoConvertNil: [request HTTPBody]],
-					     	[NSNumber numberWithUnsignedInt:[request cachePolicy]], 
+					     	[NSNumber numberWithUnsignedInt:[request cachePolicy]],
 					     	nil]
 						forKeys: [NSArray arrayWithObjects:
 							@"URL",
@@ -228,11 +229,11 @@ static NSString *serializedNilValue = @"nil";
     }
     else if (secClass == kSecClassCertificate) {
         if (CFDictionaryContainsKey(attributes, kSecValueRef)) {
-            [attributesPlist setObject:[PlistObjectConverter convertSecCertificateRef:(SecCertificateRef)CFDictionaryGetValue(attributes, kSecValueRef)] 
+            [attributesPlist setObject:[PlistObjectConverter convertSecCertificateRef:(SecCertificateRef)CFDictionaryGetValue(attributes, kSecValueRef)]
                                 forKey:(id)kSecValueRef];
         }
         else if (CFDictionaryContainsKey(attributes, kSecValuePersistentRef)) {
-            [attributesPlist setObject:[PlistObjectConverter convertSecCertificateRef:(SecCertificateRef)CFDictionaryGetValue(attributes, kSecValuePersistentRef)] 
+            [attributesPlist setObject:[PlistObjectConverter convertSecCertificateRef:(SecCertificateRef)CFDictionaryGetValue(attributes, kSecValuePersistentRef)]
                                 forKey:(id)kSecValuePersistentRef];
         }
     }
@@ -240,21 +241,21 @@ static NSString *serializedNilValue = @"nil";
         if (CFDictionaryContainsKey(attributes, kSecValueRef)) {
             SecIdentityRef identity;
             identity = (SecIdentityRef)CFDictionaryGetValue(attributes, kSecValueRef);
-            [attributesPlist setObject:[PlistObjectConverter convertSecIdentityRef:(SecIdentityRef)CFDictionaryGetValue(attributes, kSecValueRef)] 
+            [attributesPlist setObject:[PlistObjectConverter convertSecIdentityRef:(SecIdentityRef)CFDictionaryGetValue(attributes, kSecValueRef)]
                                 forKey:(id)kSecValueRef];
         }
         else if (CFDictionaryContainsKey(attributes, kSecValuePersistentRef)) {
-            [attributesPlist setObject:[PlistObjectConverter convertSecIdentityRef:(SecIdentityRef)CFDictionaryGetValue(attributes, kSecValuePersistentRef)] 
+            [attributesPlist setObject:[PlistObjectConverter convertSecIdentityRef:(SecIdentityRef)CFDictionaryGetValue(attributes, kSecValuePersistentRef)]
                                 forKey:(id)kSecValuePersistentRef];
         }
     }
     else if (secClass == kSecClassKey) {
         if (CFDictionaryContainsKey(attributes, kSecValueRef)) {
-            [attributesPlist setObject:[PlistObjectConverter convertSecKeyRef:(SecKeyRef)CFDictionaryGetValue(attributes, kSecValueRef)] 
+            [attributesPlist setObject:[PlistObjectConverter convertSecKeyRef:(SecKeyRef)CFDictionaryGetValue(attributes, kSecValueRef)]
                                 forKey:(id)kSecValueRef];
         }
         else if (CFDictionaryContainsKey(attributes, kSecValuePersistentRef)) {
-            [attributesPlist setObject:[PlistObjectConverter convertSecKeyRef:(SecKeyRef)CFDictionaryGetValue(attributes, kSecValuePersistentRef)] 
+            [attributesPlist setObject:[PlistObjectConverter convertSecKeyRef:(SecKeyRef)CFDictionaryGetValue(attributes, kSecValuePersistentRef)]
                                 forKey:(id)kSecValuePersistentRef];
         }
     }
@@ -276,7 +277,7 @@ static NSString *serializedNilValue = @"nil";
 	NSDictionary *identityDict = [NSDictionary dictionaryWithObjects:
 						[NSArray arrayWithObjects:
 						[PlistObjectConverter convertSecCertificateRef:certRef],
-						[PlistObjectConverter convertSecKeyRef:privateKeyRef], 
+						[PlistObjectConverter convertSecKeyRef:privateKeyRef],
 						nil]
 			      	forKeys:
 				    	[NSArray arrayWithObjects:
@@ -297,7 +298,7 @@ static NSString *serializedNilValue = @"nil";
 	// TODO: Dump private keys
 	NSDictionary *keyDict = [NSDictionary dictionaryWithObjects:
 						[NSArray arrayWithObjects:
-						[NSNumber numberWithUnsignedInt: (unsigned int)key], 
+						[NSNumber numberWithUnsignedInt: (unsigned int)key],
 						nil]
 			      	forKeys:
 				    	[NSArray arrayWithObjects:
@@ -346,7 +347,7 @@ static NSString *serializedNilValue = @"nil";
 						[PlistObjectConverter autoConvertNil: [credential password]],
 						certsSummary,
 						[NSNumber numberWithUnsignedInt: (unsigned int)[credential identity]],
-						[NSNumber numberWithUnsignedInt: [credential persistence]], 
+						[NSNumber numberWithUnsignedInt: [credential persistence]],
 						nil]
 			      	forKeys:
 				    	[NSArray arrayWithObjects:
@@ -354,7 +355,7 @@ static NSString *serializedNilValue = @"nil";
 				    	@"password",
 				    	@"certificates",
 				    	@"identity",
-						@"persistence", 
+						@"persistence",
 						nil]];
 	return credentialDict;
 }
@@ -460,7 +461,7 @@ static NSString *serializedNilValue = @"nil";
 		}
 		if (methodDescriptions)	free(methodDescriptions);
 	};
-	// Call our block multiple times with different arguments 
+	// Call our block multiple times with different arguments
 	// to enumerate all class, instance, required and non-required methods
 	enumerate(YES, YES);
 	enumerate(YES, NO);

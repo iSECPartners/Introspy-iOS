@@ -1,3 +1,5 @@
+#import <UIKit/UIApplication.h>
+#import <UIKit/UIPasteboard.h>
 
 @interface PlistObjectConverter: NSObject {
 
