@@ -24,7 +24,6 @@ static sqlite3 *dbConnection;
 
     // Are we monitoring a System app or an App Store app ?
     NSString *appRoot = [@"~/" stringByExpandingTildeInPath];
-    NSLog(@" LOLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO %@ ", appRoot);
     if ([appRoot isEqualToString: @"/var/mobile"]) {
         DBFilePath = [NSString stringWithFormat:systemDBFileFormat, appId];
     }
