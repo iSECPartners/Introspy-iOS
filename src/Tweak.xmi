@@ -96,6 +96,11 @@ static void traceURISchemes() {
 
     // Only hook Apps the user has selected in Introspy's settings panel
     NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
+    if (appId == nil) {
+        appId = [[NSProcessInfo processInfo] processName];
+        NSLog(@"Introspy - Process has no bundle ID, use process name instead: %@", appId);
+    }
+    
     // Load Introspy preferences
     NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:preferenceFilePath];
     id shouldHook = [preferences objectForKey:appId];
