@@ -1,6 +1,6 @@
 #TARGET = iphone:6.1
 #ARCHS = armv7
-include theos/makefiles/common.mk
+include $(THEOS)/makefiles/common.mk
 
 APPLICATION_NAME = IntrospyTestApp
 IntrospyTestApp_FILES = main.m IntrospyTestAppApplication.mm RootViewController.mm XMLTester.m FileSystemTester.m KeyChainTester.m UserPreferencesTester.m CryptoTester.m PasteboardTester.m HTTPTester.m SchemeTester.m
