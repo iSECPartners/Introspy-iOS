@@ -30,6 +30,7 @@ Installation
 
 Users should first download the latest pre-compiled Debian package available
 in the release section of the project page at:
+https://github.com/integrity-sa/Introspy-iOS/releases or for older releases at 
 https://github.com/iSECPartners/Introspy-iOS/releases
 
 ### Dependencies
@@ -37,7 +38,7 @@ https://github.com/iSECPartners/Introspy-iOS/releases
 The tracer will only run on a jailbroken device. Using Cydia, make
 sure the following packages are installed:
 - dpkg
-- MobileSubstrate
+- Cydia Substrate
 - PreferenceLoader
 - Applist
 
@@ -85,16 +86,15 @@ Most users should just download and install the pre-compiled Debian package.
 However, if you want to modify the library's functionality you will have to
 build the Debian package yourself.
 
-The build requires rpetrich's fork of the Theos suite, available at
-https://github.com/rpetrich/theos.
+The build requires the Theos suite, available at https://github.com/theos/theos.
 For general instructions on how to install Theos, see
-http://www.iphonedevwiki.net/index.php/Theos/Getting\_Started but make sure
-you're using rpetrich's fork, not the official Theos.
+https://github.com/theos/theos/wiki/Installation.
 
-You first have to create a symlink to your theos installation:
+You must also set the $THEOS variable in your environment, and export it so
+make will see its value when you run it
 
-    cd Introspy-iOS/src/
-    ln -s /opt/theos/ ./theos
+    export THEOS=/absolute/path/to/theos
+    export PATH=$THEOS/bin:$PATH
 
 Then, the package can be built using:
 
@@ -118,3 +118,8 @@ Authors
 
 * Tom Daniels
 * Alban Diquet
+
+Maintainers
+-------
+
+* Herman Duarte

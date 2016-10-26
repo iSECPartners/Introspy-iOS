@@ -7,3 +7,4 @@ _/*
 *.swp
 .gitconfig
 *.sublime-workspace
+packages/*
